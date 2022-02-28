@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Exception: {{ message }}</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Roboto+Mono&display=swap">
+
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    fontFamily: {
+                        'sans': ['DM Sans', 'sans-serif'],
+                        'mono': ['Roboto Mono', 'Cascadia Code', 'monospace'],
+                    },
+                },
+            }
+        </script>
+    </head>
+
+    <body class="bg-gray-50 h-screen flex justify-center leading-8 gap-8 dark:bg-gray-900 dark:text-gray-50 p-28 md:p-32 lg:p-64">
+        <main class="bg-white dark:bg-gray-800 p-12 rounded-xl shadow w-full">
+            <h1 class="text-2xl font-bold">
+                Exception: {{ message }}
+            </h1>
+
+            <p class="mt-7 opacity-90">Route: {{ method }} {{ uri }}</p>
+    
+            <button class="bg-orange-500 px-5 py-2 mt-12 rounded-lg text-white hover:opacity-90" onclick="window.location.reload()">Reload</button>
+        </main>
+    </body>
+</html>

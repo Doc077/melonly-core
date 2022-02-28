@@ -63,7 +63,7 @@ export class App {
         })
     }
 
-    public static createApp(controllers: any[]): App {
+    public static registerControllers(controllers: any[]): App {
         return new App()
     }
 }

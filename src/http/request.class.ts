@@ -1,11 +1,11 @@
-import { IncomingRequest } from '../http/incoming-request.class'
+import { RequestStatic } from '../http/request-static.class'
 
 export class Request {
     public data(): any {
-        return IncomingRequest.getData()
+        return RequestStatic.getData()
     }
 
     public parameter(name: string): string {
-        return IncomingRequest.getParameter(name)
+        return RequestStatic.getParameter(name)
     }
 }

@@ -3,8 +3,8 @@ import { config } from 'dotenv'
 import { join } from 'path'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { RouteNotFoundException } from '../routing/route-not-found-exception.class'
-import { IncomingRequest } from '../http/incoming-request.class'
-import { ClientResponse } from '../http/client-response.class'
+import { RequestStatic } from '../http/request-static.class'
+import { ResponseStatic } from '../http/response-static.class'
 import { Router } from '../routing/router.class'
 import { Console } from '../console/console.class'
 import { readFileSync } from 'fs'
@@ -29,8 +29,8 @@ export class App {
         const port = process.env.APP_PORT ?? 3000
 
         const server = createServer((request, response) => {
-            IncomingRequest.setNodeRequest(request)
-            ClientResponse.setNodeResponse(response)
+            RequestStatic.setNodeRequest(request)
+            ResponseStatic.setNodeResponse(response)
 
             const uri = request.url ?? '/'
 

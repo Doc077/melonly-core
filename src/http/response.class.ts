@@ -2,7 +2,7 @@ import { join } from 'path'
 import { existsSync } from 'fs'
 import { Exception } from '../handler/exception.class'
 import { View } from '../views/view.class'
-import { ClientResponse } from '../http/client-response.class'
+import { ResponseStatic } from '../http/response-static.class'
 
 export type RedirectResponse = null
 
@@ -18,8 +18,8 @@ export class Response {
     }
 
     public redirect(uri: string, code: number = 302): RedirectResponse {
-        ClientResponse.setHeader('Location', uri)
-        ClientResponse.setStatusCode(code)
+        ResponseStatic.setHeader('Location', uri)
+        ResponseStatic.setStatusCode(code)
 
         return null
     }

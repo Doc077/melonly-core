@@ -1,7 +1,7 @@
 import { Injector } from '../container/injector.class'
 import { Method } from '../http/method.enum'
-import { IncomingRequest } from '../http/incoming-request.class'
-import { ClientResponse } from '../http/client-response.class'
+import { RequestStatic } from '../http/request-static.class'
+import { ResponseStatic } from '../http/response-static.class'
 import { Route } from './route.class'
 import { RouteNotFoundException } from '../routing/route-not-found-exception.class'
 import { pathToRegexp, match } from 'path-to-regexp'
@@ -34,7 +34,7 @@ export class Router {
     public static evaluate(url: string): void {
         for (const route of this.routes) {
             if (route.pattern.test(url)) {
-                if (String(route.method) !== IncomingRequest.getMethod()) {
+                if (String(route.method) !== RequestStatic.getMethod()) {
                     this.abortNotFound()
                 }
 
@@ -43,23 +43,23 @@ export class Router {
                     encode: encodeURI,
                 })
 
-                for (const [param, value] of Object.entries(urlMatch(IncomingRequest.getUrl()).params)) {
-                    IncomingRequest.setParameter(param, value as string)
+                for (const [param, value] of Object.entries(urlMatch(RequestStatic.getUrl()).params)) {
+                    RequestStatic.setParameter(param, value as string)
                 }
 
                 let responseContent = route.action()
 
                 if (Array.isArray(responseContent) || typeof responseContent === 'object') {
-                    ClientResponse.setHeader('Content-Type', 'application/json')
+                    ResponseStatic.setHeader('Content-Type', 'application/json')
 
                     responseContent = JSON.stringify(responseContent)
                 }
 
                 if (typeof responseContent === 'string') {
-                    ClientResponse.setHeader('Content-Type', 'text/html')
+                    ResponseStatic.setHeader('Content-Type', 'text/html')
                 }
 
-                ClientResponse.end(responseContent)
+                ResponseStatic.end(responseContent)
 
                 return
             }

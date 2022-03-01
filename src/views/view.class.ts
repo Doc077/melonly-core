@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs'
 import { encode } from 'html-entities'
 import { Exception } from '../handler/exception.class'
-import { ClientResponse } from '../http/client-response.class'
+import { ResponseStatic } from '../http/response-static.class'
 
 export type ViewResponse = string
 
@@ -27,7 +27,7 @@ export class View {
             compiled = compiled.replace(expression[0], encode(variable))
         }
 
-        ClientResponse.setHeader('Content-Type', 'text/html')
+        ResponseStatic.setHeader('Content-Type', 'text/html')
 
         return compiled
     }

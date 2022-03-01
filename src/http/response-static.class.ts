@@ -1,4 +1,4 @@
-export class ClientResponse {
+export class ResponseStatic {
     private static nodeResponse: any
 
     public static end(content?: any): void {

@@ -1,4 +1,4 @@
-export class IncomingRequest {
+export class RequestStatic {
     private static nodeRequest: any
 
     private static parameters: { [key: string]: string } = {}

@@ -3,6 +3,8 @@ import { Exception } from '../handler/exception.class'
 
 export class Email {
     private static transporter = createTransport({
+        port: parseInt(process.env.MAIL_PORT ?? '25'),
+        host: process.env.MAIL_HOST,
         service: process.env.MAIL_SERVICE,
         auth: {
             user: process.env.MAIL_ADDRESS,

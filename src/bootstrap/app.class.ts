@@ -69,6 +69,10 @@ export class App {
         })
     }
 
+    public bindSingletons(classes: any[]): void {
+        Container.bindSingletons(classes)
+    }
+
     public registerControllers(controllers: any[]): this {
         return this
     }

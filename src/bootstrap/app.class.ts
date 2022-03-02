@@ -1,23 +1,29 @@
 import { createServer } from 'http'
 import { config } from 'dotenv'
 import { join } from 'path'
+import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { RouteNotFoundException } from '../routing/route-not-found-exception.class'
+import { Request } from '../http/request.class'
 import { RequestStatic } from '../http/request-static.class'
+import { Response } from '../http/response.class'
 import { ResponseStatic } from '../http/response-static.class'
 import { Router } from '../routing/router.class'
 import { Console } from '../console/console.class'
 import { readFileSync } from 'fs'
+
 import 'reflect-metadata'
 
 export class App {
-    public constructor() {
+    constructor() {
         process.on('uncaughtException', (exception: any) => {
             ExceptionHandler.handle(exception)
         })
 
         try {
             config({ path: join('.env') })
+
+            Container.bindSingletons([Request, Response])
 
             this.runServer()
         } catch (exception) {
@@ -49,7 +55,7 @@ export class App {
 
                     response.end(fileContent)
                 } catch (error) {
-                    throw new RouteNotFoundException('Route not found')
+                    throw new RouteNotFoundException()
                 }
 
                 return

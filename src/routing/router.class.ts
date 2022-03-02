@@ -75,6 +75,6 @@ export class Router {
     }
 
     private static abortNotFound(): void {
-        throw new RouteNotFoundException('Route not found')
+        throw new RouteNotFoundException()
     }
 }

@@ -1,4 +1,5 @@
 import { createTransport } from 'nodemailer'
+import { Exception } from '../handler/exception.class'
 
 export class Email {
     private static transporter = createTransport({
@@ -17,7 +18,7 @@ export class Email {
             text,
         }, (error: any) => {
             if (error) {
-                throw error
+                throw new Exception('Could not send an email or credentials not set')
             }
         })
     }

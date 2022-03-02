@@ -20,6 +20,7 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
   - [Controllers and Routing](#controllers-and-routing)
   - [Views](#views-1)
   - [Services](#services)
+  - [Mail](#mail)
 - [License](#license)
 
 
@@ -173,7 +174,7 @@ export class UserService {
 }
 ```
 
-Since we class has been declared as injectable, we can type-hint controller constructor to get injected services.
+Since the class has been declared as injectable, we can type-hint the controller constructor to get injected services:
 
 ```ts
 import { UserService } from './user.service'
@@ -186,11 +187,32 @@ export class UserController {
 }
 ```
 
+Injected services will be automatically available in the controller:
+
 ```ts
 @Get('/users')
 public index(): string {
     return this.userService.getHello()
 }
+```
+
+
+### Mail
+
+Melonly provides a fluent interface for sending emails from your application. All configuration is stored in `.env` file:
+
+```
+MAIL_ADDRESS=example@mail.com
+MAIL_SERVICE=gmail
+MAIL_PASSWORD=
+```
+
+After providing your mail service credentials you'll be able to send emails:
+
+```ts
+import { Email } from '@melonly/core'
+
+Email.send('to@address.com', 'Test Email', 'This is the test email sent from Melonly application.')
 ```
 
 

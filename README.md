@@ -19,6 +19,7 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
   - [Configuration](#configuration)
   - [Controllers and Routing](#controllers-and-routing)
   - [Views](#views-1)
+  - [Services](#services)
 - [License](#license)
 
 
@@ -111,12 +112,28 @@ export class AppController {
 
 Basically, a controller is just a class which handles web requests. Each controller should contain decorated methods registering routes. In the example above, when the user enters `/` route, the request will be passed to the `index` method which returns a view with passed variable.
 
+Controller routes can be created as dynamic patterns with `:paramName` syntax:
+
+```ts
+@Get('/users/:id')
+```
+
+To make paramater optional use the question mark:
+
+```ts
+@Get('/users/:id?')
+```
+
+This route will match both `/users` and `/users/327` paths.
+
 
 ### Views
 
 Melonly includes a built-in view templating engine. Views are placed in `/views` directory and have the `.melon.html` extension.
 
-The example template looks like this:
+Melonly's template engine allows you to create loops, conditionals and variable interpolation.
+
+The example template with foreach loop and conditional rendering looks like this:
 
 ```html
 <h1>{{ title }}</h1>
@@ -130,7 +147,51 @@ The example template looks like this:
 [/if]
 ```
 
-Control directives have a square brackets syntax with `{{ ... }}` for variable interpolation.
+Control directives use the square brackets syntax with `{{ ... }}` for variable interpolation.
+
+
+### Services
+
+Melonly strongly encourages you to write clean code separated into small parts. We believe that controllers should be only responsible for request and response handling. All other buisness logic should be located in service classes. Service class is an injectable class with methods responsible for transforming some data.
+
+To create new service run the following command:
+
+```shell
+melon new service user
+```
+
+`user` is just a name for the generated class. It will contain the following code:
+
+```ts
+import { Injectable } from '@melonly/core'
+
+@Injectable()
+export class UserService {
+    public getHello(): string {
+        return 'Hello World'
+    }
+}
+```
+
+Since we class has been declared as injectable, we can type-hint controller constructor to get injected services.
+
+```ts
+import { UserService } from './user.service'
+
+@Controller()
+export class UserController {
+    constructor(private readonly userService: UserService) {}
+
+    ...
+}
+```
+
+```ts
+@Get('/users')
+public index(): string {
+    return this.userService.getHello()
+}
+```
 
 
 ## License

@@ -6,6 +6,9 @@
     "scripts": {
         "start": "tsc --watch"
     },
+    "publishConfig": {
+        "access": "public"
+    },
     "author": "Dominik Rajkowski",
     "license": "MIT",
     "dependencies": {

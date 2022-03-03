@@ -33,13 +33,13 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
 
 ## Installation
 
-To create fresh Melonly project you can use the official CLI. Just install in once and you'll be able to run useful commands:
+To create a fresh Melonly project you can use the CLI installer. You only have to install once `@melonly/cli` package and you'll be able to run useful commands:
 
 ```shell
 npm install -g @melonly/cli
 ```
 
-To create new project run the following command:
+To create new project run the `project` command in your directory:
 
 ```shell
 melon project <project-name>
@@ -52,6 +52,7 @@ Once your application project has been created you can run it on the local serve
 
 ```shell
 cd <project-name>
+
 npm start
 ```
 

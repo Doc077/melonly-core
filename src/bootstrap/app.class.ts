@@ -1,6 +1,7 @@
-import { createServer } from 'http'
 import { config } from 'dotenv'
+import { createServer } from 'http'
 import { join } from 'path'
+import { readFileSync } from 'fs'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { RouteNotFoundException } from '../routing/route-not-found-exception.class'
@@ -10,7 +11,6 @@ import { Response } from '../http/response.class'
 import { ResponseStatic } from '../http/response-static.class'
 import { Router } from '../routing/router.class'
 import { Console } from '../console/console.class'
-import { readFileSync } from 'fs'
 
 import 'reflect-metadata'
 
@@ -21,7 +21,9 @@ export class App {
         })
 
         try {
-            config({ path: join('.env') })
+            config({
+                path: '.env',
+            })
 
             Container.bindSingletons([Request, Response])
 
@@ -42,21 +44,11 @@ export class App {
 
             Console.info(`Request: ${request.method?.toUpperCase()} ${uri}`)
 
-            const filePath = join('public', uri.replace('/', ''))
-            const fileExtension = uri.replace('/', '').split('.')[1] ?? ''
-
             if (uri.includes('.')) {
-                try {
-                    const fileContent = readFileSync(filePath)
+                const filePath = join('public', uri.replace('/', ''))
+                const fileExtension = uri.replace('/', '').split('.')[1] ?? ''
 
-                    const extensionMimes: { [key: string]: string } = require('../../assets/mimes.json')
-
-                    response.setHeader('Content-Type', extensionMimes[fileExtension])
-
-                    response.end(fileContent)
-                } catch (error) {
-                    throw new RouteNotFoundException()
-                }
+                this.serveStaticFile(filePath, fileExtension)
 
                 return
             }
@@ -67,6 +59,20 @@ export class App {
         server.listen(port, () => {
             Console.info(`Server started on port ${port}`)
         })
+    }
+
+    private serveStaticFile(path: string, extension: string): void {
+        try {
+            const fileContent = readFileSync(path)
+
+            const extensionMimes: { [key: string]: string } = require('../../assets/mimes.json')
+
+            ResponseStatic.setHeader('Content-Type', extensionMimes[extension])
+
+            ResponseStatic.end(fileContent)
+        } catch (error) {
+            throw new RouteNotFoundException()
+        }
     }
 
     public bindSingletons(classes: any[]): void {

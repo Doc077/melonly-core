@@ -8,6 +8,7 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
 
 - [Melonly Node.js Framework](#melonly-nodejs-framework)
 - [Requirements](#requirements)
+- [Installation](#installation)
 - [Running Application](#running-application)
 - [Directory Structure](#directory-structure)
   - [`/database`](#database)
@@ -30,11 +31,27 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
 - `npm` installed
 
 
+## Installation
+
+To create fresh Melonly project you can use the official CLI. Just install in once and you'll be able to run useful commands:
+
+```shell
+npm install -g @melonly/cli
+```
+
+To create new project run the following command:
+
+```shell
+melon project <project-name>
+```
+
+
 ## Running Application
 
 Once your application project has been created you can run it on the local server:
 
 ```shell
+cd <project-name>
 npm start
 ```
 
@@ -183,7 +200,7 @@ import { UserService } from './user.service'
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    ...
+    // ...
 }
 ```
 

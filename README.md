@@ -39,10 +39,10 @@ To create a fresh Melonly project you can use the CLI installer. You only have t
 npm install -g @melonly/cli
 ```
 
-To create new project run the `project` command in your directory:
+To create new project run the `new` command in your directory:
 
 ```shell
-melon project <project-name>
+melon new <project-name>
 ```
 
 
@@ -176,7 +176,7 @@ Melonly strongly encourages you to write clean code separated into small parts. 
 To create new service run the following command:
 
 ```shell
-melon new service user
+melon make service user
 ```
 
 `user` is just a name for the generated class. It will contain the following code:

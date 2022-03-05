@@ -1,8 +1,8 @@
 import { join } from 'path'
 import { existsSync } from 'fs'
 import { Exception } from '../handler/exception.class'
-import { View } from '../views/view.class'
 import { ResponseStatic } from '../http/response-static.class'
+import { View } from '../views/view.class'
 
 export type RedirectResponse = null
 

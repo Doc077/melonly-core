@@ -250,16 +250,28 @@ melon make email welcome
 This command will create a new `app/welcome.email.ts` file. It will look like this:
 
 ```ts
-import { Email, ViewResponse } from '@melonly/core'
+import { Email } from '@melonly/core'
 
-export class Welcome extends Email {
-    public build(): ViewResponse {
-        return this.renderTemplate('mail.welcome')
+export class WelcomeEmail extends Email {
+    public subject(): string {
+        return 'Welcome, New User!'
+    }
+
+    public build(): string {
+        return this.fromTemplate('mail.welcome')
     }
 }
 ```
 
 In the example above email will render `views/mail.welcome.melon.html` template. You can pass any variables to the template like we done it in view rendering.
+
+Sending email using classes is very similar:
+
+```ts
+import { WelcomeEmail } from '../app/welcome.email'
+
+Email.send('to@address.com', new WelcomeEmail())
+```
 
 
 ## License
@@ -268,4 +280,4 @@ Melonly is an open-source framework licensed under the [MIT License](melonly/LIC
 
 Author: [Doc077](https://github.com/Doc077)
 
-If you discovered a bug or security vulnerability please open an issue / pull request or email me: dom.rajkowski@gmail.com.
+If you discovered a bug or security vulnerability please open an issue / pull request in the repository or email me: dom.rajkowski@gmail.com.

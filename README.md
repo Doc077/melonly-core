@@ -1,14 +1,14 @@
-<img src="assets/logo.png" width="66">
+<img src="assets/logo.png" width="60">
 
+<!-- omit in toc -->
 ## Melonly Node.js Framework
 
-[![npm version](https://badge.fury.io/js/@melonly%2Fcore.svg)](https://badge.fury.io/js/@melonly%2Fcore)
+[![npm version](https://badge.fury.io/js/@melonly%2Fcore.svg)](https://www.npmjs.com/package/@melonly/core)
 
 Melonly is a fast and modern web development framework for Node.js. It makes easy to create secure and fast web applications with awesome developer experience.
 
 **Table of Contents**
 
-- [Melonly Node.js Framework](#melonly-nodejs-framework)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Running Application](#running-application)
@@ -173,8 +173,12 @@ Control directives use the square brackets syntax with `{{ ... }}` for variable 
 Rendering views is done using the 'dot' syntax:
 
 ```ts
+// This will render views/pages/some-view.melon.html template
+
 return this.response.render('pages.some-view')
 ```
+
+Note that view file names should not contain dot signs.
 
 
 ### Services

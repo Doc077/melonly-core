@@ -2,9 +2,11 @@
 
 ## Melonly Node.js Framework
 
+[![npm version](https://badge.fury.io/js/@melonly%2Fcore.svg)](https://badge.fury.io/js/@melonly%2Fcore)
+
 Melonly is a fast and modern web development framework for Node.js. It makes easy to create secure and fast web applications with awesome developer experience.
 
-**Table of Contents | Documentation**
+**Table of Contents**
 
 - [Melonly Node.js Framework](#melonly-nodejs-framework)
 - [Requirements](#requirements)
@@ -33,7 +35,7 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
 
 ## Installation
 
-To create a fresh Melonly project you can use the CLI installer. You only have to install once `@melonly/cli` package and you'll be able to run useful commands:
+To create a fresh Melonly project you can use the CLI installer. You only have to install `@melonly/cli` package. Then you'll be able to run `melon` commands:
 
 ```shell
 npm install -g @melonly/cli
@@ -48,7 +50,7 @@ melon new <project-name>
 
 ## Running Application
 
-Once your application project has been created you can run it on the local server:
+Once your project has been created you can run it on the local server:
 
 ```shell
 cd <project-name>
@@ -56,7 +58,7 @@ cd <project-name>
 npm start
 ```
 
-Your application will be available on `localhost:3000` by default. You can set the port in `.env` configuration file.
+Your application will be available on `localhost:3000` by default. You can change the port in `.env` configuration file.
 
 
 ## Directory Structure
@@ -168,6 +170,12 @@ The example template with foreach loop and conditional rendering looks like this
 
 Control directives use the square brackets syntax with `{{ ... }}` for variable interpolation.
 
+Rendering views is done using the 'dot' syntax:
+
+```ts
+return this.response.render('pages.some-view')
+```
+
 
 ### Services
 
@@ -217,7 +225,7 @@ public index(): string {
 
 ### Mail
 
-Melonly provides a fluent interface for sending emails from your application. All configuration is stored in `.env` file:
+Melonly provides a fluent interface for sending emails from your application. All configuration needed for that is stored in the `.env` file variables:
 
 ```
 MAIL_ADDRESS=example@mail.com
@@ -225,7 +233,7 @@ MAIL_SERVICE=gmail
 MAIL_PASSWORD=
 ```
 
-After providing your mail service credentials you'll be able to send emails:
+After providing your mail service credentials you'll be able to create and send your first email. The most basic form is writing raw text message from `Mail.send` method:
 
 ```ts
 import { Email } from '@melonly/core'
@@ -233,10 +241,30 @@ import { Email } from '@melonly/core'
 Email.send('to@address.com', 'Test Email', 'This is the test email sent from Melonly application.')
 ```
 
+But we recommend the more object-oriented approach with email classes. It will allow us to make template based emails. To generate new email file use the CLI command:
+
+```shell
+melon make email welcome
+```
+
+This command will create a new `app/welcome.email.ts` file. It will look like this:
+
+```ts
+import { Email, ViewResponse } from '@melonly/core'
+
+export class Welcome extends Email {
+    public build(): ViewResponse {
+        return this.renderTemplate('mail.welcome')
+    }
+}
+```
+
+In the example above email will render `views/mail.welcome.melon.html` template. You can pass any variables to the template like we done it in view rendering.
+
 
 ## License
 
-Melonly is an open-source framework licensed under the [MIT license](melonly/LICENSE).
+Melonly is an open-source framework licensed under the [MIT License](melonly/LICENSE).
 
 Author: [Doc077](https://github.com/Doc077)
 

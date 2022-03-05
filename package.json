@@ -2,15 +2,19 @@
     "name": "@melonly/core",
     "version": "1.0.0-alpha",
     "description": "The modern Node.js framework",
-    "main": "dist/index.js",
-    "scripts": {
-        "start": "tsc --watch"
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Doc077/melonly-core"
     },
+    "license": "MIT",
+    "author": "Dominik Rajkowski",
+    "main": "dist/index.js",
     "publishConfig": {
         "access": "public"
     },
-    "author": "Dominik Rajkowski",
-    "license": "MIT",
+    "scripts": {
+        "start": "tsc --watch"
+    },
     "dependencies": {
         "cli-color": "^2.0.1",
         "dotenv": "^16.0.0",

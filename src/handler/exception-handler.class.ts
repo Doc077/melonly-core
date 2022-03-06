@@ -32,6 +32,7 @@ export class ExceptionHandler {
                 message: exception.message,
                 method: RequestStatic.getMethod().toUpperCase(),
                 uri: RequestStatic.getUrl(),
+                status: ResponseStatic.getStatusCode(),
             }))
 
             return

@@ -37,8 +37,8 @@ export class App {
         const port = process.env.APP_PORT ?? 3000
 
         const server = createServer((request, response) => {
-            RequestStatic.setNodeRequest(request)
-            ResponseStatic.setNodeResponse(response)
+            RequestStatic.setInstance(request)
+            ResponseStatic.setInstance(response)
 
             const uri = request.url ?? '/'
 

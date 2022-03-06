@@ -32,7 +32,7 @@ export class Router {
         this.routes.push(route)
     }
 
-    public static async evaluate(url: string): Promise<void> {
+    public static evaluate(url: string): void {
         for (const route of this.routes) {
             if (route.pattern.test(url)) {
                 if (String(route.method) !== RequestStatic.getMethod()) {
@@ -49,7 +49,7 @@ export class Router {
                 }
 
                 try {
-                    let responseContent = await route.action()
+                    let responseContent = route.action()
 
                     if (Array.isArray(responseContent) || typeof responseContent === 'object') {
                         ResponseStatic.setHeader('Content-Type', 'application/json')
@@ -61,7 +61,7 @@ export class Router {
 
                     ResponseStatic.end(responseContent)
                 } catch (exception) {
-                    throw new Exception('Asynchronous operation failed')
+                    throw exception
                 }
 
                 return
@@ -71,10 +71,14 @@ export class Router {
         this.abortNotFound()
     }
 
-    public static resolveController(controller: any, method: string): any {
-        const result = Injector.resolve(controller)[method]()
+    public static async resolveController(controller: any, method: string): Promise<any> {
+        try {
+            const result = await Injector.resolve(controller)[method]()
 
-        return result
+            return result
+        } catch (exception) {
+            throw exception
+        }
     }
 
     private static abortNotFound(): void {

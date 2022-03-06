@@ -1,19 +1,25 @@
+import { ServerResponse } from 'http'
+
 export class ResponseStatic {
-    private static nodeResponse: any
+    private static instance: ServerResponse
 
     public static end(content?: any): void {
-        this.nodeResponse.end(content)
+        this.instance.end(content)
     }
 
     public static setHeader(header: string, value: string): void {
-        this.nodeResponse.setHeader(header, value)
+        this.instance.setHeader(header, value)
     }
 
-    public static setNodeResponse(response: any): void {
-        this.nodeResponse = response
+    public static setInstance(response: any): void {
+        this.instance = response
     }
 
-    public static setStatusCode(code: number): void {
-        this.nodeResponse.statusCode = code
+    public static setStatusCode(code: number = 200): void {
+        this.instance.statusCode = code
+    }
+
+    public static getStatusCode(): number {
+        return this.instance.statusCode
     }
 }

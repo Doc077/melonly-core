@@ -1,5 +1,7 @@
+import { IncomingMessage } from 'http'
+
 export class RequestStatic {
-    private static nodeRequest: any
+    private static instance: IncomingMessage
 
     private static parameters: { [key: string]: string } = {}
 
@@ -7,38 +9,38 @@ export class RequestStatic {
         if (!['get', 'head'].includes(this.getMethod())) {
             let body = ''
 
-            this.nodeRequest.on('data', (data: any) => {
+            this.instance.on('data', (data: any) => {
                 body += data
 
                 if (body.length > 1e6) {
-                    this.nodeRequest.connection.destroy()
+                    this.instance.connection.destroy()
                 }
             })
 
-            this.nodeRequest.on('end', () => {
+            this.instance.on('end', () => {
                 const data = body
 
                 return data
             })
         }
 
-        return this.nodeRequest.body
+        return ''
     }
 
     public static getMethod(): string {
-        return this.nodeRequest.method.toLowerCase()
+        return this.instance.method?.toLowerCase() ?? 'get'
     }
 
     public static getUrl(): string {
-        return this.nodeRequest.url
+        return this.instance.url ?? ''
     }
 
     public static getParameter(name: string): string {
         return this.parameters[name]
     }
 
-    public static setNodeRequest(request: any): void {
-        this.nodeRequest = request
+    public static setInstance(request: any): void {
+        this.instance = request
     }
 
     public static setParameter(name: string, value: string): void {

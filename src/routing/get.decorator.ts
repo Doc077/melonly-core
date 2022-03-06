@@ -2,8 +2,12 @@ import { Router } from './router.class'
 
 export const Get = (uri: string) => {
     return (target: any, methodName: string, descriptor: PropertyDescriptor) => {
-        Router.get(uri, async () => {
-            return Router.resolveController(target.constructor, methodName)
-        })
+        try {
+            Router.get(uri, async () => {
+                return await Router.resolveController(target.constructor, methodName)
+            })
+        } catch (exception) {
+            throw exception
+        }
     }
 }

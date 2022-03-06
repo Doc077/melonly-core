@@ -17,14 +17,18 @@ export class View {
 
         // Interpolation
 
-        for (const expression of template.matchAll(/\{\{ [^@]*([^ ]*?) *\}\}/g) ?? []) {
-            const variable = variables[expression[1]]
+        for (const expression of template.matchAll(/([^@])\{\{ *([^ ]*?) *\}\}/g) ?? []) {
+            let variableValue = variables[expression[2]]
 
-            if (!variable) {
-                throw new Exception(`Variable '${expression[1]}' has not been defined`)
+            if (!variableValue) {
+                throw new Exception(`variableValue '${expression[2]}' has not been defined`)
             }
 
-            compiled = compiled.replace(expression[0], encode(variable))
+            if (typeof variableValue === 'object') {
+                variableValue = JSON.stringify(variableValue)
+            }
+
+            compiled = compiled.replace(expression[0], expression[1] + encode(variableValue))
         }
 
         ResponseStatic.setHeader('Content-Type', 'text/html')

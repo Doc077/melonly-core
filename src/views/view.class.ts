@@ -17,7 +17,7 @@ export class View {
 
         // Interpolation
 
-        for (const expression of template.matchAll(/\{\{ *([^ ]*?) *\}\}/g) ?? []) {
+        for (const expression of template.matchAll(/\{\{ [^@]*([^ ]*?) *\}\}/g) ?? []) {
             const variable = variables[expression[1]]
 
             if (!variable) {

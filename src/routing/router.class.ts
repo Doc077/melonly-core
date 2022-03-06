@@ -1,9 +1,10 @@
+import { Exception } from '../handler/exception.class'
 import { Injector } from '../container/injector.class'
 import { Method } from '../http/method.enum'
 import { RequestStatic } from '../http/request-static.class'
 import { ResponseStatic } from '../http/response-static.class'
 import { Route } from './route.class'
-import { RouteNotFoundException } from '../routing/route-not-found-exception.class'
+import { RouteNotFoundException } from './route-not-found.exception'
 import { pathToRegexp, match } from 'path-to-regexp'
 
 export class Router {
@@ -31,7 +32,7 @@ export class Router {
         this.routes.push(route)
     }
 
-    public static evaluate(url: string): void {
+    public static async evaluate(url: string): Promise<void> {
         for (const route of this.routes) {
             if (route.pattern.test(url)) {
                 if (String(route.method) !== RequestStatic.getMethod()) {
@@ -47,19 +48,21 @@ export class Router {
                     RequestStatic.setParameter(param, value as string)
                 }
 
-                let responseContent = route.action()
+                try {
+                    let responseContent = await route.action()
 
-                if (Array.isArray(responseContent) || typeof responseContent === 'object') {
-                    ResponseStatic.setHeader('Content-Type', 'application/json')
+                    if (Array.isArray(responseContent) || typeof responseContent === 'object') {
+                        ResponseStatic.setHeader('Content-Type', 'application/json')
 
-                    responseContent = JSON.stringify(responseContent)
+                        responseContent = JSON.stringify(responseContent)
+                    } else if (typeof responseContent === 'string') {
+                        ResponseStatic.setHeader('Content-Type', 'text/html')
+                    }
+
+                    ResponseStatic.end(responseContent)
+                } catch (exception) {
+                    throw new Exception('Asynchronous operation failed')
                 }
-
-                if (typeof responseContent === 'string') {
-                    ResponseStatic.setHeader('Content-Type', 'text/html')
-                }
-
-                ResponseStatic.end(responseContent)
 
                 return
             }

@@ -1,4 +1,6 @@
-<img src="assets/logo.png" width="60">
+<p align="center">
+    <img src="assets/logo.png" width="54">
+</p>
 
 <!-- omit in toc -->
 ## Melonly Node.js Framework
@@ -168,9 +170,15 @@ The example template with foreach loop and conditional rendering looks like this
 [/if]
 ```
 
-Control directives use the square brackets syntax with `{{ ... }}` for variable interpolation.
+All control directives like conditional blocks and loops use the square brackets syntax with `{{ ... }}` for variable interpolation.
 
-Rendering views is done using the 'dot' syntax:
+Some frontend frameworks like Vue use the same bracket syntax for displaying data. To render raw brackets put `@` sign before them:
+
+```html
+@{{ value }}
+```
+
+Rendering views is done using the 'dot' syntax for nested folders:
 
 ```ts
 // This will render views/pages/some-view.melon.html template
@@ -285,3 +293,5 @@ Melonly is an open-source framework licensed under the [MIT License](melonly/LIC
 Author: [Doc077](https://github.com/Doc077)
 
 If you discovered a bug or security vulnerability please open an issue / pull request in the repository or email me: dom.rajkowski@gmail.com.
+
+**Logo: [Watermelon icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/watermelon)**

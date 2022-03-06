@@ -4,6 +4,24 @@ export class RequestStatic {
     private static parameters: { [key: string]: string } = {}
 
     public static getData(): string {
+        if (!['get', 'head'].includes(this.getMethod())) {
+            let body = ''
+
+            this.nodeRequest.on('data', (data: any) => {
+                body += data
+
+                if (body.length > 1e6) {
+                    this.nodeRequest.connection.destroy()
+                }
+            })
+
+            this.nodeRequest.on('end', () => {
+                const data = body
+
+                return data
+            })
+        }
+
         return this.nodeRequest.body
     }
 

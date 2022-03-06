@@ -7,7 +7,7 @@ import { View } from '../views/view.class'
 export type RedirectResponse = null
 
 export class Response {
-    public render(view: string, variables: { [key: string]: string } = {}): string {
+    public render(view: string, variables: { [key: string]: any } = {}): string {
         const file = join('views', `${view.replace('.', '/')}.melon.html`)
 
         if (!existsSync(file)) {

@@ -1,7 +1,7 @@
 import { Console } from '../console/console.class'
 import { ResponseStatic } from '../http/response-static.class'
 import { RequestStatic } from '../http/request-static.class'
-import { RouteNotFoundException } from '../routing/route-not-found-exception.class'
+import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { View } from '../views/view.class'
 import { join } from 'path'
 

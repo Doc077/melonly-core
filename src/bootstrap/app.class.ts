@@ -4,7 +4,7 @@ import { join } from 'path'
 import { readFileSync } from 'fs'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
-import { RouteNotFoundException } from '../routing/route-not-found-exception.class'
+import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { Request } from '../http/request.class'
 import { RequestStatic } from '../http/request-static.class'
 import { Response } from '../http/response.class'
@@ -57,7 +57,7 @@ export class App {
         })
         
         server.listen(port, () => {
-            Console.info(`Server started on port ${port}`)
+            Console.info(`Server started on http://localhost:${port}`)
         })
     }
 

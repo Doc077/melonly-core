@@ -251,17 +251,21 @@ constructor(private readonly request: Request, private readonly response: Respon
 Example redirect response using the `redirect` method:
 
 ```ts
-return this.response.redirect('/login')
+import { RedirectResponse } from '@melonly/core'
+
+@Get('/')
+public index(): RedirectResponse {
+    return this.response.redirect('/login')
+}
 ```
 
 Obtaining matched url parameters:
 
 ```ts
-// Route definition...
-
 @Get('/users/:id')
-
-return this.response.parameter('id')
+public show(): string {
+    return this.response.parameter('id')
+}
 ```
 
 You can also get url query data:

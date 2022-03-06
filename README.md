@@ -25,6 +25,7 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
   - [Controllers and Routing](#controllers-and-routing)
   - [Views](#views-1)
   - [Services](#services)
+  - [HTTP Request and Response](#http-request-and-response)
   - [Mail](#mail)
 - [License](#license)
 
@@ -235,6 +236,43 @@ public index(): string {
 ```
 
 
+### HTTP Request and Response
+
+Melonly provides a simple API for dealing with web requests and responses. You can inject `Request` and `Response` objects to controller and use them.
+
+```ts
+import { Request, Response } from '@melonly/core'
+
+// In controller's constructor...
+
+constructor(private readonly request: Request, private readonly response: Response) {}
+```
+
+Example redirect response using the `redirect` method:
+
+```ts
+return this.response.redirect('/login')
+```
+
+Obtaining matched url parameters:
+
+```ts
+// Route definition...
+
+@Get('/users/:id')
+
+return this.response.parameter('id')
+```
+
+You can also get url query data:
+
+```ts
+// URI: /users?view=all
+
+return this.response.queryParam('view') // 'all'
+```
+
+
 ### Mail
 
 Melonly provides a fluent interface for sending emails from your application. All configuration needed for that is stored in the `.env` file variables:
@@ -250,10 +288,10 @@ After providing your mail service credentials you'll be able to create and send 
 ```ts
 import { Email } from '@melonly/core'
 
-Email.send('to@address.com', 'Test Email', 'This is the test email sent from Melonly application.')
+Email.send('recipient@address.com', 'Test Email', 'This is the test email sent from Melonly application.')
 ```
 
-But we recommend the more object-oriented approach with email classes. It will allow us to make template based emails. To generate new email file use the CLI command:
+Even though this is simple and convinient for fast testing, we recommend the more object-oriented approach with separate email classes. It will allow us to make template based emails. To generate new email file use the CLI command:
 
 ```shell
 melon make email welcome
@@ -282,7 +320,7 @@ Sending email using classes is very similar:
 ```ts
 import { WelcomeEmail } from '../app/welcome.email'
 
-Email.send('to@address.com', new WelcomeEmail())
+Email.send('recipient@address.com', new WelcomeEmail())
 ```
 
 

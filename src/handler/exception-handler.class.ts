@@ -12,7 +12,7 @@ export class ExceptionHandler {
 
             const file = join(__dirname, '..', '..', 'assets', 'status.melon.html')
 
-            ResponseStatic.end(View.render(file, {
+            ResponseStatic.end(View.compile(file, {
                 code: 404,
                 text: 'Not Found',
             }))
@@ -24,11 +24,13 @@ export class ExceptionHandler {
 
         ResponseStatic.setStatusCode(500)
 
+        ResponseStatic.setTerminated(true)
+
         // Render error page
         if (process.env.APP_DEBUG === 'true') {
             const file = join(__dirname, '..', '..', 'assets', 'exception.melon.html')
 
-            ResponseStatic.end(View.render(file, {
+            ResponseStatic.end(View.compile(file, {
                 message: exception.message,
                 method: RequestStatic.getMethod().toUpperCase(),
                 uri: RequestStatic.getUrl(),

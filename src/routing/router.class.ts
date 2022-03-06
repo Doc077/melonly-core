@@ -48,21 +48,26 @@ export class Router {
                     RequestStatic.setParameter(param, value as string)
                 }
 
-                try {
-                    let responseContent = route.action()
+                let responseContent = route.action()
 
-                    if (Array.isArray(responseContent) || typeof responseContent === 'object') {
-                        ResponseStatic.setHeader('Content-Type', 'application/json')
+                // Async methods support
 
-                        responseContent = JSON.stringify(responseContent)
-                    } else if (typeof responseContent === 'string') {
-                        ResponseStatic.setHeader('Content-Type', 'text/html')
-                    }
+                if (responseContent instanceof Promise) {
+                    let result: any
 
-                    ResponseStatic.end(responseContent)
-                } catch (exception) {
-                    throw exception
+                    responseContent.then((content: any) => {
+                        result = content
+                    }).finally(() => {
+                        responseContent = result
+
+                        this.respond(result)
+                    }).catch(() => {
+                        throw new Exception('Asynchronous operation failed')
+                    })
+                    return
                 }
+
+                this.respond(responseContent)
 
                 return
             }
@@ -71,14 +76,26 @@ export class Router {
         this.abortNotFound()
     }
 
-    public static async resolveController(controller: any, method: string): Promise<any> {
+    public static resolveController(controller: any, method: string): any {
         try {
-            const result = await Injector.resolve(controller)[method]()
+            const result = Injector.resolve(controller)[method]()
 
             return result
         } catch (exception) {
             throw exception
         }
+    }
+
+    private static respond(responseContent: any): void {
+        if (Array.isArray(responseContent) || typeof responseContent === 'object') {
+            ResponseStatic.setHeader('Content-Type', 'application/json')
+            
+            responseContent = JSON.stringify(responseContent)
+        } else if (typeof responseContent === 'string') {
+            ResponseStatic.setHeader('Content-Type', 'text/html')
+        }
+
+        ResponseStatic.end(responseContent)
     }
 
     private static abortNotFound(): void {

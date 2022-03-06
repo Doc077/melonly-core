@@ -3,12 +3,16 @@ import { ServerResponse } from 'http'
 export class ResponseStatic {
     private static instance: ServerResponse
 
+    private static terminated: boolean = false
+
     public static end(content?: any): void {
         this.instance.end(content)
     }
 
     public static setHeader(header: string, value: string): void {
-        this.instance.setHeader(header, value)
+        if (!this.terminated) {
+            this.instance.setHeader(header, value)
+        }
     }
 
     public static set nodeInstance(response: ServerResponse) {
@@ -21,5 +25,9 @@ export class ResponseStatic {
 
     public static getStatusCode(): number {
         return this.instance.statusCode
+    }
+
+    public static setTerminated(terminated: boolean): void {
+        this.terminated = terminated
     }
 }

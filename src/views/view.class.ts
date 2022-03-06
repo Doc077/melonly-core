@@ -6,7 +6,7 @@ import { ResponseStatic } from '../http/response-static.class'
 export type ViewResponse = string
 
 export class View {
-    public static render(file: string, variables: { [key: string]: any } = {}): ViewResponse {
+    public static compile(file: string, variables: { [key: string]: any } = {}): ViewResponse {
         const template = readFileSync(file).toString()
 
         let compiled = template
@@ -26,12 +26,12 @@ export class View {
 
             if (typeof variableValue === 'object') {
                 variableValue = JSON.stringify(variableValue)
+            } else {
+                variableValue = encode(variableValue)
             }
 
-            compiled = compiled.replace(expression[0], expression[1] + encode(variableValue))
+            compiled = compiled.replace(expression[0], expression[1] + variableValue)
         }
-
-        ResponseStatic.setHeader('Content-Type', 'text/html')
 
         return compiled
     }

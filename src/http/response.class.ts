@@ -14,7 +14,9 @@ export class Response {
             throw new Exception(`View '${view}' does not exist`)
         }
 
-        return View.render(file, variables)
+        ResponseStatic.setHeader('Content-Type', 'text/html')
+
+        return View.compile(file, variables)
     }
 
     public redirect(uri: string, code: number = 302): RedirectResponse {

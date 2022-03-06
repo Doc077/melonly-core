@@ -1,30 +1,27 @@
 import { IncomingMessage } from 'http'
+import { parse } from 'url'
 
 export class RequestStatic {
     private static instance: IncomingMessage
 
     private static parameters: { [key: string]: string } = {}
 
-    public static getData(): string {
+    public static getData(): any[] {
         if (!['get', 'head'].includes(this.getMethod())) {
-            let body = ''
+            let body: any[] = []
 
             this.instance.on('data', (data: any) => {
-                body += data
-
-                if (body.length > 1e6) {
-                    this.instance.connection.destroy()
-                }
+                body.push(data)
             })
 
             this.instance.on('end', () => {
-                const data = body
+                const data = Buffer.concat(body)
 
                 return data
             })
         }
 
-        return ''
+        return []
     }
 
     public static getMethod(): string {
@@ -39,7 +36,21 @@ export class RequestStatic {
         return this.parameters[name]
     }
 
-    public static setInstance(request: any): void {
+    public static getQueryParam(param: string): string | null {
+        const url = new URL(this.getUrl())
+
+        const params = new URLSearchParams(url.search)
+
+        for (const [key, value] of params.entries()) {
+            if (key === param) {
+                return value
+            }
+        }
+
+        return null
+    }
+
+    public static set nodeInstance(request: IncomingMessage) {
         this.instance = request
     }
 

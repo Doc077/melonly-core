@@ -36,7 +36,7 @@ export abstract class Email {
         })
     }
 
-    protected fromTemplate(view: string, variables: { [key: string]: string } = {}): string {
+    protected fromTemplate(view: string, variables: { [key: string]: any } = {}): string {
         const file = join('views', `${view.replace('.', '/')}.melon.html`)
 
         if (!existsSync(file)) {

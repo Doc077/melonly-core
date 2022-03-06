@@ -11,7 +11,7 @@ export class ResponseStatic {
         this.instance.setHeader(header, value)
     }
 
-    public static setInstance(response: any): void {
+    public static set nodeInstance(response: ServerResponse) {
         this.instance = response
     }
 

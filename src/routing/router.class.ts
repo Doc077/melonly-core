@@ -1,3 +1,4 @@
+import { pathToRegexp, match } from 'path-to-regexp'
 import { Exception } from '../handler/exception.class'
 import { Injector } from '../container/injector.class'
 import { Method } from '../http/method.enum'
@@ -5,7 +6,6 @@ import { RequestStatic } from '../http/request-static.class'
 import { ResponseStatic } from '../http/response-static.class'
 import { Route } from './route.class'
 import { RouteNotFoundException } from './route-not-found.exception'
-import { pathToRegexp, match } from 'path-to-regexp'
 
 export class Router {
     private static routes: Route[] = []
@@ -57,13 +57,16 @@ export class Router {
 
                     responseContent.then((content: any) => {
                         result = content
-                    }).finally(() => {
+                    })
+                    .finally(() => {
                         responseContent = result
 
                         this.respond(result)
-                    }).catch(() => {
+                    })
+                    .catch(() => {
                         throw new Exception('Asynchronous operation failed')
                     })
+
                     return
                 }
 

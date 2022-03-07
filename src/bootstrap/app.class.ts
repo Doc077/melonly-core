@@ -4,13 +4,13 @@ import { join } from 'path'
 import { readFileSync } from 'fs'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
-import { RouteNotFoundException } from '../routing/route-not-found.exception'
+import { Logger } from '../console/logger.class'
 import { Request } from '../http/request.class'
 import { RequestStatic } from '../http/request-static.class'
 import { Response } from '../http/response.class'
 import { ResponseStatic } from '../http/response-static.class'
+import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { Router } from '../routing/router.class'
-import { Console } from '../console/console.class'
 
 import 'reflect-metadata'
 
@@ -34,15 +34,13 @@ export class App {
     }
 
     private runServer(): void {
-        const port = process.env.APP_PORT ?? 3000
-
         const server = createServer((request, response) => {
             RequestStatic.nodeInstance = request
             ResponseStatic.nodeInstance = response
 
             const uri = request.url ?? '/'
 
-            Console.info(`Request: ${request.method?.toUpperCase()} ${uri}`)
+            Logger.info(`Request: ${request.method?.toUpperCase()} ${uri}`)
 
             if (uri.includes('.')) {
                 const filePath = join('public', uri.replace('/', ''))
@@ -55,9 +53,11 @@ export class App {
         
             Router.evaluate(uri)
         })
-        
+
+        const port = process.env.APP_PORT ?? 3000
+
         server.listen(port, () => {
-            Console.info(`Server started on http://localhost:${port}`)
+            Logger.info(`Server started on http://localhost:${port}`)
         })
     }
 
@@ -67,7 +67,7 @@ export class App {
 
             const extensionMimes: { [key: string]: string } = require('../../assets/mimes.json')
 
-            ResponseStatic.setHeader('Content-Type', extensionMimes[extension])
+            ResponseStatic.setHeader('Content-Type', extensionMimes[extension] ?? 'text/plain')
 
             ResponseStatic.end(fileContent)
         } catch (error) {

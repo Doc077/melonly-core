@@ -1,6 +1,6 @@
 import cli from 'cli-color'
 
-export class Console {
+export class Logger {
     public static error(output: any): void {
         console.log(cli.redBright(`[melonly] ${output}`))
     }

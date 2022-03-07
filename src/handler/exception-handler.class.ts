@@ -1,9 +1,9 @@
-import { Console } from '../console/console.class'
-import { ResponseStatic } from '../http/response-static.class'
+import { join } from 'path'
+import { Logger } from '../console/logger.class'
 import { RequestStatic } from '../http/request-static.class'
+import { ResponseStatic } from '../http/response-static.class'
 import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { View } from '../views/view.class'
-import { join } from 'path'
 
 export class ExceptionHandler {
     public static handle(exception: any): void {
@@ -20,13 +20,14 @@ export class ExceptionHandler {
             return
         }
 
-        Console.error(`Exception: ${exception.message}`)
+        Logger.error(`Exception: ${exception.message}`)
 
         ResponseStatic.setStatusCode(500)
 
         ResponseStatic.setTerminated(true)
 
         // Render error page
+
         if (process.env.APP_DEBUG === 'true') {
             const file = join(__dirname, '..', '..', 'assets', 'exception.melon.html')
 

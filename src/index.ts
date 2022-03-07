@@ -1,4 +1,5 @@
 export * from './bootstrap/app.class'
+export * from './bootstrap/create-app.function'
 export * from './console/console.class'
 export * from './container/injectable.decorator'
 export * from './container/injector.class'

@@ -82,8 +82,4 @@ export class App {
     public registerControllers(controllers: any[]): this {
         return this
     }
-
-    public static createApp(): App {
-        return new App()
-    }
 }

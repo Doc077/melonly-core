@@ -14,7 +14,7 @@ export class Router {
         const route = new Route(
             uri,
             Method.Get,
-            pathToRegexp(uri),
+            pathToRegexp(uri, [], { endsWith: '?' }),
             action,
         )
 
@@ -25,7 +25,7 @@ export class Router {
         const route = new Route(
             uri,
             Method.Post,
-            pathToRegexp(uri),
+            pathToRegexp(uri,  [], { endsWith: '?' }),
             action,
         )
 

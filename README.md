@@ -38,10 +38,18 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
 
 ## Installation
 
-To create a fresh Melonly project you can use the CLI installer. You only have to install `@melonly/cli` package. Then you'll be able to run `melon` commands:
+To create a fresh Melonly project you can use the CLI installer. You only have to install `@melonly/cli` package.
 
 ```shell
 npm install -g @melonly/cli
+```
+
+You can check the CLI version if properly installed. Then you'll be able to run `melon` commands:
+
+```shell
+# Display information about CLI version
+
+melon -v
 ```
 
 To create new project run the `new` command in your directory:
@@ -53,7 +61,7 @@ melon new <project-name>
 
 ## Running Application
 
-Once your project has been created you can run it on the local server:
+Once your project has been created you can run it on the local server with `npm start`:
 
 ```shell
 cd <project-name>
@@ -62,6 +70,8 @@ npm start
 ```
 
 Your application will be available on `localhost:3000` by default. You can change the port in `.env` configuration file.
+
+If you don't want to open the browser automatically, use the `npm run start:dev` command.
 
 
 ## Directory Structure
@@ -200,15 +210,15 @@ To create new service run the following command:
 melon make service user
 ```
 
-`user` is just a name for the generated class. It will contain the following code:
+`user` is just a name for the generated class. The path will look like `src/user/user.service.ts` It will contain the following code:
 
 ```ts
 import { Injectable } from '@melonly/core'
 
 @Injectable()
 export class UserService {
-    public getHello(): string {
-        return 'Hello World'
+    public getMessage(): string {
+        return 'Hello World!'
     }
 }
 ```
@@ -231,7 +241,7 @@ Injected services will be automatically available in the controller:
 ```ts
 @Get('/users')
 public index(): string {
-    return this.userService.getHello()
+    return this.userService.getMessage()
 }
 ```
 
@@ -301,14 +311,14 @@ Even though this is simple and convinient for fast testing, we recommend the mor
 melon make email welcome
 ```
 
-This command will create a new `app/welcome.email.ts` file. It will look like this:
+This command will create a new `mail/welcome.email.ts` file. It will look like this:
 
 ```ts
 import { Email } from '@melonly/core'
 
 export class WelcomeEmail extends Email {
     public subject(): string {
-        return 'Welcome, New User!'
+        return 'Welcome'
     }
 
     public build(): string {
@@ -322,7 +332,7 @@ In the example above email will render `views/mail.welcome.melon.html` template.
 Sending email using classes is very similar:
 
 ```ts
-import { WelcomeEmail } from '../app/welcome.email'
+import { WelcomeEmail } from '../mail/welcome.email'
 
 Email.send('recipient@address.com', new WelcomeEmail())
 ```

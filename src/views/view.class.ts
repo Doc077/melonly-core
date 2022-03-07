@@ -1,7 +1,6 @@
 import { readFileSync } from 'fs'
 import { encode } from 'html-entities'
 import { Exception } from '../handler/exception.class'
-import { ResponseStatic } from '../http/response-static.class'
 
 export type ViewResponse = string
 
@@ -24,13 +23,17 @@ export class View {
                 throw new Exception(`variableValue '${expression[2]}' has not been defined`)
             }
 
-            if (typeof variableValue === 'object') {
-                variableValue = JSON.stringify(variableValue)
-            } else {
-                variableValue = encode(variableValue)
-            }
+            variableValue = typeof variableValue === 'object'
+                ? JSON.stringify(variableValue)
+                : encode(variableValue)
 
             compiled = compiled.replace(expression[0], expression[1] + variableValue)
+        }
+
+        // Raw bracket syntax rendering
+
+        for (const expression of template.matchAll(/@(\{\{ *[^ ]*? *\}\})/g) ?? []) {
+            compiled = compiled.replace(expression[0], expression[1])
         }
 
         return compiled

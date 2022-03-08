@@ -17,7 +17,7 @@ export class ExceptionHandler {
 
             ResponseStatic.end(View.compile(file, {
                 code: 404,
-                text: 'Not Found',
+                message: 'Not Found',
             }))
 
             return
@@ -51,9 +51,7 @@ export class ExceptionHandler {
 
         ResponseStatic.end(View.compile(file, {
             code: 500,
-            text: 'Server Error',
+            message: 'Server Error',
         }))
-
-        ResponseStatic.end('')
     }
 }

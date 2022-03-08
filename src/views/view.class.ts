@@ -4,13 +4,17 @@ import { Exception } from '../handler/exception.class'
 
 export type ViewResponse = string
 
+export interface ViewVariables {
+    [key: string]: any
+}
+
 export class View {
     private static patterns: { [name: string]: RegExp } = {
         each: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
         if: /\[if (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
     }
 
-    public static compile(file: string, variables: { [key: string]: any } = {}): ViewResponse {
+    public static compile(file: string, variables: ViewVariables = {}): ViewResponse {
         const template = readFileSync(file).toString()
 
         let compiled = template
@@ -31,7 +35,7 @@ export class View {
                 throw new Exception(`Variable '${expression[2]}' has not been passed or defined`)
             }
 
-            variableValue = typeof variableValue === 'object'
+            variableValue = Array.isArray(variableValue) || typeof variableValue === 'object'
                 ? JSON.stringify(variableValue)
                 : encode(variableValue)
 
@@ -68,7 +72,7 @@ export class View {
         return content
     }
 
-    private static parseIfDirectives(content: string, variables: { [key: string]: any } = {}): string {
+    private static parseIfDirectives(content: string, variables: ViewVariables = {}): string {
         const matches = content.matchAll(this.patterns.if) ?? []
 
         for (const match of matches) {

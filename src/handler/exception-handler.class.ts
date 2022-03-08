@@ -1,3 +1,4 @@
+import { existsSync } from 'fs'
 import { join } from 'path'
 import { Logger } from '../console/logger.class'
 import { RequestStatic } from '../http/request-static.class'
@@ -10,7 +11,9 @@ export class ExceptionHandler {
         if (exception instanceof RouteNotFoundException) {
             ResponseStatic.setStatusCode(404)
 
-            const file = join(__dirname, '..', '..', 'assets', 'status.melon.html')
+            const file = existsSync(join('views', 'errors', '404.melon.html'))
+                ? join('views', 'errors', '404.melon.html')
+                : join(__dirname, '..', '..', 'assets', 'status.melon.html')
 
             ResponseStatic.end(View.compile(file, {
                 code: 404,
@@ -26,8 +29,9 @@ export class ExceptionHandler {
 
         ResponseStatic.setTerminated(true)
 
-        // Render error page
-
+        /**
+         * Render error page
+         */
         if (process.env.APP_DEBUG === 'true') {
             const file = join(__dirname, '..', '..', 'assets', 'exception.melon.html')
 
@@ -40,6 +44,15 @@ export class ExceptionHandler {
 
             return
         }
+
+        const file = existsSync(join('views', 'errors', '500.melon.html'))
+            ? join('views', 'errors', '500.melon.html')
+            : join(__dirname, '..', '..', 'assets', 'status.melon.html')
+
+        ResponseStatic.end(View.compile(file, {
+            code: 500,
+            text: 'Server Error',
+        }))
 
         ResponseStatic.end('')
     }

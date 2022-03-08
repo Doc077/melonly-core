@@ -15,9 +15,7 @@ export class View {
     }
 
     public static compile(file: string, variables: ViewVariables = {}): ViewResponse {
-        const template = readFileSync(file).toString()
-
-        let compiled = template
+        let compiled = readFileSync(file).toString()
 
         /**
          * Compile directives

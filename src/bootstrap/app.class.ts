@@ -1,7 +1,8 @@
 import { config } from 'dotenv'
-import { createServer } from 'http'
+import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { join } from 'path'
 import { readFileSync } from 'fs'
+import { Server, Socket } from 'socket.io'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { Logger } from '../console/logger.class'
@@ -15,7 +16,9 @@ import { Router } from '../routing/router.class'
 import 'reflect-metadata'
 
 export class App {
-    constructor() {
+    private useWebsocket: boolean = false
+
+    public start(): this {
         process.on('uncaughtException', (exception: any) => {
             ExceptionHandler.handle(exception)
         })
@@ -31,10 +34,26 @@ export class App {
         } catch (exception) {
             ExceptionHandler.handle(exception)
         }
+
+        return this
+    }
+
+    public bindSingletons(classes: any[]): void {
+        Container.bindSingletons(classes)
+    }
+
+    public registerChannels(channels: any[]): this {
+        this.useWebsocket = true
+
+        return this
+    }
+
+    public registerControllers(controllers: any[]): this {
+        return this
     }
 
     private runServer(): void {
-        const server = createServer((request, response) => {
+        const server = createServer((request: IncomingMessage, response: ServerResponse) => {
             RequestStatic.nodeInstance = request
             ResponseStatic.nodeInstance = response
 
@@ -54,10 +73,18 @@ export class App {
             Router.evaluate(uri)
         })
 
-        const port = process.env.APP_PORT ?? 3000
+        const serverPort = process.env.APP_PORT ?? 3000
 
-        server.listen(port, () => {
-            Logger.info(`Server started on http://localhost:${port}`)
+        if (this.useWebsocket) {
+            const io = new Server(server)
+
+            io.on('connection', (socket: Socket) => {
+                Logger.info(`Websocket connection: ${socket.id}`)
+            })
+        }
+
+        server.listen(serverPort, () => {
+            Logger.info(`Server started on http://localhost:${serverPort}`)
         })
     }
 
@@ -73,13 +100,5 @@ export class App {
         } catch (error) {
             throw new RouteNotFoundException()
         }
-    }
-
-    public bindSingletons(classes: any[]): void {
-        Container.bindSingletons(classes)
-    }
-
-    public registerControllers(controllers: any[]): this {
-        return this
     }
 }

@@ -21,7 +21,8 @@
         "html-entities": "^2.3.2",
         "nodemailer": "^6.7.2",
         "path-to-regexp": "^6.2.0",
-        "reflect-metadata": "^0.1.13"
+        "reflect-metadata": "^0.1.13",
+        "socket.io": "^4.4.1"
     },
     "devDependencies": {
         "@types/cli-color": "^2.0.2",

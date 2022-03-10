@@ -2,7 +2,7 @@ import { config } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { join } from 'path'
 import { readFileSync } from 'fs'
-import { Server, Socket } from 'socket.io'
+import { Broadcaster } from '../broadcasting/broadcaster.class'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { Logger } from '../console/logger.class'
@@ -16,7 +16,9 @@ import { Router } from '../routing/router.class'
 import 'reflect-metadata'
 
 export class App {
-    private useWebsocket: boolean = false
+    private broadcastingEnabled: boolean = false
+
+    private broadcastChannels: any[] = []
 
     public start(): this {
         process.on('uncaughtException', (exception: any) => {
@@ -43,13 +45,19 @@ export class App {
     }
 
     public registerChannels(channels: any[]): this {
-        this.useWebsocket = true
+        this.broadcastingEnabled = true
+
+        this.broadcastChannels.push(...channels)
 
         return this
     }
 
     public registerControllers(controllers: any[]): this {
         return this
+    }
+
+    public channels(): any[] {
+        return this.broadcastChannels
     }
 
     private runServer(): void {
@@ -75,12 +83,8 @@ export class App {
 
         const serverPort = process.env.APP_PORT ?? 3000
 
-        if (this.useWebsocket) {
-            const io = new Server(server)
-
-            io.on('connection', (socket: Socket) => {
-                Logger.info(`Websocket connection: ${socket.id}`)
-            })
+        if (this.broadcastingEnabled) {
+            Broadcaster.init(server)
         }
 
         server.listen(serverPort, () => {

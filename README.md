@@ -27,6 +27,7 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
   - [Services](#services)
   - [HTTP Request and Response](#http-request-and-response)
   - [Mail](#mail)
+  - [Websockets and Broadcasting](#websockets-and-broadcasting)
 - [License](#license)
 
 
@@ -305,7 +306,7 @@ After providing your mail service credentials you'll be able to create and send 
 ```ts
 import { Email } from '@melonly/core'
 
-Email.send('recipient@address.com', 'Test Email', 'This is the test email sent from Melonly application.')
+Email.send('recipient@mail.com', 'Test Email', 'This is the test email sent from Melonly application.')
 ```
 
 Even though this is simple and convinient for fast testing, we recommend the more object-oriented approach with separate email classes. It will allow us to make template based emails. To generate new email file use the CLI command:
@@ -332,13 +333,39 @@ export class WelcomeEmail extends Email {
 
 In the example above email will render `views/mail.welcome.melon.html` template. You can pass any variables to the template like we done it in view rendering.
 
-Sending email using classes is very similar:
+Sending emails using this method is very similar. Instead of 
 
 ```ts
 import { WelcomeEmail } from '../mail/welcome.email'
 
-Email.send('recipient@address.com', new WelcomeEmail())
+Email.send('recipient@mail.com', new WelcomeEmail())
 ```
+
+
+### Websockets and Broadcasting
+
+Modern applications often require established two-way server connection for real-time data updating. The best option is to use Websocket connections. Melonly provides a powerful API for managing these features.
+
+First though, you should get to know the concept of broadcasting channels. To create new channel class you may use CLI:
+
+```shell
+melon make channel chat
+```
+
+This will create new `src/broadcasting/chat.channel.ts` file with the following content:
+
+```ts
+import { BroadcastChannel, ChannelInterface } from '@melonly/core'
+
+@BroadcastChannel('chat/:id')
+export class ChatChannel implements ChannelInterface {
+    public userAuthorized(): boolean {
+        return true
+    }
+}
+```
+
+String argument passed to decorator is channel name with dynamic parameter. The `userAuthorized` method is used to determine if authenticated user is authorized to join the channel on the client side.
 
 
 ## License

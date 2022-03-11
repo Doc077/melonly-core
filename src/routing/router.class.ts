@@ -50,8 +50,9 @@ export class Router {
 
                 let responseContent = route.action()
 
-                // Async methods support
-
+                /**
+                 * Async methods support
+                 */
                 if (responseContent instanceof Promise) {
                     let result: any
 

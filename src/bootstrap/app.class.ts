@@ -18,8 +18,6 @@ import 'reflect-metadata'
 export class App {
     private broadcastingEnabled: boolean = false
 
-    private broadcastChannels: any[] = []
-
     public start(): this {
         process.on('uncaughtException', (exception: any) => {
             ExceptionHandler.handle(exception)
@@ -47,17 +45,13 @@ export class App {
     public registerChannels(channels: any[]): this {
         this.broadcastingEnabled = true
 
-        this.broadcastChannels.push(...channels)
+        Broadcaster.registerChannels(channels)
 
         return this
     }
 
     public registerControllers(controllers: any[]): this {
         return this
-    }
-
-    public channels(): any[] {
-        return this.broadcastChannels
     }
 
     private runServer(): void {

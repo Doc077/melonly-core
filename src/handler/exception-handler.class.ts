@@ -13,7 +13,7 @@ export class ExceptionHandler {
 
             const file = existsSync(join('views', 'errors', '404.melon.html'))
                 ? join('views', 'errors', '404.melon.html')
-                : join(__dirname, '..', '..', 'assets', 'status.melon.html')
+                : join(__dirname, '..', '..', 'assets', 'status.melon')
 
             ResponseStatic.end(View.compile(file, {
                 code: 404,
@@ -33,7 +33,7 @@ export class ExceptionHandler {
          * Render error page
          */
         if (process.env.APP_DEBUG === 'true') {
-            const file = join(__dirname, '..', '..', 'assets', 'exception.melon.html')
+            const file = join(__dirname, '..', '..', 'assets', 'exception.melon')
 
             ResponseStatic.end(View.compile(file, {
                 message: exception.message,
@@ -47,7 +47,7 @@ export class ExceptionHandler {
 
         const file = existsSync(join('views', 'errors', '500.melon.html'))
             ? join('views', 'errors', '500.melon.html')
-            : join(__dirname, '..', '..', 'assets', 'status.melon.html')
+            : join(__dirname, '..', '..', 'assets', 'status.melon')
 
         ResponseStatic.end(View.compile(file, {
             code: 500,

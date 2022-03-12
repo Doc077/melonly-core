@@ -1,12 +1,13 @@
 import { Server as BroadcastServer, Socket } from 'socket.io'
 import { Server } from 'http'
+import { ChannelInterface } from './channel.interface'
 import { Injector } from '../container/injector.class'
 import { Logger } from '../console/logger.class'
 
 export class Broadcaster {
     private static broadcastServer: BroadcastServer | null = null
 
-    private static channels: any[] = []
+    private static channels: ChannelInterface[] = []
 
     public static event(name: string, channelName: string, data: object = {}): void {
         for (const channel of this.channels) {

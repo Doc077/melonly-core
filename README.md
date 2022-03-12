@@ -367,6 +367,18 @@ export class ChatChannel implements ChannelInterface {
 
 String argument passed to decorator is channel name with dynamic parameter. The `userAuthorized` method is used to determine if authenticated user is authorized to join the channel on the client side.
 
+Emitting events on the server side can be done using `Broadcaster`:
+
+```ts
+import { Broadcaster } from '@melonly/core'
+
+// Example usage
+
+const chatId = 15
+
+Broadcaster.event('message', `chat/${chatId}`)
+```
+
 
 ## License
 

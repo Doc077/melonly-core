@@ -346,7 +346,7 @@ Email.send('recipient@mail.com', new WelcomeEmail())
 
 Modern applications often require established two-way server connection for real-time data updating. The best option is to use Websocket connections. Melonly provides a powerful API for managing these features.
 
-First though, you should get to know the concept of broadcasting channels. To create new channel class you may use CLI:
+First though, you should get to know the concept of broadcasting channels. Channel is a class used for namespacing events with its own authorization logic. To create new channel class you may use CLI:
 
 ```shell
 melon make channel chat
@@ -365,7 +365,7 @@ export class ChatChannel implements ChannelInterface {
 }
 ```
 
-String argument passed to decorator is channel name with dynamic parameter. The `userAuthorized` method is used to determine if authenticated user is authorized to join the channel on the client side.
+String argument passed to decorator is channel name with dynamic parameter. The `userAuthorized` method is used to determine whether authenticated user is authorized to join the channel on the client side.
 
 Emitting events on the server side can be done using `Broadcaster`:
 
@@ -378,6 +378,8 @@ const chatId = 15
 
 Broadcaster.event('message', `chat/${chatId}`)
 ```
+
+Now you'll be able to receive broadcasts on the client side.
 
 
 ## License

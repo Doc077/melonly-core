@@ -28,6 +28,7 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
   - [HTTP Request and Response](#http-request-and-response)
   - [Mail](#mail)
   - [Websockets and Broadcasting](#websockets-and-broadcasting)
+  - [Testing](#testing)
 - [License](#license)
 
 
@@ -196,12 +197,14 @@ Some frontend frameworks like Vue use the same bracket syntax for displaying dat
 Rendering views is done using the 'dot' syntax for nested folders:
 
 ```ts
-// This will render views/pages/some-view.melon.html template
+// This will render views/pages/welcome.melon.html template
 
-return this.response.render('pages.some-view')
+return this.response.render('pages.welcome')
 ```
 
 Note that view file names should not contain dot signs.
+
+You can also customize the default 404 page. All you have to do is to create `views/errors/404.melon.html` file with your custom template. When this file exists, Melonly will serve it as the 404 error page. Otherwise, the default one will be displayed.
 
 
 ### Services
@@ -380,6 +383,20 @@ Broadcaster.event('message', `chat/${chatId}`)
 ```
 
 Now you'll be able to receive broadcasts on the client side.
+
+
+### Testing
+
+Testing your application is very important. Melonly ships with [Jest](https://jestjs.io) testing library installed by default. Test files are placed in `/tests` directory. Run `npm test command` to see test results:
+
+```shell
+npm test
+
+PASS  tests/app.controller.test.ts
+  √ asserts response is truthy (1 ms)
+
+Test Suites: 1 passed, 1 total
+```
 
 
 ## License

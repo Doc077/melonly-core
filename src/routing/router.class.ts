@@ -6,6 +6,7 @@ import { RequestStatic } from '../http/request-static.class'
 import { ResponseStatic } from '../http/response-static.class'
 import { Route } from './route.class'
 import { RouteNotFoundException } from './route-not-found.exception'
+import { ViewResponse } from '../views/view-response.class'
 
 export class Router {
     private static routes: Route[] = []
@@ -91,6 +92,10 @@ export class Router {
     }
 
     private static respond(responseContent: any): void {
+        if (responseContent instanceof ViewResponse) {
+            responseContent = responseContent.toString()
+        }
+
         if (Array.isArray(responseContent) || typeof responseContent === 'object') {
             ResponseStatic.setHeader('Content-Type', 'application/json')
             

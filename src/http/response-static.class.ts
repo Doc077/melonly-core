@@ -1,4 +1,5 @@
 import { ServerResponse } from 'http'
+import { ViewResponse } from '../views/view-response.class'
 
 export class ResponseStatic {
     private static instance: ServerResponse
@@ -6,6 +7,10 @@ export class ResponseStatic {
     private static terminated: boolean = false
 
     public static end(content?: any): void {
+        if (content instanceof ViewResponse) {
+            content = content.toString()
+        }
+
         this.instance.end(content)
     }
 

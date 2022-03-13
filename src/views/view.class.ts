@@ -1,8 +1,7 @@
 import { encode } from 'html-entities'
 import { readFileSync } from 'fs'
 import { Exception } from '../handler/exception.class'
-
-export type ViewResponse = string
+import { ViewResponse } from './view-response.class'
 
 export interface ViewVariables {
     [key: string]: any
@@ -47,7 +46,7 @@ export class View {
             compiled = compiled.replace(expression[0], expression[1])
         }
 
-        return compiled
+        return new ViewResponse(compiled)
     }
 
     private static parseEachDirectives(content: string): string {

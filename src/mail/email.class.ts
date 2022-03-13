@@ -43,7 +43,7 @@ export abstract class Email {
             throw new Exception(`View '${view}' does not exist`)
         }
 
-        return View.compile(file, variables)
+        return View.compile(file, variables).toString()
     }
 
     protected abstract build(): string

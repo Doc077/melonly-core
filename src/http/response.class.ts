@@ -3,6 +3,7 @@ import { join } from 'path'
 import { Exception } from '../handler/exception.class'
 import { ResponseStatic } from '../http/response-static.class'
 import { View } from '../views/view.class'
+import { ViewResponse } from '../views/view-response.class'
 
 export type RedirectResponse = null
 
@@ -26,7 +27,7 @@ export class Response {
         return null
     }
 
-    public render(view: string, variables: { [key: string]: any } = {}): string {
+    public render(view: string, variables: { [key: string]: any } = {}): ViewResponse {
         const file = join('views', `${view.replace('.', '/')}.melon.html`)
 
         if (!existsSync(file)) {

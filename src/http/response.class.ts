@@ -1,28 +1,48 @@
 import { existsSync } from 'fs'
+import { ServerResponse } from 'http'
 import { join } from 'path'
 import { Exception } from '../handler/exception.class'
-import { ResponseStatic } from '../http/response-static.class'
 import { View } from '../views/view.class'
 import { ViewResponse } from '../views/view-response.class'
 
 export type RedirectResponse = null
 
 export class Response {
+    private instance: ServerResponse | null = null
+
+    private terminated: boolean = false
+
+    public end(content?: any): void {
+        if (content instanceof ViewResponse) {
+            content = content.toString()
+        }
+
+        this.instance?.end(content)
+    }
+
     public header(header: string, value: string): this {
-        ResponseStatic.setHeader(header, value)
+        if (!this.terminated) {
+            this.instance?.setHeader(header, value)
+        }
 
         return this
     }
 
     public status(code: number = 200): this {
-        ResponseStatic.setStatusCode(code)
+        if (this.instance) {
+            this.instance.statusCode = code
+        }
 
         return this
     }
 
+    public getStatus(): number {
+        return this.instance?.statusCode ?? 200
+    }
+
     public redirect(uri: string, code: number = 302): RedirectResponse {
-        ResponseStatic.setHeader('Location', uri)
-        ResponseStatic.setStatusCode(code)
+        this.header('Location', uri)
+        this.status(code)
 
         return null
     }
@@ -34,8 +54,16 @@ export class Response {
             throw new Exception(`View '${view}' does not exist`)
         }
 
-        ResponseStatic.setHeader('Content-Type', 'text/html')
+        this.header('Content-Type', 'text/html')
 
         return View.compile(file, variables)
+    }
+
+    public setTerminated(terminated: boolean): void {
+        this.terminated = terminated
+    }
+
+    public set nodeInstance(response: ServerResponse) {
+        this.instance = response
     }
 }

@@ -1,9 +1,10 @@
 import { pathToRegexp, match } from 'path-to-regexp'
+import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Injector } from '../container/injector.class'
 import { Method } from '../http/method.enum'
-import { RequestStatic } from '../http/request-static.class'
-import { ResponseStatic } from '../http/response-static.class'
+import { Request } from '../http/request.class'
+import { Response } from '../http/response.class'
 import { Route } from './route.class'
 import { RouteNotFoundException } from './route-not-found.exception'
 import { ViewResponse } from '../views/view-response.class'
@@ -26,7 +27,7 @@ export class Router {
         const route = new Route(
             uri,
             Method.Post,
-            pathToRegexp(uri,  [], { endsWith: '?' }),
+            pathToRegexp(uri, [], { endsWith: '?' }),
             action,
         )
 
@@ -36,7 +37,7 @@ export class Router {
     public static evaluate(url: string): void {
         for (const route of this.routes) {
             if (route.pattern.test(url)) {
-                if (String(route.method) !== RequestStatic.getMethod()) {
+                if (String(route.method) !== Container.getSingleton(Request).method()) {
                     this.abortNotFound()
                 }
 
@@ -45,8 +46,8 @@ export class Router {
                     encode: encodeURI,
                 })
 
-                for (const [param, value] of Object.entries(urlMatch(RequestStatic.getUrl()).params)) {
-                    RequestStatic.setParameter(param, value as string)
+                for (const [param, value] of Object.entries(urlMatch(Container.getSingleton(Request).url()).params)) {
+                    Container.getSingleton(Request).setParam(param, value as string)
                 }
 
                 let responseContent = route.action()
@@ -97,14 +98,14 @@ export class Router {
         }
 
         if (Array.isArray(responseContent) || typeof responseContent === 'object') {
-            ResponseStatic.setHeader('Content-Type', 'application/json')
+            Container.getSingleton(Response).header('Content-Type', 'application/json')
             
             responseContent = JSON.stringify(responseContent)
         } else if (typeof responseContent === 'string') {
-            ResponseStatic.setHeader('Content-Type', 'text/html')
+            Container.getSingleton(Response).header('Content-Type', 'text/html')
         }
 
-        ResponseStatic.end(responseContent)
+        Container.getSingleton(Response).end(responseContent)
     }
 
     private static abortNotFound(): void {

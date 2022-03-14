@@ -7,9 +7,7 @@ import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { Logger } from '../console/logger.class'
 import { Request } from '../http/request.class'
-import { RequestStatic } from '../http/request-static.class'
 import { Response } from '../http/response.class'
-import { ResponseStatic } from '../http/response-static.class'
 import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { Router } from '../routing/router.class'
 
@@ -56,8 +54,8 @@ export class App {
 
     private runServer(): void {
         const server = createServer((request: IncomingMessage, response: ServerResponse) => {
-            RequestStatic.nodeInstance = request
-            ResponseStatic.nodeInstance = response
+            Container.getSingleton(Request).nodeInstance = request
+            Container.getSingleton(Response).nodeInstance = response
 
             const uri = request.url ?? '/'
 
@@ -92,9 +90,9 @@ export class App {
 
             const extensionMimes: { [key: string]: string } = require('../../assets/mimes.json')
 
-            ResponseStatic.setHeader('Content-Type', extensionMimes[extension] ?? 'text/plain')
+            Container.getSingleton(Response).header('Content-Type', extensionMimes[extension] ?? 'text/plain')
 
-            ResponseStatic.end(fileContent)
+            Container.getSingleton(Response).end(fileContent)
         } catch (error) {
             throw new RouteNotFoundException()
         }

@@ -287,16 +287,26 @@ Obtaining matched url parameters:
 ```ts
 @Get('/users/:id')
 public show(): string {
-    return this.request.parameter('id')
+    return this.request.param('id')
 }
 ```
 
 You can also get url query data:
 
 ```ts
-// URI: /users?view=all
+// Route: /users?view=gallery
 
-return this.request.queryParam('view') // 'all'
+const view = this.request.queryParam('view') // 'gallery'
+```
+
+To get sent form data, use `request.data`:
+
+```html
+<input type="text" name="username">
+```
+
+```ts
+const username = this.request.data.username
 ```
 
 

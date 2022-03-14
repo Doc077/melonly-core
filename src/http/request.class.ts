@@ -1,34 +1,46 @@
+import { Exception } from '../handler/exception.class'
 import { IncomingMessage } from 'http'
+import formidable from 'formidable'
 
 export class Request {
     private instance: IncomingMessage | null = null
 
     private parameters: { [key: string]: string } = {}
 
-    public get data(): any {
-        if (!['get', 'head'].includes(this.method())) {
-            let body: any[] = []
+    public get data(): object {
+        if (!['get', 'head'].includes(this.method()) && this.instance) {
+            const form = formidable({})
 
-            this.instance?.on('data', (data: any) => {
-                body.push(data)
+            let data = {}
+
+            form.parse(this.instance, (error, fields, files) => {
+                if (error) {
+                    throw new Exception('Cannot retrieve form data')
+                }
+
+                data = { ...fields }
             })
 
-            this.instance?.on('end', () => {
-                const data = Buffer.concat(body)
-
-                return data
-            })
+            return data
         }
 
-        return []
+        return {}
     }
 
     public method(): string {
         return this.instance?.method?.toLowerCase() ?? 'get'
     }
 
+    public params(): { [key: string]: string } {
+        return this.parameters
+    }
+
     public param(name: string): string {
         return this.parameters[name]
+    }
+
+    public setParam(name: string, value: string): void {
+        this.parameters[name] = value
     }
 
     public url(): string {
@@ -51,9 +63,5 @@ export class Request {
 
     public set nodeInstance(request: IncomingMessage) {
         this.instance = request
-    }
-
-    public setParam(name: string, value: string): void {
-        this.parameters[name] = value
     }
 }

@@ -26,8 +26,6 @@ export class App {
                 path: '.env',
             })
 
-            Container.bindSingletons([Request, Response])
-
             this.runServer()
         } catch (exception) {
             ExceptionHandler.handle(exception)
@@ -54,8 +52,12 @@ export class App {
 
     private runServer(): void {
         const server = createServer((request: IncomingMessage, response: ServerResponse) => {
+            Container.bindSingletons([Request, Response])
+
             Container.getSingleton(Request).nodeInstance = request
             Container.getSingleton(Response).nodeInstance = response
+
+            Container.getSingleton(Request).init()
 
             const uri = request.url ?? '/'
 

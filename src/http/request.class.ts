@@ -1,37 +1,56 @@
-import { Exception } from '../handler/exception.class'
-import { IncomingMessage } from 'http'
 import formidable from 'formidable'
+import { IncomingMessage } from 'http'
+import { Exception } from '../handler/exception.class'
+
+interface UrlParams {
+    [key: string]: string
+}
 
 export class Request {
     private instance: IncomingMessage | null = null
 
-    private parameters: { [key: string]: string } = {}
+    private formData: object = {}
 
-    public get data(): object {
+    private formFiles: object = {}
+
+    private formDataLoaded: boolean = false
+
+    private parameters: UrlParams = {}
+
+    public init() {
         if (!['get', 'head'].includes(this.method()) && this.instance) {
             const form = formidable({})
-
-            let data = {}
 
             form.parse(this.instance, (error, fields, files) => {
                 if (error) {
                     throw new Exception('Cannot retrieve form data')
                 }
 
-                data = { ...fields }
-            })
+                this.formData = { ...fields }
+                this.formFiles = { ...files }
 
-            return data
+                this.formDataLoaded = true
+            })
+        }
+    }
+
+    public get data(): object {
+        while (!this.formDataLoaded) {
+            // 
         }
 
-        return {}
+        return this.formData
+    }
+
+    public get files(): object {
+        return this.formFiles
     }
 
     public method(): string {
         return this.instance?.method?.toLowerCase() ?? 'get'
     }
 
-    public params(): { [key: string]: string } {
+    public params(): UrlParams {
         return this.parameters
     }
 

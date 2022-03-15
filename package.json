@@ -13,6 +13,7 @@
         "access": "public"
     },
     "scripts": {
+        "build": "tsc",
         "format": "prettier \"**/*.ts\" --ignore-path ./.prettierignore --write",
         "start": "tsc --watch"
     },

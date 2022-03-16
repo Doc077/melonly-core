@@ -41,15 +41,23 @@ export class Request {
         return this.formData
     }
 
+    public input(name: string): any {
+        return this.formData[name]
+    }
+
     public get files(): FormData {
         return this.formFiles
+    }
+
+    public file(name: string): any {
+        return this.formFiles[name]
     }
 
     public method(): string {
         return this.instance?.method?.toLowerCase() ?? 'get'
     }
 
-    public params(): UrlParams {
+    public get params(): UrlParams {
         return this.parameters
     }
 

@@ -1,4 +1,4 @@
-import { pathToRegexp, match } from 'path-to-regexp'
+import { pathToRegexp } from 'path-to-regexp'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Injector } from '../container/injector.class'
@@ -37,16 +37,39 @@ export class Router {
     public static evaluate(url: string): void {
         for (const route of this.routes) {
             if (route.pattern.test(url)) {
-                if (String(route.method) !== Container.getSingleton(Request).method()) {
+                /**
+                 * Check routes with the same URL but different methods
+                 */
+                let routeNameCount = 0
+
+                for (const item of this.routes) {
+                    if (item.pattern.test(url)) {
+                        routeNameCount++
+                    }
+                }
+
+                if (routeNameCount === 1 && String(route.method) !== Container.getSingleton(Request).method()) {
                     this.abortNotFound()
                 }
 
-                const urlMatch: any = match(route.pattern, {
-                    decode: decodeURIComponent,
-                    encode: encodeURI,
+                let keys: string[] = []
+                let values: string[] = []
+
+                for (const key of route.uri.matchAll(/:([a-zA-Z0-9]*)/g) ?? []) {
+                    keys.push(key[1])
+                }
+
+                for (const param of route.pattern.exec(url)?.slice(1) ?? []) {
+                    values.push(param)
+                }
+
+                let entries = {}
+
+                keys.map((key: string, i: number) => {
+                    entries = {...entries, [key]: values[i]}
                 })
 
-                for (const [param, value] of Object.entries(urlMatch(Container.getSingleton(Request).url()).params)) {
+                for (const [param, value] of Object.entries(entries)) {
                     Container.getSingleton(Request).setParam(param, value as string)
                 }
 

@@ -271,18 +271,7 @@ import { Request, Response } from '@melonly/core'
 constructor(private readonly request: Request, private readonly response: Response) {}
 ```
 
-Example redirect response using the `redirect` method:
-
-```ts
-import { RedirectResponse } from '@melonly/core'
-
-@Get('/')
-public index(): RedirectResponse {
-    return this.response.redirect('/login')
-}
-```
-
-Obtaining matched url parameters:
+You can get matched url parameters:
 
 ```ts
 @Get('/users/:id')
@@ -299,14 +288,32 @@ You can also get url query data:
 const view = this.request.queryParam('view') // 'gallery'
 ```
 
-To get sent form data, use `request.data`:
+To retrieve sent form data, use `request.data` getter:
 
 ```html
+<!-- in html -->
 <input type="text" name="username">
 ```
 
 ```ts
 const username = this.request.data.username
+```
+
+Example redirect response using the `redirect` method:
+
+```ts
+import { RedirectResponse } from '@melonly/core'
+
+@Get('/')
+public index(): RedirectResponse {
+    return this.response.redirect('/login')
+}
+```
+
+You can also write response headers:
+
+```ts
+this.response.header('Content-Type', 'text/plain')
 ```
 
 

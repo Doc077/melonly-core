@@ -1,19 +1,22 @@
 import formidable from 'formidable'
 import { IncomingMessage } from 'http'
 import { Exception } from '../handler/exception.class'
+import { Router } from '../routing/router.class'
 
 interface UrlParams {
     [key: string]: string
 }
 
+interface FormData {
+    [key: string]: any
+}
+
 export class Request {
     private instance: IncomingMessage | null = null
 
-    private formData: object = {}
+    private formData: FormData = {}
 
-    private formFiles: object = {}
-
-    private formDataLoaded: boolean = false
+    private formFiles: FormData = {}
 
     private parameters: UrlParams = {}
 
@@ -29,20 +32,16 @@ export class Request {
                 this.formData = { ...fields }
                 this.formFiles = { ...files }
 
-                this.formDataLoaded = true
+                Router.evaluate(this.url())
             })
         }
     }
 
-    public get data(): object {
-        while (!this.formDataLoaded) {
-            // 
-        }
-
+    public get data(): FormData {
         return this.formData
     }
 
-    public get files(): object {
+    public get files(): FormData {
         return this.formFiles
     }
 

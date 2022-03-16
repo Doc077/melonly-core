@@ -71,8 +71,15 @@ export class App {
 
                 return
             }
-        
-            Router.evaluate(uri)
+
+            /**
+             * Respond in case of GET/HEAD method
+             * Otherwise response will be generated after Request.init()
+             * which processes form data
+             */
+            if (['get', 'head'].includes(Container.getSingleton(Request).method())) {
+                Router.evaluate(uri)
+            }
         })
 
         const serverPort = process.env.APP_PORT ?? 3000

@@ -160,6 +160,8 @@ export class AppController {
 
 Basically, a controller is just a class which handles web requests. Each controller should contain decorated methods registering routes. In the example above, when the user enters `/` route, the request will be passed to the `index` method which returns a view with passed variable.
 
+Controller methods should always return some value. Melonly automatically sends proper headers based on returned content. In case of object / array the response will have JSON type. When returned value is text, it will be rendered as HTML.
+
 Controller routes can be created as dynamic patterns with `:paramName` syntax:
 
 ```ts
@@ -172,12 +174,12 @@ To make paramater optional use the question mark:
 @Get('/users/:id?')
 ```
 
-This route will match both `/users` and `/users/327` paths.
+Route above will match both `/users` and `/users/327` paths.
 
 
 ### Views
 
-Melonly includes a built-in view templating engine. Views are placed in `/views` directory and have the `.melon.html` extension.
+Melonly includes a built-in modern view templating engine. Views are placed in `/views` directory and have the `.melon.html` extension.
 
 Melonly's template engine allows you to create loops, conditionals and variable interpolation.
 
@@ -195,7 +197,7 @@ The example template with foreach loop and conditional rendering looks like this
 [/if]
 ```
 
-All directives like conditional blocks and loops use the square brackets and slash syntax. For displaying passed variables use `{{ variable }}` syntax.
+All directives like conditional blocks and loops use the square brackets and slash syntax. For displaying passed variables use `{{ variable }}` syntax. Variables are automatically escaped from HTML to prevent XSS attacks.
 
 Some frontend frameworks like Vue use the same bracket syntax for displaying data. To render raw brackets put `@` sign before them:
 

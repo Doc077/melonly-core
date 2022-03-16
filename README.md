@@ -29,6 +29,9 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
   - [Views](#views-1)
   - [Services](#services)
   - [HTTP Request and Response](#http-request-and-response)
+    - [Form Input Data](#form-input-data)
+    - [Redirecting](#redirecting)
+    - [HTTP Headers](#http-headers)
   - [Mail](#mail)
   - [Websockets and Broadcasting](#websockets-and-broadcasting)
   - [Testing](#testing)
@@ -288,16 +291,29 @@ You can also get url query data:
 const view = this.request.queryParam('view') // 'gallery'
 ```
 
-To retrieve sent form data, use `request.data` getter:
+
+#### Form Input Data
+
+To retrieve and process incoming form data, use the `request.data` getter:
+
+```ts
+import { Post } from '@melonly/core'
+
+@Post('/users')
+public create(): string {
+    const username = this.request.data.username
+
+    return username
+}
+```
 
 ```html
-<!-- in html -->
+<!-- example form -->
 <input type="text" name="username">
 ```
 
-```ts
-const username = this.request.data.username
-```
+
+#### Redirecting
 
 Example redirect response using the `redirect` method:
 
@@ -309,6 +325,9 @@ public index(): RedirectResponse {
     return this.response.redirect('/login')
 }
 ```
+
+
+#### HTTP Headers
 
 You can also write response headers:
 

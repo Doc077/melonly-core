@@ -11,6 +11,7 @@ export class View {
     private static patterns: { [name: string]: RegExp } = {
         each: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
         if: /\[if (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
+        variable: /([^@])\{\{ *([^ ]*?) *\}\}/g,
     }
 
     public static compile(file: string, variables: ViewVariables = {}): ViewResponse {
@@ -25,7 +26,7 @@ export class View {
         /**
          * Interpolation
          */
-        for (const expression of compiled.matchAll(/([^@])\{\{ *([^ ]*?) *\}\}/g) ?? []) {
+        for (const expression of compiled.matchAll(this.patterns.variable) ?? []) {
             let variableValue = variables[expression[2]]
 
             if (!variableValue) {
@@ -56,7 +57,7 @@ export class View {
             let result = ''
 
             for (const item of eval(match[2])) {
-                for (const variable of match[4].matchAll(/([^@])\{\{ *([^ ]*?) *\}\}/g)) {
+                for (const variable of match[4].matchAll(this.patterns.variable)) {
                     if (variable[2] === match[1]) {
                         result += match[4].replace(variable[0], variable[1] + item)
                     }

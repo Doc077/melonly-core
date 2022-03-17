@@ -1,6 +1,5 @@
 import formidable from 'formidable'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
-import { hostname } from 'os'
 import { Exception } from '../handler/exception.class'
 import { Router } from '../routing/router.class'
 

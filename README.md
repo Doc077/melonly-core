@@ -31,7 +31,7 @@ Melonly is a fast and modern web development framework for Node.js. It makes it 
   - [HTTP Requests and Responses](#http-requests-and-responses)
     - [Form Input Data](#form-input-data)
     - [Redirects](#redirects)
-    - [HTTP Headers](#http-headers)
+    - [Headers](#headers)
   - [Mail](#mail)
   - [Websockets and Broadcasting](#websockets-and-broadcasting)
   - [Testing](#testing)
@@ -336,18 +336,18 @@ public index(): RedirectResponse {
 ```
 
 
-#### HTTP Headers
+#### Headers
 
 You can also write response headers:
 
 ```ts
-this.response.header('Content-Type', 'text/plain')
+this.response.header('X-Custom-Header', 'content')
 ```
 
 
 ### Mail
 
-Melonly provides a fluent interface for sending emails from your application. All configuration needed for that is stored in the `.env` file variables:
+Melonly provides a fluent interface for sending emails from your application. All configuration needed for mailing is stored in the `.env` variables:
 
 ```
 MAIL_ADDRESS=example@mail.com
@@ -363,7 +363,7 @@ import { Email } from '@melonly/core'
 Email.send('recipient@mail.com', 'Test Email', 'This is the test email sent from Melonly application.')
 ```
 
-Even though this is simple and convinient for small applications, we recommend the more object-oriented approach with separate email classes. It allows us to make emails with HTML templates. To generate a new email file use the CLI command:
+Though this is simple and convinient for small-sized applications, we recommend the more object-oriented approach with separate email classes. It allows us to make emails with HTML templates. To generate a new email file use the CLI command:
 
 ```shell
 melon make email welcome
@@ -385,7 +385,7 @@ export class WelcomeEmail extends Email {
 }
 ```
 
-In the example above email will render `views/mail.welcome.melon.html` template. You can pass any variables to the template like we done it in view rendering.
+The above email will render `views/mail.welcome.melon.html` template. You can pass any variables to the template like we done it in view rendering.
 
 Sending emails using this method is very similar. Instead of 
 
@@ -406,7 +406,7 @@ First though, you should get to know the concept of broadcasting channels. Chann
 melon make channel chat
 ```
 
-This will create new `src/broadcasting/chat.channel.ts` file with the following content:
+The new `src/broadcasting/chat.channel.ts` file will contain following template:
 
 ```ts
 import { BroadcastChannel, ChannelInterface } from '@melonly/core'

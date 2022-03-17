@@ -1,13 +1,13 @@
-import { join } from 'path'
 import { existsSync } from 'fs'
+import { join } from 'path'
 import { createTransport } from 'nodemailer'
 import { Exception } from '../handler/exception.class'
-import { View } from '../views/view.class'
+import { View, ViewVariables } from '../views/view.class'
 
 export abstract class Email {
     private static transporter = createTransport({
-        port: parseInt(process.env.MAIL_PORT ?? '25'),
-        host: process.env.MAIL_HOST,
+        host: process.env.MAIL_HOST ?? '127.0.0.1',
+        port: parseInt(process.env.MAIL_PORT ?? '465'),
         service: process.env.MAIL_SERVICE,
         auth: {
             user: process.env.MAIL_ADDRESS,
@@ -31,12 +31,12 @@ export abstract class Email {
             text,
         }, (error: any) => {
             if (error) {
-                throw new Exception('Cannot send an email or credentials are not set')
+                throw new Exception(`Cannot send an email: ${error}`)
             }
         })
     }
 
-    protected fromTemplate(view: string, variables: { [key: string]: any } = {}): string {
+    protected fromTemplate(view: string, variables: ViewVariables = {}): string {
         const file = join('views', `${view.replace('.', '/')}.melon.html`)
 
         if (!existsSync(file)) {

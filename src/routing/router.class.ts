@@ -13,6 +13,10 @@ export class Router {
     private static routes: Route[] = []
 
     public static get(uri: string, action: () => any): void {
+        if (!uri.startsWith('/')) {
+            uri = `/${uri}`
+        }
+
         const route = new Route(
             uri,
             Method.Get,
@@ -24,6 +28,10 @@ export class Router {
     }
 
     public static post(uri: string, action: () => any): void {
+        if (!uri.startsWith('/')) {
+            uri = `/${uri}`
+        }
+
         const route = new Route(
             uri,
             Method.Post,

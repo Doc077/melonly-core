@@ -1,5 +1,6 @@
 import formidable from 'formidable'
-import { IncomingMessage } from 'http'
+import { IncomingMessage, IncomingHttpHeaders } from 'http'
+import { hostname } from 'os'
 import { Exception } from '../handler/exception.class'
 import { Router } from '../routing/router.class'
 
@@ -8,6 +9,10 @@ interface UrlParams {
 }
 
 interface FormData {
+    [key: string]: any
+}
+
+interface QueryStringParams {
     [key: string]: any
 }
 
@@ -41,16 +46,28 @@ export class Request {
         return this.formData
     }
 
-    public input(name: string): any {
-        return this.formData[name]
-    }
-
     public get files(): FormData {
         return this.formFiles
     }
 
     public file(name: string): any {
         return this.formFiles[name]
+    }
+
+    public fullUrl(): string {
+        return `${this.protocol()}://${this.instance?.headers.host}${this.url()}`
+    }
+
+    public headers(): IncomingHttpHeaders {
+        return this.nodeInstance?.headers
+    }
+
+    public header(name: string): string | string[] | null {
+        return this.nodeInstance?.headers[name] ?? null
+    }
+
+    public input(name: string): any {
+        return this.formData[name]
     }
 
     public method(): string {
@@ -73,8 +90,28 @@ export class Request {
         return this.instance?.url ?? ''
     }
 
+    public protocol(): string {
+        return this.instance?.connection.encrypted
+            ? 'https'
+            : 'http'
+    }
+
+    public get query(): QueryStringParams {
+        const url = new URL(this.fullUrl())
+
+        const params = new URLSearchParams(url.search)
+
+        let object: QueryStringParams = {}
+
+        for (const [key, value] of params.entries()) {
+            object[key] = value
+        }
+
+        return object
+    }
+
     public queryParam(param: string): string | null {
-        const url = new URL(this.url())
+        const url = new URL(this.fullUrl())
 
         const params = new URLSearchParams(url.search)
 
@@ -85,6 +122,10 @@ export class Request {
         }
 
         return null
+    }
+
+    public secure(): boolean {
+        return this.protocol() === 'https'
     }
 
     public set nodeInstance(request: IncomingMessage) {

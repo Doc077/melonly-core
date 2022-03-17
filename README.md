@@ -9,7 +9,7 @@
 <a href="https://www.npmjs.com/package/@melonly/core" target="_blank"><img src="https://img.shields.io/npm/dt/@melonly/core.svg?style=flat-square&labelColor=333842&color=fd6f71" alt="Downloads"></a>
 <a href="https://www.npmjs.com/package/@melonly/core" target="_blank"><img src="https://img.shields.io/npm/l/@melonly/core.svg?style=flat-square&labelColor=333842&color=fd6f71" alt="License"></a>
 
-Melonly is a fast and modern web development framework for Node.js. It makes easy to create secure and fast web applications with awesome developer experience.
+Melonly is a fast and modern web development framework for Node.js. It makes it easy to create secure and fast web applications with awesome developer experience.
 
 **Table of Contents**
 
@@ -28,9 +28,9 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
   - [Controllers and Routing](#controllers-and-routing)
   - [Views](#views-1)
   - [Services](#services)
-  - [HTTP Request and Response](#http-request-and-response)
+  - [HTTP Requests and Responses](#http-requests-and-responses)
     - [Form Input Data](#form-input-data)
-    - [Redirecting](#redirecting)
+    - [Redirects](#redirects)
     - [HTTP Headers](#http-headers)
   - [Mail](#mail)
   - [Websockets and Broadcasting](#websockets-and-broadcasting)
@@ -40,13 +40,13 @@ Melonly is a fast and modern web development framework for Node.js. It makes eas
 
 ## Requirements
 
-- Node.js v16.4.2+
+- Node.js 15+
 - `npm` installed
 
 
 ## Installation
 
-To create a new Melonly project you can use the CLI installer. First you only have to install `@melonly/cli` package.
+To create new Melonly project you can use the CLI installer. You only have to install `@melonly/cli` package:
 
 ```shell
 npm install -g @melonly/cli
@@ -208,7 +208,7 @@ Some frontend frameworks like Vue use the same bracket syntax for displaying dat
 Rendering views is done using the 'dot' syntax for nested folders:
 
 ```ts
-// This will render views/pages/welcome.melon.html template
+// Render views/pages/welcome.melon.html template
 
 return this.response.render('pages.welcome')
 ```
@@ -264,7 +264,7 @@ public index(): string {
 ```
 
 
-### HTTP Request and Response
+### HTTP Requests and Responses
 
 Melonly provides a simple API for dealing with web requests and responses. You can inject `Request` and `Response` objects to controller and use them.
 
@@ -281,7 +281,7 @@ You can get matched URL parameters:
 ```ts
 @Get('/users/:id')
 public show(): string {
-    return this.request.param('id')
+    return this.request.params.id
 }
 ```
 
@@ -290,7 +290,7 @@ You can also get url query data:
 ```ts
 // Route: /users?view=gallery
 
-const view = this.request.queryParam('view') // 'gallery'
+const view = this.request.query.view // 'gallery'
 ```
 
 
@@ -309,13 +309,20 @@ public create(): string {
 }
 ```
 
+Input data can be sent by HTML form or AJAX:
+
 ```html
-<!-- example form -->
 <input type="text" name="username">
 ```
 
+```ts
+import axios from 'axios'
 
-#### Redirecting
+axios.post('/users', data)
+```
+
+
+#### Redirects
 
 Example redirect response using the `redirect` method:
 
@@ -356,7 +363,7 @@ import { Email } from '@melonly/core'
 Email.send('recipient@mail.com', 'Test Email', 'This is the test email sent from Melonly application.')
 ```
 
-Even though this is simple and convinient for fast testing, we recommend the more object-oriented approach with separate email classes. It will allow us to make template based emails. To generate new email file use the CLI command:
+Even though this is simple and convinient for small applications, we recommend the more object-oriented approach with separate email classes. It allows us to make emails with HTML templates. To generate a new email file use the CLI command:
 
 ```shell
 melon make email welcome

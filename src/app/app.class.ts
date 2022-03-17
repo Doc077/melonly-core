@@ -10,6 +10,7 @@ import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
 import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { Router } from '../routing/router.class'
+import { Session } from '../session/session.class'
 
 import 'reflect-metadata'
 
@@ -71,6 +72,8 @@ export class App {
 
                 return
             }
+
+            Session.start()
 
             /**
              * Respond in case of GET/HEAD method

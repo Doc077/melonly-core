@@ -41,6 +41,10 @@ export class Request {
         }
     }
 
+    public ajax(): boolean {
+        return this.header('X-Requested-With') === 'XMLHttpRequest'
+    }
+
     public get data(): FormData {
         return this.formData
     }
@@ -58,11 +62,11 @@ export class Request {
     }
 
     public headers(): IncomingHttpHeaders {
-        return this.nodeInstance?.headers
+        return this.instance?.headers ?? {}
     }
 
     public header(name: string): string | string[] | null {
-        return this.nodeInstance?.headers[name] ?? null
+        return this.instance?.headers[name] ?? null
     }
 
     public input(name: string): any {

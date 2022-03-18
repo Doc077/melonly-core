@@ -21,6 +21,8 @@ interface Mimes {
 export class App {
     private broadcastingEnabled: boolean = false
 
+    public controllers: any[] = []
+
     public start(): this {
         process.on('uncaughtException', (exception: any) => {
             ExceptionHandler.handle(exception)
@@ -52,27 +54,37 @@ export class App {
     }
 
     public registerControllers(controllers: any[]): this {
+        this.controllers.push(...controllers)
+
         return this
+    }
+
+    private initHttpModule(request: IncomingMessage, response: ServerResponse): void {
+        Container.bindSingletons([Request, Response])
+
+        const requestInstance = Container.getSingleton(Request)
+        const responseInstance = Container.getSingleton(Response)
+
+        requestInstance.setInstance(request)
+        responseInstance.setInstance(response)
+
+        requestInstance.init()
     }
 
     private runServer(): void {
         const server = createServer((request: IncomingMessage, response: ServerResponse) => {
-            Container.bindSingletons([Request, Response])
+            this.initHttpModule(request, response)
 
-            Container.getSingleton(Request).setInstance(request)
-            Container.getSingleton(Response).setInstance(response)
-
-            Container.getSingleton(Request).init()
-
+            const requestInstance = Container.getSingleton(Request)
             const url = request.url ?? '/'
 
             Logger.info(`Request: ${request.method?.toUpperCase()} ${url}`)
 
             if (url.includes('.')) {
                 const filePath = join('public', url.replace('/', ''))
-                const fileExtension = url.replace('/', '').split('.')[1] ?? ''
+                const fileExtension = url.replace('/', '').split('.')[1]
 
-                this.serveStaticFile(filePath, fileExtension)
+                this.serveStaticFile(filePath, fileExtension ?? '')
 
                 return
             }
@@ -81,10 +93,10 @@ export class App {
 
             /**
              * Respond in case of GET or HEAD method
-             * Otherwise, the response will be generated after Request.init()
-             * method processes form data
+             * Otherwise, the response will be generated after
+             * Request.init() method processes input data
              */
-            if (['get', 'head'].includes(Container.getSingleton(Request).method())) {
+            if (['get', 'head'].includes(requestInstance.method())) {
                 Router.evaluate(url)
             }
         })
@@ -96,7 +108,7 @@ export class App {
         }
 
         server.listen(serverPort, () => {
-            Logger.info(`Server started on http://localhost:${serverPort}`)
+            Logger.info(`Server listening on http://localhost:${serverPort}`)
         })
     }
 

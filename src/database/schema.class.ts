@@ -1,5 +1,7 @@
+import { SchemaType } from './schema-type.enum'
+
 interface Columns {
-    [column: string]: string
+    [column: string]: SchemaType
 }
 
 export class Schema {

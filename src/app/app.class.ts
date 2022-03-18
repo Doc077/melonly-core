@@ -14,7 +14,7 @@ import { Session } from '../session/session.class'
 
 import 'reflect-metadata'
 
-interface Mimes {
+interface MimeTypes {
     [key: string]: string
 }
 
@@ -108,14 +108,14 @@ export class App {
         }
 
         server.listen(serverPort, () => {
-            Logger.info(`Server listening on http://localhost:${serverPort}`)
+            Logger.info(`Server listening on port ${serverPort} [http://localhost:${serverPort}]`)
         })
     }
 
     private serveStaticFile(path: string, extension: string): void {
         try {
             const fileContent = readFileSync(path)
-            const extensionMimes: Mimes = require('../../assets/mimes.json')
+            const extensionMimes: MimeTypes = require('../../assets/mime-types.json')
 
             const response = Container.getSingleton(Response)
 

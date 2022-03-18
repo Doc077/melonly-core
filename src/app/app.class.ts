@@ -1,4 +1,4 @@
-import { config } from 'dotenv'
+import { config as envConfig } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { join } from 'path'
 import { readFileSync } from 'fs'
@@ -14,6 +14,10 @@ import { Session } from '../session/session.class'
 
 import 'reflect-metadata'
 
+interface Mimes {
+    [key: string]: string
+}
+
 export class App {
     private broadcastingEnabled: boolean = false
 
@@ -23,7 +27,7 @@ export class App {
         })
 
         try {
-            config({
+            envConfig({
                 path: '.env',
             })
 
@@ -60,13 +64,13 @@ export class App {
 
             Container.getSingleton(Request).init()
 
-            const uri = request.url ?? '/'
+            const url = request.url ?? '/'
 
-            Logger.info(`Request: ${request.method?.toUpperCase()} ${uri}`)
+            Logger.info(`Request: ${request.method?.toUpperCase()} ${url}`)
 
-            if (uri.includes('.')) {
-                const filePath = join('public', uri.replace('/', ''))
-                const fileExtension = uri.replace('/', '').split('.')[1] ?? ''
+            if (url.includes('.')) {
+                const filePath = join('public', url.replace('/', ''))
+                const fileExtension = url.replace('/', '').split('.')[1] ?? ''
 
                 this.serveStaticFile(filePath, fileExtension)
 
@@ -81,7 +85,7 @@ export class App {
              * method processes form data
              */
             if (['get', 'head'].includes(Container.getSingleton(Request).method())) {
-                Router.evaluate(uri)
+                Router.evaluate(url)
             }
         })
 
@@ -99,12 +103,13 @@ export class App {
     private serveStaticFile(path: string, extension: string): void {
         try {
             const fileContent = readFileSync(path)
+            const extensionMimes: Mimes = require('../../assets/mimes.json')
 
-            const extensionMimes: { [key: string]: string } = require('../../assets/mimes.json')
+            const response = Container.getSingleton(Response)
 
-            Container.getSingleton(Response).header('Content-Type', extensionMimes[extension] ?? 'text/plain')
+            response.header('Content-Type', extensionMimes[extension] ?? 'text/plain')
 
-            Container.getSingleton(Response).end(fileContent)
+            response.end(fileContent)
         } catch (error) {
             throw new RouteNotFoundException()
         }

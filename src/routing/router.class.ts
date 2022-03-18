@@ -12,30 +12,30 @@ import { ViewResponse } from '../views/view-response.class'
 export class Router {
     private static routes: Route[] = []
 
-    public static get(uri: string, action: () => any): void {
-        if (!uri.startsWith('/')) {
-            uri = `/${uri}`
+    public static get(url: string, action: () => any): void {
+        if (!url.startsWith('/')) {
+            url = `/${url}`
         }
 
         const route = new Route(
-            uri,
+            url,
             Method.Get,
-            pathToRegexp(uri, [], { endsWith: '?' }),
+            pathToRegexp(url, [], { endsWith: '?' }),
             action,
         )
 
         this.routes.push(route)
     }
 
-    public static post(uri: string, action: () => any): void {
-        if (!uri.startsWith('/')) {
-            uri = `/${uri}`
+    public static post(url: string, action: () => any): void {
+        if (!url.startsWith('/')) {
+            url = `/${url}`
         }
 
         const route = new Route(
-            uri,
+            url,
             Method.Post,
-            pathToRegexp(uri, [], { endsWith: '?' }),
+            pathToRegexp(url, [], { endsWith: '?' }),
             action,
         )
 
@@ -63,7 +63,7 @@ export class Router {
                 let keys: string[] = []
                 let values: string[] = []
 
-                for (const key of route.uri.matchAll(/:([a-zA-Z0-9]*)/g) ?? []) {
+                for (const key of route.url.matchAll(/:([a-zA-Z0-9]*)/g) ?? []) {
                     keys.push(key[1])
                 }
 

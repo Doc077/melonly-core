@@ -10,7 +10,9 @@ export class Session {
     private data: Data = {}
 
     constructor() {
-        Container.getSingleton(Response).cookie('session_id', '')
+        if (!Container.getSingleton(Request).cookie('session_id')) {
+            Container.getSingleton(Response).cookie('session_id', '')
+        }
     }
 
     public static start(): void {

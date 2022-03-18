@@ -48,6 +48,10 @@ export class Request {
         return this.header('X-Requested-With') === 'XMLHttpRequest'
     }
 
+    public cookie(name: string): string | null {
+        return this.instance?.headers.cookie ?? null
+    }
+
     public get data(): FormData {
         return this.formData
     }

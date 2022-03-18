@@ -2,8 +2,12 @@ import { Container } from '../container/container.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
 
+interface Data {
+    [key: string]: any
+}
+
 export class Session {
-    private data: object = {}
+    private data: Data = {}
 
     constructor() {
         Container.getSingleton(Response).cookie('session_id', '')

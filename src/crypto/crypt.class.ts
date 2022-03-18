@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto'
 
-interface EncryptedData {
+export interface EncryptedData {
     iv: string
     content: string
 }
@@ -10,8 +10,7 @@ export class Crypt {
 
     private static HASH_ALGORITHM: string = 'sha256'
 
-    private static key: string = process.env.APP_KEY
-        ?? randomBytes(16).toString()
+    private static key: string = process.env.APP_KEY ?? randomBytes(16).toString()
 
     private static iv: Buffer = randomBytes(16)
 

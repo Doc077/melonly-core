@@ -12,6 +12,10 @@ export class Response {
 
     private terminated: boolean = false
 
+    public cookie(name: string, value: string): void {
+        this.header('Set-Cookie', `${name}=${value}`)
+    }
+
     public end(content?: any): void {
         if (content instanceof ViewResponse) {
             content = content.toString()
@@ -59,11 +63,11 @@ export class Response {
         return View.compile(file, variables)
     }
 
-    public setTerminated(terminated: boolean): void {
-        this.terminated = terminated
+    public setInstance(response: ServerResponse) {
+        this.instance = response
     }
 
-    public set nodeInstance(response: ServerResponse) {
-        this.instance = response
+    public terminate(): void {
+        this.terminated = true
     }
 }

@@ -28,7 +28,7 @@ export class ExceptionHandler {
 
         Container.getSingleton(Response).status(500)
 
-        Container.getSingleton(Response).setTerminated(true)
+        Container.getSingleton(Response).terminate()
 
         /**
          * Render error page

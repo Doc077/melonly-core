@@ -55,8 +55,8 @@ export class App {
         const server = createServer((request: IncomingMessage, response: ServerResponse) => {
             Container.bindSingletons([Request, Response])
 
-            Container.getSingleton(Request).nodeInstance = request
-            Container.getSingleton(Response).nodeInstance = response
+            Container.getSingleton(Request).setInstance(request)
+            Container.getSingleton(Response).setInstance(response)
 
             Container.getSingleton(Request).init()
 
@@ -76,9 +76,9 @@ export class App {
             Session.start()
 
             /**
-             * Respond in case of GET/HEAD method
-             * Otherwise response will be generated after Request.init()
-             * which processes form data
+             * Respond in case of GET or HEAD method
+             * Otherwise, the response will be generated after Request.init()
+             * method processes form data
              */
             if (['get', 'head'].includes(Container.getSingleton(Request).method())) {
                 Router.evaluate(uri)

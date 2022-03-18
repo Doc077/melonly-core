@@ -2,6 +2,7 @@ import formidable from 'formidable'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
 import { Exception } from '../handler/exception.class'
 import { Router } from '../routing/router.class'
+import { Session } from '../session/session.class'
 
 interface UrlParams {
     [key: string]: string
@@ -17,6 +18,8 @@ interface QueryStringParams {
 
 export class Request {
     private instance: IncomingMessage | null = null
+
+    private sessionInstance: Session | null = null
 
     private formData: FormData = {}
 
@@ -131,7 +134,15 @@ export class Request {
         return this.protocol() === 'https'
     }
 
-    public set nodeInstance(request: IncomingMessage) {
+    public get session(): Session | null {
+        return this.sessionInstance
+    }
+
+    public setInstance(request: IncomingMessage) {
         this.instance = request
+    }
+
+    public setSessionInstance(session: Session) {
+        this.sessionInstance = session
     }
 }

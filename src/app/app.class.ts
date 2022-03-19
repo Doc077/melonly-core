@@ -11,6 +11,7 @@ import { Response } from '../http/response.class'
 import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { Router } from '../routing/router.class'
 import { Session } from '../session/session.class'
+import { NODE_MIN_VERSION } from '../constants'
 
 import 'reflect-metadata'
 
@@ -32,6 +33,10 @@ export class App {
             envConfig({
                 path: '.env',
             })
+
+            if (NODE_MIN_VERSION > parseInt(process.versions.node)) {
+                Logger.warn(`Node version requirements (v${NODE_MIN_VERSION}+) not met`)
+            }
 
             this.runServer()
         } catch (exception) {

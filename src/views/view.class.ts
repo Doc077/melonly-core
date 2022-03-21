@@ -2,6 +2,7 @@ import { encode } from 'html-entities'
 import { readFileSync } from 'fs'
 import { Exception } from '../handler/exception.class'
 import { ViewResponse } from './view-response.class'
+import * as constants from '../constants'
 
 export interface ViewVariables {
     [key: string]: any
@@ -27,10 +28,14 @@ export class View {
          * Interpolation
          */
         for (const expression of compiled.matchAll(this.patterns.variable) ?? []) {
-            let variableValue = variables[expression[2]]
+            const name: string = expression[2]
+
+            let variableValue: string = name.startsWith('MELONLY_')
+                ? constants[name as keyof object]
+                : variables[name]
 
             if (!variableValue) {
-                throw new Exception(`Variable '${expression[2]}' has not been passed or defined`)
+                throw new Exception(`Variable '${name}' has not been passed or defined`)
             }
 
             variableValue = Array.isArray(variableValue) || typeof variableValue === 'object'

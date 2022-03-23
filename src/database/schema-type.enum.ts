@@ -1,7 +1,7 @@
 export const enum SchemaType {
-    Id,
-    String,
-    Int,
-    Float,
-    DateTime,
+  Id,
+  String,
+  Int,
+  Float,
+  DateTime,
 }

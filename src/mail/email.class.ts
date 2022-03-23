@@ -7,8 +7,11 @@ import { View, ViewVariables } from '../views/view.class'
 export abstract class Email {
   private static transporter = createTransport({
     host: process.env.MAIL_HOST ?? '127.0.0.1',
+
     port: parseInt(process.env.MAIL_PORT ?? '465'),
+
     service: process.env.MAIL_SERVICE,
+
     auth: {
       user: process.env.MAIL_ADDRESS,
       pass: process.env.MAIL_PASSWORD,
@@ -20,14 +23,12 @@ export abstract class Email {
 
     const text = emailOrSubject instanceof Email ? emailOrSubject.build() : content
 
-    this.transporter.sendMail(
-      {
+    this.transporter.sendMail({
         from: process.env.MAIL_ADDRESS,
         to,
         subject,
         text,
-      },
-      (error: any) => {
+      }, (error: any) => {
         if (error) {
           throw new Exception(`Cannot send an email: ${error}`)
         }

@@ -4,6 +4,10 @@ import { Exception } from '../handler/exception.class'
 import { Router } from '../routing/router.class'
 import { Session } from '../session/session.class'
 
+interface CookieList {
+  [key: string]: string
+}
+
 interface UrlParams {
   [key: string]: string
 }
@@ -48,8 +52,29 @@ export class Request {
     return this.header('X-Requested-With') === 'XMLHttpRequest'
   }
 
+  public get cookies(): CookieList {
+    const cookieString = this.instance?.headers.cookie ?? ''
+    const list: CookieList = {}
+
+    cookieString.split(';').forEach((cookie: string): void => {
+      let [name, ...rest] = cookie.split('=')
+
+      name = name?.trim()
+
+      if (!name) return
+
+      const value = rest.join('=').trim()
+
+      if (!value) return
+
+      list[name as keyof object] = decodeURIComponent(value)
+    })
+
+    return list
+  }
+
   public cookie(name: string): string | null {
-    return this.instance?.headers.cookie ?? null
+    return this.cookies[name] ?? null
   }
 
   public get data(): FormData {

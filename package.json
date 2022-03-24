@@ -18,6 +18,7 @@
     "start": "tsc --watch"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cli-color": "^2.0.1",
     "dotenv": "^16.0.0",
     "formidable": "^2.0.1",
@@ -28,6 +29,7 @@
     "socket.io": "^4.4.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cli-color": "^2.0.2",
     "@types/formidable": "^2.0.4",
     "@types/node": "^17.0.21",

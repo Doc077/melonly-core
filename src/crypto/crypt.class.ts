@@ -1,4 +1,4 @@
-import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto'
+import { createCipheriv, createDecipheriv, randomBytes } from 'crypto'
 
 export interface EncryptedData {
   iv: string
@@ -7,8 +7,6 @@ export interface EncryptedData {
 
 export class Crypt {
   private static ENCRYPTION_ALGORITHM: string = 'aes-256-ctr'
-
-  private static HASH_ALGORITHM: string = 'sha256'
 
   private static key: string = process.env.APP_KEY ?? randomBytes(16).toString()
 
@@ -31,11 +29,5 @@ export class Crypt {
     const decrpyted = Buffer.concat([decipher.update(Buffer.from(EncryptedData.content, 'hex')), decipher.final()])
 
     return decrpyted.toString()
-  }
-
-  public static hash(text: string): string {
-    const hash = createHash(this.HASH_ALGORITHM)
-
-    return hash.update(text, 'binary').digest('base64')
   }
 }

@@ -13,23 +13,23 @@ export class Router {
   private static routes: Route[] = []
 
   public static get(url: string, action: () => any): void {
-    if (!url.startsWith('/')) {
-      url = `/${url}`
-    }
-
-    const route = new Route(url, Method.Get, pathToRegexp(url, [], { endsWith: '?' }), action)
-
-    this.routes.push(route)
+    this.addRoute(url, action, Method.Get)
   }
 
   public static post(url: string, action: () => any): void {
-    if (!url.startsWith('/')) {
-      url = `/${url}`
-    }
+    this.addRoute(url, action, Method.Post)
+  }
 
-    const route = new Route(url, Method.Post, pathToRegexp(url, [], { endsWith: '?' }), action)
+  public static put(url: string, action: () => any): void {
+    this.addRoute(url, action, Method.Put)
+  }
 
-    this.routes.push(route)
+  public static patch(url: string, action: () => any): void {
+    this.addRoute(url, action, Method.Patch)
+  }
+
+  public static delete(url: string, action: () => any): void {
+    this.addRoute(url, action, Method.Delete)
   }
 
   public static evaluate(url: string): void {
@@ -102,6 +102,18 @@ export class Router {
     }
 
     this.abortNotFound()
+  }
+
+  private static addRoute(url: string, action: () => any, method: Method): void {
+    if (!url.startsWith('/')) {
+      url = `/${url}`
+    }
+
+    const route = new Route(url, method, pathToRegexp(url, [], {
+      endsWith: '?',
+    }), action)
+
+    this.routes.push(route)
   }
 
   public static resolveController(controller: any, method: string): any {

@@ -16,6 +16,10 @@ interface FormData {
   [key: string]: any
 }
 
+interface SessionData {
+  [key: string]: any
+}
+
 interface QueryStringParams {
   [key: string]: any
 }
@@ -161,8 +165,16 @@ export class Request {
     return this.protocol() === 'https'
   }
 
-  public get session(): Session | null {
-    return this.sessionInstance
+  public get session(): SessionData | null {
+    return this.sessionInstance?.data() ?? null
+  }
+
+  public setSession(key: string, value: any): void {
+    this.sessionInstance?.set(key, value)
+  }
+
+  public deleteSession(): void {
+    this.sessionInstance?.delete()
   }
 
   public setInstance(request: IncomingMessage) {

@@ -135,8 +135,8 @@ export class Router {
       Container.getSingleton(Response).header('Content-Type', 'application/json')
 
       responseContent = JSON.stringify(responseContent)
-    } else if (typeof responseContent === 'string') {
-      Container.getSingleton(Response).header('Content-Type', 'text/html')
+    } else if (responseContent === null || responseContent === undefined || typeof responseContent === 'string') {
+      Container.getSingleton(Response).header('Content-Type', 'text/html; charset=utf-8')
     }
 
     Container.getSingleton(Response).end(responseContent)

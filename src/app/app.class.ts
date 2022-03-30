@@ -94,7 +94,7 @@ export class App {
         return
       }
 
-      Session.start()
+      Session.init()
 
       /**
        * Respond in case of GET or HEAD method

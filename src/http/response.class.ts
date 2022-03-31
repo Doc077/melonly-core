@@ -1,9 +1,9 @@
 import { existsSync } from 'fs'
-import { ServerResponse } from 'http'
 import { join } from 'path'
+import { ServerResponse } from 'http'
 import { Exception } from '../handler/exception.class'
-import { View, ViewVariables } from '../views/view.class'
 import { ViewResponse } from '../views/view-response.class'
+import { View, ViewVariables } from '../views/view.class'
 
 export type RedirectResponse = null
 

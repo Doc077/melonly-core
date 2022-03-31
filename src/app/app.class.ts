@@ -65,7 +65,7 @@ export class App {
   }
 
   private initHttpModule(request: IncomingMessage, response: ServerResponse): void {
-    Container.bindSingletons([Request, Response, Session])
+    Container.bindSingletons([Request, Response])
 
     const requestInstance = Container.getSingleton(Request)
     const responseInstance = Container.getSingleton(Response)
@@ -74,6 +74,8 @@ export class App {
     responseInstance.setInstance(response)
 
     requestInstance.init()
+
+    Container.bindSingletons([Session])
   }
 
   private runServer(): void {

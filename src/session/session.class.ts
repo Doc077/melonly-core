@@ -57,7 +57,7 @@ export class Session {
     }
   }
 
-  public delete(): void {
+  public clear(): void {
     this.variables = {}
 
     try {

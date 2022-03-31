@@ -42,7 +42,11 @@ export class Session {
   public clear(): void {
     this.variables = {}
 
-    this.saveSessionData()
+    try {
+      unlinkSync(joinPath('storage', 'sessions', `${this.key}.json`))
+    } catch (error) {
+      throw new Exception('Unable to clear session')
+    }
 
     Container.getSingleton(Response).cookie('sessionId', '')
   }

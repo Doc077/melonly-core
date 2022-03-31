@@ -103,7 +103,13 @@ export class Request {
   }
 
   public method(): string {
-    return this.instance?.method?.toLowerCase() ?? 'get'
+    let method = this.instance?.method?.toLowerCase() ?? 'get'
+
+    if (method === 'post' && ['put', 'patch', 'delete', 'head'].includes(this.data._method)) {
+      method = this.data._method
+    }
+
+    return method
   }
 
   public get params(): UrlParams {

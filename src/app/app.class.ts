@@ -1,6 +1,6 @@
 import { config as envConfig } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
-import { join } from 'path'
+import { join as joinPath } from 'path'
 import { readFileSync } from 'fs'
 import { Broadcaster } from '../broadcasting/broadcaster.class'
 import { Container } from '../container/container.class'
@@ -86,7 +86,7 @@ export class App {
       Logger.info(`Request: ${request.method?.toUpperCase()} ${url}`)
 
       if (url.includes('.')) {
-        const filePath = join('public', url.replace('/', ''))
+        const filePath = joinPath('public', url.replace('/', ''))
         const fileExtension = url.replace('/', '').split('.')[1]
 
         this.serveStaticFile(filePath, fileExtension ?? '')

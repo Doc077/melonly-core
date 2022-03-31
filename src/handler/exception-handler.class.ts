@@ -1,5 +1,5 @@
 import { existsSync } from 'fs'
-import { join } from 'path'
+import { join as joinPath } from 'path'
 import { Container } from '../container/container.class'
 import { Logger } from '../console/logger.class'
 import { Request } from '../http/request.class'
@@ -12,9 +12,9 @@ export class ExceptionHandler {
     if (exception instanceof RouteNotFoundException) {
       Container.getSingleton(Response).status(404)
 
-      const file = existsSync(join('views', 'errors', '404.melon.html'))
-        ? join('views', 'errors', '404.melon.html')
-        : join(__dirname, '..', '..', 'assets', 'status.melon')
+      const file = existsSync(joinPath('views', 'errors', '404.melon.html'))
+        ? joinPath('views', 'errors', '404.melon.html')
+        : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
 
       Container.getSingleton(Response).end(
         View.compile(file, {
@@ -36,7 +36,7 @@ export class ExceptionHandler {
      * Render error page
      */
     if (process.env.APP_DEBUG === 'true') {
-      const file = join(__dirname, '..', '..', 'assets', 'exception.melon')
+      const file = joinPath(__dirname, '..', '..', 'assets', 'exception.melon')
 
       Container.getSingleton(Response).end(
         View.compile(file, {
@@ -50,9 +50,9 @@ export class ExceptionHandler {
       return
     }
 
-    const file = existsSync(join('views', 'errors', '500.melon.html'))
-      ? join('views', 'errors', '500.melon.html')
-      : join(__dirname, '..', '..', 'assets', 'status.melon')
+    const file = existsSync(joinPath('views', 'errors', '500.melon.html'))
+      ? joinPath('views', 'errors', '500.melon.html')
+      : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
 
     Container.getSingleton(Response).end(
       View.compile(file, {

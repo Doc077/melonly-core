@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { join as joinPath } from 'path'
 import { randomBytes } from 'crypto'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
@@ -18,7 +18,7 @@ export class Session {
   constructor() {
     this.key = Container.getSingleton(Request).cookie('sessionId')
 
-    const sessionFilePath = join('storage', 'sessions', `${this.key}.json`)
+    const sessionFilePath = joinPath('storage', 'sessions', `${this.key}.json`)
 
     if (this.key && existsSync(sessionFilePath)) {
       const savedSessionData = JSON.parse(readFileSync(sessionFilePath, 'utf-8').toString())
@@ -30,7 +30,7 @@ export class Session {
       Container.getSingleton(Response).cookie('sessionId', generatedId)
 
       try {
-        const path = join('storage', 'sessions', `${generatedId}.json`)
+        const path = joinPath('storage', 'sessions', `${generatedId}.json`)
 
         writeFileSync(path, JSON.stringify({}), 'utf-8')
       } catch (error) {
@@ -47,7 +47,7 @@ export class Session {
     this.variables[key] = value
 
     try {
-      const path = join('storage', 'sessions', `${this.key}.json`)
+      const path = joinPath('storage', 'sessions', `${this.key}.json`)
 
       writeFileSync(path, JSON.stringify({
         ...this.variables,
@@ -61,7 +61,7 @@ export class Session {
     this.variables = {}
 
     try {
-      const path = join('storage', 'sessions', `${this.key}.json`)
+      const path = joinPath('storage', 'sessions', `${this.key}.json`)
 
       unlinkSync(path)
     } catch (error) {

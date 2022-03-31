@@ -43,9 +43,27 @@ export class Session {
     return this.variables
   }
 
+  public delete(key: string): void {
+    delete this.variables[key]
+
+    this.saveSessionData()
+  }
+
   public set(key: string, value: any): void {
     this.variables[key] = value
 
+    this.saveSessionData()
+  }
+
+  public clear(): void {
+    this.variables = {}
+
+    this.saveSessionData()
+
+    Container.getSingleton(Response).cookie('sessionId', '')
+  }
+
+  public saveSessionData(): void {
     try {
       const path = joinPath('storage', 'sessions', `${this.key}.json`)
 
@@ -53,21 +71,7 @@ export class Session {
         ...this.variables,
       }), 'utf-8')
     } catch (error) {
-      throw new Exception('Unable to initialize session')
+      throw new Exception('Unable to save session')
     }
-  }
-
-  public clear(): void {
-    this.variables = {}
-
-    try {
-      const path = joinPath('storage', 'sessions', `${this.key}.json`)
-
-      unlinkSync(path)
-    } catch (error) {
-      throw new Exception('Unable to delete session')
-    }
-
-    Container.getSingleton(Response).cookie('sessionId', '')
   }
 }

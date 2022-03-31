@@ -12,8 +12,9 @@ export class View {
   private static patterns: { [name: string]: RegExp } = {
     each: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
     if: /\[if (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
-    variable: /([^@])\{\{ *([^ ]*?) *\}\}/g,
     raw: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
+    method: /\[method '?(.*?)'?\]/g,
+    variable: /([^@])\{\{ *([^ ]*?) *\}\}/g,
   }
 
   private static rawContents: string[] = []
@@ -26,6 +27,7 @@ export class View {
      */
     compiled = this.parseRawDirectives(compiled)
     compiled = this.parseEachDirectives(compiled)
+    compiled = this.parseMethodDirectives(compiled)
     compiled = this.parseIfDirectives(compiled, variables)
 
     /**
@@ -72,6 +74,16 @@ export class View {
       count++
 
       this.rawContents.push(match[2])
+    }
+
+    return content
+  }
+
+  private static parseMethodDirectives(content: string): string {
+    const matches = content.matchAll(this.patterns.method) ?? []
+
+    for (const match of matches) {
+      content = content.replace(match[0], `<input type="hidden" name="_method" value="${match[1]}">`)
     }
 
     return content

@@ -105,8 +105,8 @@ export class Request {
   public method(): string {
     let method = this.instance?.method?.toLowerCase() ?? 'get'
 
-    if (method === 'post' && ['put', 'patch', 'delete', 'head'].includes(this.data._method)) {
-      method = this.data._method
+    if (method === 'post' && ['put', 'patch', 'delete', 'head'].includes(this.data._method.toLowerCase())) {
+      method = this.data._method.toLowerCase()
     }
 
     return method

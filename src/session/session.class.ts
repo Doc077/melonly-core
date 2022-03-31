@@ -1,6 +1,6 @@
-import { randomBytes } from 'crypto'
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 import { join } from 'path'
-import { existsSync, readFileSync, writeFileSync, unlinkSync } from 'fs'
+import { randomBytes } from 'crypto'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Request } from '../http/request.class'
@@ -30,18 +30,16 @@ export class Session {
       Container.getSingleton(Response).cookie('sessionId', generatedId)
 
       try {
-        writeFileSync(join('storage', 'sessions', `${generatedId}.json`), JSON.stringify({}), 'utf-8')
+        const path = join('storage', 'sessions', `${generatedId}.json`)
+
+        writeFileSync(path, JSON.stringify({}), 'utf-8')
       } catch (error) {
         throw new Exception('Unable to initialize session')
       }
     }
   }
 
-  public static init(): void {
-    Container.getSingleton(Request).sessionInstance = new this()
-  }
-
-  public data(): Data {
+  public get data(): Data {
     return this.variables
   }
 
@@ -49,7 +47,9 @@ export class Session {
     this.variables[key] = value
 
     try {
-      writeFileSync(join('storage', 'sessions', `${this.key}.json`), JSON.stringify({
+      const path = join('storage', 'sessions', `${this.key}.json`)
+
+      writeFileSync(path, JSON.stringify({
         ...this.variables,
       }), 'utf-8')
     } catch (error) {
@@ -61,7 +61,9 @@ export class Session {
     this.variables = {}
 
     try {
-      unlinkSync(join('storage', 'sessions', `${this.key}.json`))
+      const path = join('storage', 'sessions', `${this.key}.json`)
+
+      unlinkSync(path)
     } catch (error) {
       throw new Exception('Unable to delete session')
     }

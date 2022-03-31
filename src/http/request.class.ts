@@ -2,7 +2,6 @@ import formidable from 'formidable'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
 import { Exception } from '../handler/exception.class'
 import { Router } from '../routing/router.class'
-import { Session } from '../session/session.class'
 
 interface CookieList {
   [key: string]: string
@@ -16,18 +15,12 @@ interface FormData {
   [key: string]: any
 }
 
-interface SessionData {
-  [key: string]: any
-}
-
 interface QueryStringParams {
   [key: string]: any
 }
 
 export class Request {
   private instance: IncomingMessage | null = null
-
-  private sessionInstance: Session | null = null
 
   private formData: FormData = {}
 
@@ -165,23 +158,7 @@ export class Request {
     return this.protocol() === 'https'
   }
 
-  public get session(): SessionData | null {
-    return this.sessionInstance?.data() ?? null
-  }
-
-  public setSession(key: string, value: any): void {
-    this.sessionInstance?.set(key, value)
-  }
-
-  public deleteSession(): void {
-    this.sessionInstance?.delete()
-  }
-
   public setInstance(request: IncomingMessage) {
     this.instance = request
-  }
-
-  public setSessionInstance(session: Session) {
-    this.sessionInstance = session
   }
 }

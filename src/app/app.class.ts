@@ -65,7 +65,7 @@ export class App {
   }
 
   private initHttpModule(request: IncomingMessage, response: ServerResponse): void {
-    Container.bindSingletons([Request, Response])
+    Container.bindSingletons([Request, Response, Session])
 
     const requestInstance = Container.getSingleton(Request)
     const responseInstance = Container.getSingleton(Response)
@@ -93,8 +93,6 @@ export class App {
 
         return
       }
-
-      Session.init()
 
       /**
        * Respond in case of GET or HEAD method

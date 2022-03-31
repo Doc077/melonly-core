@@ -39,6 +39,14 @@ export class Session {
     }
   }
 
+  public clear(): void {
+    this.variables = {}
+
+    this.saveSessionData()
+
+    Container.getSingleton(Response).cookie('sessionId', '')
+  }
+
   public get data(): Data {
     return this.variables
   }
@@ -49,18 +57,14 @@ export class Session {
     this.saveSessionData()
   }
 
+  public get(key: string): any {
+    return this.variables[key]
+  }
+
   public set(key: string, value: any): void {
     this.variables[key] = value
 
     this.saveSessionData()
-  }
-
-  public clear(): void {
-    this.variables = {}
-
-    this.saveSessionData()
-
-    Container.getSingleton(Response).cookie('sessionId', '')
   }
 
   public saveSessionData(): void {

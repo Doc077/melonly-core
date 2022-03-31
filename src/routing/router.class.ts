@@ -46,8 +46,12 @@ export class Router {
           }
         }
 
-        if (routeNameCount === 1 && String(route.method) !== Container.getSingleton(Request).method()) {
-          this.abortNotFound()
+        if (String(route.method) !== Container.getSingleton(Request).method()) {
+          if (routeNameCount === 1) {
+            this.abortNotFound()
+          }
+
+          continue
         }
 
         let keys: string[] = []
@@ -64,7 +68,10 @@ export class Router {
         let entries = {}
 
         keys.map((key: string, i: number) => {
-          entries = { ...entries, [key]: values[i] }
+          entries = {
+            ...entries,
+            [key]: values[i],
+          }
         })
 
         for (const [param, value] of Object.entries(entries)) {
@@ -142,7 +149,7 @@ export class Router {
     Container.getSingleton(Response).end(responseContent)
   }
 
-  private static abortNotFound(): void {
+  private static abortNotFound(): never {
     throw new RouteNotFoundException()
   }
 }

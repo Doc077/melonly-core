@@ -13,7 +13,10 @@ export class View {
     each: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
     if: /\[if (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
     variable: /([^@])\{\{ *([^ ]*?) *\}\}/g,
+    raw: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
   }
+
+  private static rawContents: string[] = []
 
   public static compile(file: string, variables: ViewVariables = {}): ViewResponse {
     let compiled = readFileSync(file).toString()
@@ -21,11 +24,12 @@ export class View {
     /**
      * Compile directives
      */
+    compiled = this.parseRawDirectives(compiled)
     compiled = this.parseEachDirectives(compiled)
     compiled = this.parseIfDirectives(compiled, variables)
 
     /**
-     * Interpolation
+     * Variables
      */
     for (const expression of compiled.matchAll(this.patterns.variable) ?? []) {
       const name: string = expression[2]
@@ -51,7 +55,26 @@ export class View {
       compiled = compiled.replace(expression[0], expression[1])
     }
 
+    /**
+     * Restore raw contents
+     */
+    compiled = this.restoreRawContents(compiled)
+
     return new ViewResponse(compiled)
+  }
+
+  private static parseRawDirectives(content: string): string {
+    const matches = content.matchAll(this.patterns.raw) ?? []
+    let count = 0
+
+    for (const match of matches) {
+      content = content.replace(match[0], `__raw__${count}`)
+      count++
+
+      this.rawContents.push(match[2])
+    }
+
+    return content
   }
 
   private static parseEachDirectives(content: string): string {
@@ -85,6 +108,18 @@ export class View {
       }
 
       content = content.replace(match[0], '')
+    }
+
+    return content
+  }
+
+  private static restoreRawContents(content: string): string {
+    const matches = content.matchAll(/__raw__([0-9]+)/g) ?? []
+
+    for (const match of matches) {
+      const index = parseInt(match[1])
+
+      content = content.replace(match[0], this.rawContents[index])
     }
 
     return content

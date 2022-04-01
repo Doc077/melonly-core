@@ -2,6 +2,7 @@ import { pathToRegexp } from 'path-to-regexp'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Injector } from '../container/injector.class'
+import { Logger } from '../console/logger.class'
 import { Method } from '../http/method.enum'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
@@ -33,6 +34,8 @@ export class Router {
   }
 
   public static evaluate(url: string): void {
+    Logger.info(`Request: ${Container.getSingleton(Request).method().toUpperCase()} ${url}`)
+
     for (const route of this.routes) {
       if (route.pattern.test(url)) {
         /**

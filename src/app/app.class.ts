@@ -14,7 +14,6 @@ import { Session } from '../session/session.class'
 import { NODE_MIN_VERSION } from '../constants'
 
 import 'reflect-metadata'
-import { Exception } from '../handler/exception.class'
 
 interface MimeTypes {
   [key: string]: string
@@ -85,8 +84,6 @@ export class App {
 
       const requestInstance = Container.getSingleton(Request)
       const url = request.url ?? '/'
-
-      Logger.info(`Request: ${request.method?.toUpperCase()} ${url}`)
 
       if (url.includes('.')) {
         const filePath = joinPath('public', url.replace('/', ''))

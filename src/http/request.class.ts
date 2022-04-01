@@ -46,7 +46,7 @@ export class Request {
   }
 
   public ajax(): boolean {
-    return this.header('X-Requested-With') === 'XMLHttpRequest'
+    return this.header('x-requested-with') === 'XMLHttpRequest'
   }
 
   public get cookies(): CookieList {
@@ -100,6 +100,10 @@ export class Request {
 
   public input(name: string): any {
     return this.formData[name]
+  }
+
+  public lang(): string | string[] {
+    return this.header('accept-language')?.slice(0, 2) ?? 'en'
   }
 
   public method(): string {

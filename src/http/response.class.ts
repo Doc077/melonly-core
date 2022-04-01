@@ -13,7 +13,7 @@ export class Response {
   private terminated: boolean = false
 
   public cookie(name: string, value: string): void {
-    this.header('Set-Cookie', `${name}=${value}`)
+    this.header('set-cookie', `${name}=${value}`)
   }
 
   public end(content?: any): void {
@@ -45,7 +45,7 @@ export class Response {
   }
 
   public redirect(uri: string, code: number = 302): RedirectResponse {
-    this.header('Location', uri)
+    this.header('location', uri)
     this.status(code)
 
     return null
@@ -58,7 +58,7 @@ export class Response {
       throw new Exception(`View '${view}' does not exist`)
     }
 
-    this.header('Content-Type', 'text/html')
+    this.header('content-type', 'text/html')
 
     return View.compile(file, variables)
   }

@@ -12,8 +12,10 @@ export class ExceptionHandler {
     if (exception instanceof RouteNotFoundException) {
       Container.getSingleton(Response).status(404)
 
-      const file = existsSync(joinPath('views', 'errors', '404.melon.html'))
-        ? joinPath('views', 'errors', '404.melon.html')
+      const customTemplatePath = joinPath('views', 'errors', '404.melon.html')
+
+      const file = existsSync(customTemplatePath)
+        ? customTemplatePath
         : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
 
       Container.getSingleton(Response).end(
@@ -42,16 +44,18 @@ export class ExceptionHandler {
         View.compile(file, {
           message: exception.message,
           method: Container.getSingleton(Request).method().toUpperCase(),
-          uri: Container.getSingleton(Request).url(),
           status: Container.getSingleton(Response).getStatus(),
+          uri: Container.getSingleton(Request).url(),
         }),
       )
 
       return
     }
 
-    const file = existsSync(joinPath('views', 'errors', '500.melon.html'))
-      ? joinPath('views', 'errors', '500.melon.html')
+    const customTemplatePath = joinPath('views', 'errors', '500.melon.html')
+
+    const file = existsSync(customTemplatePath)
+      ? customTemplatePath
       : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
 
     Container.getSingleton(Response).end(

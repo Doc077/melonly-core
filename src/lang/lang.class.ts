@@ -13,4 +13,10 @@ export class Lang {
 
     return translations[key] ?? key
   }
+
+  public static set(language: string): string {
+    this.current = language
+
+    return this.current
+  }
 }

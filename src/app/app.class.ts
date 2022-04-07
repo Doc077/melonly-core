@@ -6,16 +6,13 @@ import { Broadcaster } from '../broadcasting/broadcaster.class'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { Logger } from '../console/logger.class'
+import { MimeTypes } from '../http/mime-types.interface'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
 import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { Router } from '../routing/router.class'
 import { Session } from '../session/session.class'
 import { NODE_MIN_VERSION } from '../constants'
-
-interface MimeTypes {
-  [key: string]: string
-}
 
 export class App {
   private broadcastingEnabled: boolean = false

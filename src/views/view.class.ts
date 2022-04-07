@@ -2,11 +2,8 @@ import { encode } from 'html-entities'
 import { readFileSync } from 'fs'
 import { Exception } from '../handler/exception.class'
 import { ViewResponse } from './view-response.class'
+import { ViewVariables } from './view-variables.interface'
 import * as constants from '../constants'
-
-export interface ViewVariables {
-  [key: string]: any
-}
 
 export class View {
   private static patterns: { [name: string]: RegExp } = {

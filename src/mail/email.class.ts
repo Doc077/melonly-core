@@ -2,7 +2,8 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 import { createTransport } from 'nodemailer'
 import { Exception } from '../handler/exception.class'
-import { View, ViewVariables } from '../views/view.class'
+import { ViewVariables } from '../views/view-variables.interface'
+import { View } from '../views/view.class'
 
 export abstract class Email {
   private static transporter = createTransport({

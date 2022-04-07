@@ -4,7 +4,7 @@ export class Logger {
   private static badge(): string {
     const date = new Date()
 
-    return `[melonly] [${date.toDateString()} ${date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}]`
+    return `[melonly] [${date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })}]`
   }
 
   public static error(data: any): void {

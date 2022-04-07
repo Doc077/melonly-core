@@ -17,7 +17,7 @@ Melonly is a fast and modern web development framework for Node.js. It makes it 
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Creating Project](#creating-project)
-- [Running Application](#running-application)
+- [Running the Application](#running-the-application)
 - [License](#license)
 - [Information](#information)
 
@@ -54,7 +54,7 @@ To create new Melonly project you can use the CLI. Just run the `new` command in
 melon new <project-name>
 ```
 
-## Running Application
+## Running the Application
 
 Once your project has been created you can start it on the local server using `npm start`:
 
@@ -66,18 +66,18 @@ npm start
 
 Your application will be available on `localhost:3000` by default. You can change the port in `.env` configuration file.
 
-If you don't want to open the browser automatically, use the `npm run start:dev` command.
-
 ## License
 
 Melonly is an open-source framework licensed under the [MIT License](LICENSE).
 
-If you discovered a bug or security vulnerability please open an issue / pull request in the repository or email me: dom.rajkowski@gmail.com.
+If you discovered any bug or security issue please open new issue / pull request in the [repository](https://github.com/Doc077/melonly-core) or email me: dom.rajkowski@gmail.com.
 
 ## Information
 
-Logo: [Created by Freepik - Flaticon](https://www.flaticon.com/free-icons/watermelon)
+Logo [created by Freepik - Flaticon](https://www.flaticon.com/free-icons/watermelon)
 
-Documentation: [https://melonly.pl](https://melonly.pl)
+Documentation: [melonly.pl](https://melonly.pl)
 
-Author: [Doc077](https://github.com/Doc077)
+GitHub repository: [github.com/Doc077/melonly](https://github.com/Doc077/melonly-core)
+
+by [Doc077](https://github.com/Doc077)

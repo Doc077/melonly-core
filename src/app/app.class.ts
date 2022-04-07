@@ -13,8 +13,6 @@ import { Router } from '../routing/router.class'
 import { Session } from '../session/session.class'
 import { NODE_MIN_VERSION } from '../constants'
 
-import 'reflect-metadata'
-
 interface MimeTypes {
   [key: string]: string
 }
@@ -85,6 +83,9 @@ export class App {
       const requestInstance = Container.getSingleton(Request)
       const url = request.url ?? '/'
 
+      /**
+       * Handle file requests
+       */
       if (url.includes('.')) {
         const filePath = joinPath('public', url.replace('/', ''))
         const fileExtension = url.replace('/', '').split('.')[1]

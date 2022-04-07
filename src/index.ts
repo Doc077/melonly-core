@@ -1,3 +1,5 @@
+import 'reflect-metadata'
+
 export * from './app/app.class'
 export * from './app/create-app.function'
 export * from './broadcasting/broadcast-channel.decorator'

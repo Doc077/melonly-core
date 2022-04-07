@@ -14,6 +14,7 @@ export class View {
     if: /\[if (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
     raw: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
     method: /\[method '?(.*?)'?\]/g,
+    unless: /\[unless (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/unless\]/gm,
     variable: /([^@])\{\{ *([^ ]*?) *\}\}/g,
   }
 
@@ -29,6 +30,7 @@ export class View {
     compiled = this.parseEachDirectives(compiled)
     compiled = this.parseMethodDirectives(compiled)
     compiled = this.parseIfDirectives(compiled, variables)
+    compiled = this.parseUnlessDirectives(compiled, variables)
 
     /**
      * Variables
@@ -114,6 +116,22 @@ export class View {
 
     for (const match of matches) {
       if (variables[match[1]]) {
+        content = content.replace(match[0], match[3])
+
+        break
+      }
+
+      content = content.replace(match[0], '')
+    }
+
+    return content
+  }
+
+  private static parseUnlessDirectives(content: string, variables: ViewVariables = {}): string {
+    const matches = content.matchAll(this.patterns.unless) ?? []
+
+    for (const match of matches) {
+      if (!variables[match[1]]) {
         content = content.replace(match[0], match[3])
 
         break

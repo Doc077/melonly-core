@@ -5,13 +5,10 @@ import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
-
-interface Data {
-  [key: string]: any
-}
+import { SessionData } from './session-data.interface'
 
 export class Session {
-  private variables: Data = {}
+  private variables: SessionData = {}
 
   private key: string | null = ''
 
@@ -51,7 +48,7 @@ export class Session {
     Container.getSingleton(Response).cookie('sessionId', '')
   }
 
-  public get data(): Data {
+  public get data(): SessionData {
     return this.variables
   }
 

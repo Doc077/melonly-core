@@ -11,6 +11,9 @@
   </p>
 </p>
 
+<!-- omit in toc -->
+## Melonly Node.js Framework
+
 Melonly is a fast and modern web development framework for Node.js. It makes it easy to create secure and fast web applications with awesome developer experience.
 
 **Table of Contents**

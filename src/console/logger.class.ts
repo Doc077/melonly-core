@@ -16,19 +16,19 @@ export class Logger {
   }
 
   public static error(data: any): void {
-    const output = redBright(`${this.badge()} ${data}`)
+    const output = redBright(`${this.badge()}  ${data}`)
 
     console.log(output)
   }
 
   public static info(data: any): void {
-    const output = green(`${this.badge()} ${data}`)
+    const output = green(`${this.badge()}  ${data}`)
 
     console.log(output)
   }
 
   public static warn(data: any): void {
-    const output = yellow(`${this.badge()} ${data}`)
+    const output = yellow(`${this.badge()}  ${data}`)
 
     console.warn(output)
   }

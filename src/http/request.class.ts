@@ -20,7 +20,7 @@ interface QueryStringParams {
 }
 
 export class Request {
-  private instance: IncomingMessage | null = null
+  private instance: IncomingMessage | null | any = null
 
   private formData: FormData = {}
 
@@ -39,7 +39,6 @@ export class Request {
 
         this.formData = { ...fields }
         this.formFiles = { ...files }
-
         Router.evaluate(this.url())
       })
     }
@@ -133,7 +132,7 @@ export class Request {
   }
 
   public protocol(): string {
-    return this.instance?.connection.encrypted ? 'https' : 'http'
+    return this.instance?.socket.encrypted ? 'https' : 'http'
   }
 
   public get query(): QueryStringParams {

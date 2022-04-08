@@ -19,46 +19,6 @@ export class App {
 
   public controllers: any[] = []
 
-  public start(): this {
-    process.on('uncaughtException', (exception: any) => {
-      ExceptionHandler.handle(exception)
-    })
-
-    try {
-      envConfig({
-        path: '.env',
-      })
-
-      if (NODE_MIN_VERSION > parseInt(process.versions.node)) {
-        Logger.warn(`Node version requirements (v${NODE_MIN_VERSION}+) not met`)
-      }
-
-      this.runServer()
-    } catch (exception) {
-      ExceptionHandler.handle(exception)
-    }
-
-    return this
-  }
-
-  public bindSingletons(classes: any[]): void {
-    Container.bindSingletons(classes)
-  }
-
-  public registerChannels(channels: any[]): this {
-    this.broadcastingEnabled = true
-
-    Broadcaster.registerChannels(channels)
-
-    return this
-  }
-
-  public registerControllers(controllers: any[]): this {
-    this.controllers.push(...controllers)
-
-    return this
-  }
-
   private initHttpModule(request: IncomingMessage, response: ServerResponse): void {
     Container.bindSingletons([Request, Response])
 
@@ -85,6 +45,7 @@ export class App {
       /**
        * Handle file requests
        */
+
       if (url.includes('.')) {
         const filePath = joinPath('public', url.replace('/', ''))
         const fileExtension = url.replace('/', '').split('.')[1]
@@ -99,6 +60,7 @@ export class App {
        * Otherwise, the response will be generated after
        * Request.init() method processes input data
        */
+
       if (['get', 'head'].includes(requestInstance.method())) {
         Router.evaluate(url)
       }
@@ -128,5 +90,43 @@ export class App {
     } catch (error) {
       throw new RouteNotFoundException()
     }
+  }
+
+  public start(): this {
+    process.on('uncaughtException', (exception: any) => ExceptionHandler.handle(exception))
+
+    try {
+      envConfig({
+        path: '.env',
+      })
+
+      if (parseInt(process.versions.node) < NODE_MIN_VERSION) {
+        Logger.warn(`Node version requirements >= ${NODE_MIN_VERSION} not met`)
+      }
+
+      this.runServer()
+    } catch (exception) {
+      ExceptionHandler.handle(exception)
+    }
+
+    return this
+  }
+
+  public bindSingletons(classes: any[]): void {
+    Container.bindSingletons(classes)
+  }
+
+  public registerChannels(channels: any[]): this {
+    this.broadcastingEnabled = true
+
+    Broadcaster.registerChannels(channels)
+
+    return this
+  }
+
+  public registerControllers(controllers: any[]): this {
+    this.controllers.push(...controllers)
+
+    return this
   }
 }

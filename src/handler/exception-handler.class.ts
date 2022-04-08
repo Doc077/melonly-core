@@ -59,6 +59,7 @@ export class ExceptionHandler {
     /**
      * Render error page
      */
+
     if (process.env.APP_DEBUG === 'true') {
       const file = joinPath(__dirname, '..', '..', 'assets', 'exception.melon')
 

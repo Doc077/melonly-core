@@ -1,7 +1,7 @@
 export class Exception {
-  public name: string
+  public readonly name: string
 
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     this.name = 'Exception'
   }
 }

@@ -26,6 +26,7 @@ export class View {
     /**
      * Compile directives
      */
+
     compiled = this.parseRawDirectives(compiled)
     compiled = this.parseEachDirectives(compiled)
     compiled = this.parseMethodDirectives(compiled)
@@ -36,6 +37,7 @@ export class View {
     /**
      * Variables
      */
+
     for (const expression of compiled.matchAll(this.patterns.variable) ?? []) {
       const name: string = expression[2]
 
@@ -56,6 +58,7 @@ export class View {
     /**
      * Raw bracket syntax rendering
      */
+
     for (const expression of compiled.matchAll(/@(\{\{ *[^ ]*? *\}\})/g) ?? []) {
       compiled = compiled.replace(expression[0], expression[1])
     }
@@ -63,6 +66,7 @@ export class View {
     /**
      * Restore raw contents
      */
+
     compiled = this.restoreRawContents(compiled)
 
     return new ViewResponse(compiled)

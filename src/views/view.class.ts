@@ -3,7 +3,7 @@ import { readFileSync } from 'fs'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Session } from '../session/session.class'
-import { ViewResponse } from './view-response.class'
+import { RenderResponse } from './render-response.class'
 import { ViewVariables } from './view-variables.interface'
 import * as constants from '../constants'
 
@@ -20,7 +20,7 @@ export class View {
 
   private static rawContents: string[] = []
 
-  public static compile(file: string, variables: ViewVariables = {}): ViewResponse {
+  public static compile(file: string, variables: ViewVariables = {}): RenderResponse {
     let compiled = readFileSync(file).toString()
 
     /**
@@ -69,7 +69,7 @@ export class View {
 
     compiled = this.restoreRawContents(compiled)
 
-    return new ViewResponse(compiled)
+    return new RenderResponse(compiled)
   }
 
   private static parseRawDirectives(content: string): string {

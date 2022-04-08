@@ -5,12 +5,12 @@ import { Injector } from '../container/injector.class'
 import { InvalidTokenException } from './invalid-token.exception'
 import { Logger } from '../console/logger.class'
 import { Method } from '../http/method.enum'
+import { RenderResponse } from '../views/render-response.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
 import { RouteNotFoundException } from './route-not-found.exception'
 import { Route } from './route.class'
 import { Session } from '../session/session.class'
-import { ViewResponse } from '../views/view-response.class'
 
 export class Router {
   private static routes: Route[] = []
@@ -30,7 +30,7 @@ export class Router {
   private static respond(responseContent: any): void {
     const responseInstance = Container.getSingleton(Response)
 
-    if (responseContent instanceof ViewResponse) {
+    if (responseContent instanceof RenderResponse) {
       responseContent = responseContent.toString()
     }
 

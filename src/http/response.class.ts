@@ -2,7 +2,7 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 import { ServerResponse } from 'http'
 import { Exception } from '../handler/exception.class'
-import { ViewResponse } from '../views/view-response.class'
+import { RenderResponse } from '../views/render-response.class'
 import { ViewVariables } from '../views/view-variables.interface'
 import { View } from '../views/view.class'
 
@@ -18,7 +18,7 @@ export class Response {
   }
 
   public end(content?: any): void {
-    if (content instanceof ViewResponse) {
+    if (content instanceof RenderResponse) {
       content = content.toString()
     }
 
@@ -52,7 +52,7 @@ export class Response {
     return null
   }
 
-  public render(view: string, variables: ViewVariables = {}): ViewResponse {
+  public render(view: string, variables: ViewVariables = {}): RenderResponse {
     const file = join('views', `${view.replace('.', '/')}.melon.html`)
 
     if (!existsSync(file)) {

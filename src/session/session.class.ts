@@ -58,6 +58,18 @@ export class Session {
     this.saveSessionData()
   }
 
+  public generateToken(): string {
+    if ('_token' in this.variables) {
+      return this.variables['_token']
+    }
+
+    const token = randomBytes(16).toString('hex')
+
+    this.set('_token', token)
+
+    return token
+  }
+
   public get(key: string): any {
     return this.variables[key]
   }

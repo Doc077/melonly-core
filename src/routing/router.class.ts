@@ -2,16 +2,63 @@ import { pathToRegexp } from 'path-to-regexp'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Injector } from '../container/injector.class'
+import { InvalidTokenException } from './invalid-token.exception'
 import { Logger } from '../console/logger.class'
 import { Method } from '../http/method.enum'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
-import { Route } from './route.class'
 import { RouteNotFoundException } from './route-not-found.exception'
+import { Route } from './route.class'
+import { Session } from '../session/session.class'
 import { ViewResponse } from '../views/view-response.class'
 
 export class Router {
   private static routes: Route[] = []
+
+  private static addRoute(url: string, action: () => any, method: Method): void {
+    if (!url.startsWith('/')) {
+      url = `/${url}`
+    }
+
+    const route = new Route(url, method, pathToRegexp(url, [], {
+      endsWith: '?',
+    }), action)
+
+    this.routes.push(route)
+  }
+
+  private static respond(responseContent: any): void {
+    const responseInstance = Container.getSingleton(Response)
+
+    if (responseContent instanceof ViewResponse) {
+      responseContent = responseContent.toString()
+    }
+
+    if (Array.isArray(responseContent) || typeof responseContent === 'object') {
+      responseInstance.header('Content-Type', 'application/json')
+
+      responseContent = JSON.stringify(responseContent)
+    } else if (responseContent === null || responseContent === undefined || typeof responseContent === 'string') {
+      responseInstance.header('Content-Type', 'text/html; charset=utf-8')
+    }
+
+    responseInstance.end(responseContent)
+  }
+
+  private static abortNotFound(): never {
+    throw new RouteNotFoundException()
+  }
+
+  private static verifyCsrfToken(): void {
+    const requestInstance = Container.getSingleton(Request)
+
+    if (
+      !['get', 'head'].includes(requestInstance.method()) &&
+      Container.getSingleton(Request).data._token !== Container.getSingleton(Session).data._token
+    ) {
+      throw new InvalidTokenException()
+    }
+  }
 
   public static get(url: string, action: () => any): void {
     this.addRoute(url, action, Method.Get)
@@ -34,7 +81,9 @@ export class Router {
   }
 
   public static evaluate(url: string): void {
-    Logger.info(`Request: ${Container.getSingleton(Request).method().toUpperCase()} ${url}`)
+    const method = Container.getSingleton(Request).method()
+
+    Logger.info(`Request: ${method.toUpperCase()} ${url}`)
 
     for (const route of this.routes) {
       if (route.pattern.test(url)) {
@@ -49,13 +98,15 @@ export class Router {
           }
         }
 
-        if (String(route.method) !== Container.getSingleton(Request).method()) {
+        if (String(route.method) !== method) {
           if (routeNameCount === 1) {
             this.abortNotFound()
           }
 
           continue
         }
+
+        this.verifyCsrfToken()
 
         let keys: string[] = []
         let values: string[] = []
@@ -114,18 +165,6 @@ export class Router {
     this.abortNotFound()
   }
 
-  private static addRoute(url: string, action: () => any, method: Method): void {
-    if (!url.startsWith('/')) {
-      url = `/${url}`
-    }
-
-    const route = new Route(url, method, pathToRegexp(url, [], {
-      endsWith: '?',
-    }), action)
-
-    this.routes.push(route)
-  }
-
   public static resolveController(controller: any, method: string): any {
     try {
       const result = Injector.resolve(controller)[method]()
@@ -134,25 +173,5 @@ export class Router {
     } catch (exception) {
       throw exception
     }
-  }
-
-  private static respond(responseContent: any): void {
-    if (responseContent instanceof ViewResponse) {
-      responseContent = responseContent.toString()
-    }
-
-    if (Array.isArray(responseContent) || typeof responseContent === 'object') {
-      Container.getSingleton(Response).header('Content-Type', 'application/json')
-
-      responseContent = JSON.stringify(responseContent)
-    } else if (responseContent === null || responseContent === undefined || typeof responseContent === 'string') {
-      Container.getSingleton(Response).header('Content-Type', 'text/html; charset=utf-8')
-    }
-
-    Container.getSingleton(Response).end(responseContent)
-  }
-
-  private static abortNotFound(): never {
-    throw new RouteNotFoundException()
   }
 }

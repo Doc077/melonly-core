@@ -71,6 +71,8 @@ export class App {
     requestInstance.init()
 
     Container.bindSingletons([Session])
+
+    Container.getSingleton(Session).generateToken()
   }
 
   private runServer(): void {

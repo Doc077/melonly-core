@@ -1,6 +1,8 @@
 import { encode } from 'html-entities'
 import { readFileSync } from 'fs'
+import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
+import { Session } from '../session/session.class'
 import { ViewResponse } from './view-response.class'
 import { ViewVariables } from './view-variables.interface'
 import * as constants from '../constants'
@@ -11,6 +13,7 @@ export class View {
     if: /\[if (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
     raw: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
     method: /\[method '?(.*?)'?\]/g,
+    token: /\[token\]/g,
     unless: /\[unless (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/unless\]/gm,
     variable: /([^@])\{\{ *([^ ]*?) *\}\}/g,
   }
@@ -27,6 +30,7 @@ export class View {
     compiled = this.parseEachDirectives(compiled)
     compiled = this.parseMethodDirectives(compiled)
     compiled = this.parseIfDirectives(compiled, variables)
+    compiled = this.parseTokenDirectives(compiled)
     compiled = this.parseUnlessDirectives(compiled, variables)
 
     /**
@@ -38,7 +42,7 @@ export class View {
       let variableValue: string = name.startsWith('MELONLY_') ? constants[name as keyof object] : variables[name]
 
       if (!variableValue) {
-        throw new Exception(`Variable '${name}' has not been passed or defined`)
+        throw new Exception(`Variable '${name}' has not been passed to a view`)
       }
 
       variableValue =
@@ -119,6 +123,17 @@ export class View {
       }
 
       content = content.replace(match[0], '')
+    }
+
+    return content
+  }
+
+  private static parseTokenDirectives(content: string): string {
+    const matches = content.matchAll(this.patterns.token) ?? []
+    const token = Container.getSingleton(Session).data._token
+
+    for (const match of matches) {
+      content = content.replace(match[0], `<input type="hidden" name="_token" value="${token}">`)
     }
 
     return content

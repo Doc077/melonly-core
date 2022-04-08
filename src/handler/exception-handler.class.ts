@@ -1,6 +1,7 @@
 import { existsSync } from 'fs'
 import { join as joinPath } from 'path'
 import { Container } from '../container/container.class'
+import { InvalidTokenException } from '../routing/invalid-token.exception'
 import { Logger } from '../console/logger.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
@@ -9,8 +10,10 @@ import { View } from '../views/view.class'
 
 export class ExceptionHandler {
   public static handle(exception: any): void {
+    const responseInstance = Container.getSingleton(Response)
+
     if (exception instanceof RouteNotFoundException) {
-      Container.getSingleton(Response).status(404)
+      responseInstance.status(404)
 
       const customTemplatePath = joinPath('views', 'errors', '404.melon.html')
 
@@ -18,7 +21,7 @@ export class ExceptionHandler {
         ? customTemplatePath
         : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
 
-      Container.getSingleton(Response).end(
+      responseInstance.end(
         View.compile(file, {
           code: 404,
           message: 'Not Found',
@@ -28,11 +31,30 @@ export class ExceptionHandler {
       return
     }
 
+    if (exception instanceof InvalidTokenException) {
+      responseInstance.status(419)
+
+      const customTemplatePath = joinPath('views', 'errors', '419.melon.html')
+
+      const file = existsSync(customTemplatePath)
+        ? customTemplatePath
+        : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
+
+      responseInstance.end(
+        View.compile(file, {
+          code: 419,
+          message: 'Invalid Token',
+        }),
+      )
+
+      return
+    }
+
     Logger.error(`Exception: ${exception.message}`)
 
-    Container.getSingleton(Response).status(500)
+    responseInstance.status(500)
 
-    Container.getSingleton(Response).terminate()
+    responseInstance.terminate()
 
     /**
      * Render error page
@@ -40,11 +62,11 @@ export class ExceptionHandler {
     if (process.env.APP_DEBUG === 'true') {
       const file = joinPath(__dirname, '..', '..', 'assets', 'exception.melon')
 
-      Container.getSingleton(Response).end(
+      responseInstance.end(
         View.compile(file, {
           message: exception.message,
           method: Container.getSingleton(Request).method().toUpperCase(),
-          status: Container.getSingleton(Response).getStatus(),
+          status: responseInstance.getStatus(),
           uri: Container.getSingleton(Request).url(),
         }),
       )
@@ -58,7 +80,7 @@ export class ExceptionHandler {
       ? customTemplatePath
       : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
 
-    Container.getSingleton(Response).end(
+    responseInstance.end(
       View.compile(file, {
         code: 500,
         message: 'Server Error',

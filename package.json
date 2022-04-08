@@ -19,11 +19,11 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "cli-color": "^2.0.1",
+    "cli-color": "^2.0.2",
     "dotenv": "^16.0.0",
     "formidable": "^2.0.1",
-    "html-entities": "^2.3.2",
-    "nodemailer": "^6.7.2",
+    "html-entities": "^2.3.3",
+    "nodemailer": "^6.7.3",
     "path-to-regexp": "^6.2.0",
     "reflect-metadata": "^0.1.13",
     "socket.io": "^4.4.1"

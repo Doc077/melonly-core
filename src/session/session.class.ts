@@ -18,21 +18,24 @@ export class Session {
     const sessionFilePath = joinPath('storage', 'sessions', `${this.key}.json`)
 
     if (this.key && existsSync(sessionFilePath)) {
-      const savedSessionData = JSON.parse(readFileSync(sessionFilePath, 'utf-8').toString())
+      const sessionFileContent = readFileSync(sessionFilePath, 'utf-8').toString()
+      const savedSessionData = JSON.parse(sessionFileContent)
 
       this.variables = savedSessionData
-    } else {
-      const generatedId = randomBytes(16).toString('hex')
 
-      Container.getSingleton(Response).cookie('sessionId', generatedId)
+      return
+    }
 
-      try {
-        const path = joinPath('storage', 'sessions', `${generatedId}.json`)
+    const generatedId = randomBytes(16).toString('hex')
 
-        writeFileSync(path, JSON.stringify({}), 'utf-8')
-      } catch (error) {
-        throw new Exception('Unable to initialize session')
-      }
+    Container.getSingleton(Response).cookie('sessionId', generatedId)
+
+    try {
+      const path = joinPath('storage', 'sessions', `${generatedId}.json`)
+
+      writeFileSync(path, JSON.stringify({}), 'utf-8')
+    } catch (error) {
+      throw new Exception('Unable to initialize session')
     }
   }
 

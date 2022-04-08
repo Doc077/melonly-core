@@ -10,7 +10,7 @@ import * as constants from '../constants'
 export class View {
   private static patterns: { [name: string]: RegExp } = {
     each: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
-    if: /\[if (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
+    if: /\[if (not)? ?(.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
     raw: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
     method: /\[method '?(.*?)'?\]/g,
     token: /\[token\]/g,
@@ -22,10 +22,6 @@ export class View {
 
   public static compile(file: string, variables: ViewVariables = {}): RenderResponse {
     let compiled = readFileSync(file).toString()
-
-    /**
-     * Compile directives
-     */
 
     compiled = this.parseRawDirectives(compiled)
     compiled = this.parseEachDirectives(compiled)
@@ -41,16 +37,17 @@ export class View {
     for (const expression of compiled.matchAll(this.patterns.variable) ?? []) {
       const name: string = expression[2]
 
-      let variableValue: string = name.startsWith('MELONLY_') ? constants[name as keyof object] : variables[name]
+      let variableValue: string = name.startsWith('MELONLY_')
+        ? constants[name as keyof object]
+        : variables[name]
 
       if (!variableValue) {
         throw new Exception(`Variable '${name}' has not been passed to a view`)
       }
 
-      variableValue =
-        Array.isArray(variableValue) || typeof variableValue === 'object'
-          ? JSON.stringify(variableValue)
-          : encode(variableValue)
+      variableValue = Array.isArray(variableValue) || typeof variableValue === 'object'
+        ? JSON.stringify(variableValue)
+        : encode(variableValue)
 
       compiled = compiled.replace(expression[0], expression[1] + variableValue)
     }
@@ -120,8 +117,8 @@ export class View {
     const matches = content.matchAll(this.patterns.if) ?? []
 
     for (const match of matches) {
-      if (variables[match[1]]) {
-        content = content.replace(match[0], match[3])
+      if (variables[match[2]] || (match[1] === 'not' && !variables[match[2]])) {
+        content = content.replace(match[0], match[4])
 
         break
       }

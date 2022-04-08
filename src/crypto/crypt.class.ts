@@ -6,14 +6,15 @@ export interface EncryptedData {
 }
 
 export class Crypt {
-  private static ENCRYPTION_ALGORITHM: string = 'aes-256-ctr'
+  private static readonly ALGORITHM: string = 'aes-256-ctr'
 
-  private static key: string = process.env.APP_KEY ?? randomBytes(16).toString()
+  private static readonly key: string = process.env.APP_KEY
+    ?? randomBytes(16).toString()
 
-  private static iv: Buffer = randomBytes(16)
+  private static readonly iv: Buffer = randomBytes(16)
 
   public static encrypt(text: string): EncryptedData {
-    const cipher = createCipheriv(this.ENCRYPTION_ALGORITHM, this.key, this.iv)
+    const cipher = createCipheriv(this.ALGORITHM, this.key, this.iv)
 
     const encrypted = Buffer.concat([cipher.update(text), cipher.final()])
 
@@ -24,10 +25,10 @@ export class Crypt {
   }
 
   public static decrypt(EncryptedData: EncryptedData): string {
-    const decipher = createDecipheriv(this.ENCRYPTION_ALGORITHM, this.key, Buffer.from(EncryptedData.iv, 'hex'))
+    const decipher = createDecipheriv(this.ALGORITHM, this.key, Buffer.from(EncryptedData.iv, 'hex'))
 
-    const decrpyted = Buffer.concat([decipher.update(Buffer.from(EncryptedData.content, 'hex')), decipher.final()])
+    const decrypted = Buffer.concat([decipher.update(Buffer.from(EncryptedData.content, 'hex')), decipher.final()])
 
-    return decrpyted.toString()
+    return decrypted.toString()
   }
 }

@@ -1,9 +1,7 @@
 import { Router } from './router.class'
 
-export const Post = (uri: string) => {
-  return (target: any, methodName: string, descriptor: PropertyDescriptor) => {
-    Router.post(uri, () => {
-      return Router.resolveController(target.constructor, methodName)
-    })
+export const Post = (url: string) => {
+  return (target: any, methodName: string) => {
+    Router.post(url, () => Router.resolveController(target.constructor, methodName))
   }
 }

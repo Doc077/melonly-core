@@ -94,7 +94,7 @@ export class Router {
 
         for (const item of this.routes) {
           if (item.pattern.test(url)) {
-            routeNameCount++
+            routeNameCount += 1
           }
         }
 

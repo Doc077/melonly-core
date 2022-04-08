@@ -1,18 +1,18 @@
 import { encode } from 'html-entities'
 import { readFileSync } from 'fs'
+import * as constants from '../constants'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
-import { Session } from '../session/session.class'
 import { RenderResponse } from './render-response.class'
+import { Session } from '../session/session.class'
 import { ViewVariables } from './view-variables.interface'
-import * as constants from '../constants'
 
 export class View {
   private static patterns: { [name: string]: RegExp } = {
     each: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
     if: /\[if (not)? ?(.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
-    raw: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
     method: /\[method '?(.*?)'?\]/g,
+    raw: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
     token: /\[token\]/g,
     unless: /\[unless (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/unless\]/gm,
     variable: /([^@])\{\{ *([^ ]*?) *\}\}/g,
@@ -75,7 +75,7 @@ export class View {
 
     for (const match of matches) {
       content = content.replace(match[0], `__raw__${count}`)
-      count++
+      count += 1
 
       this.rawContents.push(match[2])
     }

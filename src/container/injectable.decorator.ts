@@ -1,5 +1,3 @@
 import { ClassDecorator } from './class-decorator.type'
 
-export const Injectable = (): ClassDecorator<any> => {
-  return (target: any) => {}
-}
+export const Injectable = (): ClassDecorator<any> => (target: any) => {}

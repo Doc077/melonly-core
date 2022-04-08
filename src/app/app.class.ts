@@ -7,12 +7,12 @@ import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { Logger } from '../console/logger.class'
 import { MimeTypes } from '../http/mime-types.interface'
+import { NODE_MIN_VERSION } from '../constants'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
 import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { Router } from '../routing/router.class'
 import { Session } from '../session/session.class'
-import { NODE_MIN_VERSION } from '../constants'
 
 export class App {
   private broadcastingEnabled: boolean = false
@@ -101,7 +101,7 @@ export class App {
       })
 
       if (parseInt(process.versions.node) < NODE_MIN_VERSION) {
-        Logger.warn(`Node version requirements >= ${NODE_MIN_VERSION} not met`)
+        Logger.warn(`Node version requirements v${NODE_MIN_VERSION} or highter not met`)
       }
 
       this.runServer()

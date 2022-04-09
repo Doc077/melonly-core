@@ -154,7 +154,7 @@ export class View {
 
       variableValue = Array.isArray(variableValue) || typeof variableValue === 'object'
         ? JSON.stringify(variableValue)
-        : encode(variableValue)
+        : encode(String(variableValue))
 
       compiled = compiled.replace(expression[0], expression[1] + variableValue)
     }

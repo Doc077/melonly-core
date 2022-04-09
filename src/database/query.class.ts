@@ -23,10 +23,14 @@ export class Query {
     let conditions: string[] = []
 
     this.whereConditions.forEach((value: string, key: string) => {
-      conditions.push(`\`${key}\` ${value}`)
+      conditions.push(`${conditions.length ? ' and ' : ''}\`${key}\` ${typeof value === 'string' ? `'${value}'` : value}`)
     })
 
-    const query = `${this.type} ${this.selectColumns.join(', ')} from \`${this.table}\`${this.whereConditions.size ? ` where ${conditions.join(' and ')}` : ''}${this.limitAmount ? ` limit ${this.limitAmount}` : ''}`
+    this.orWhereConditions.forEach((value: string, key: string) => {
+      conditions.push(`${conditions.length ? ' or ' : ''}\`${key}\` ${typeof value === 'string' ? `'${value}'` : value}`)
+    })
+
+    const query = `${this.type} ${this.selectColumns.join(', ')} from \`${this.table}\`${this.whereConditions.size ? ` where ${conditions.join('')}` : ''}${this.limitAmount ? ` limit ${this.limitAmount}` : ''}`
 
     Logger.info(`Database query: ${query}`)
 
@@ -45,17 +49,3 @@ export class Query {
     return this
   }
 }
-
-/*
-  const users = User.select().where('name', 'like', `%${name}%`).orWhere('age', '=', 20).fetch()
-
-  User.create({
-    name: 'User1',
-    email: 'user1@gmail.com',
-    password: '123',
-  })
-
-  select * from `users` where `name` like '%name%' or `age` = 20
-
-  insert into `users` (name, email, password) values ('User1', 'user1@gmail.com', '123')
-*/

@@ -148,7 +148,7 @@ export class View {
         ? constants[name as keyof object]
         : variables[name]
 
-      if (variableValue === null || variableValue === undefined) {
+      if (!(name in variables)) {
         throw new Exception(`Variable '${name}' has not been passed to a view`)
       }
 

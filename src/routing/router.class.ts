@@ -35,11 +35,11 @@ export class Router {
     }
 
     if (Array.isArray(responseContent) || typeof responseContent === 'object') {
-      responseInstance.header('Content-Type', 'application/json')
+      responseInstance.header('content-type', 'application/json')
 
       responseContent = JSON.stringify(responseContent)
     } else if (responseContent === null || responseContent === undefined || typeof responseContent === 'string') {
-      responseInstance.header('Content-Type', 'text/html; charset=utf-8')
+      responseInstance.header('content-type', 'text/html; charset=utf-8')
     }
 
     responseInstance.end(responseContent)
@@ -87,19 +87,16 @@ export class Router {
 
     for (const route of this.routes) {
       if (route.pattern.test(url)) {
-        /**
-         * Check routes with the same URL but different methods
-         */
-        let routeNameCount = 0
+        let routePathCount = 0
 
         for (const item of this.routes) {
           if (item.pattern.test(url)) {
-            routeNameCount += 1
+            routePathCount += 1
           }
         }
 
         if (String(route.method) !== method) {
-          if (routeNameCount === 1) {
+          if (routePathCount === 1) {
             this.abortNotFound()
           }
 
@@ -137,6 +134,7 @@ export class Router {
         /**
          * Async methods support
          */
+
         if (responseContent instanceof Promise) {
           let result: any
 

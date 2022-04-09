@@ -1,3 +1,5 @@
+import { Logger } from '../console/logger.class'
+
 export class Query {
   private type: string = 'select'
 
@@ -34,7 +36,7 @@ export class Query {
 
     const query = `${this.type} ${this.selectColumns.join('`, `')} from ${this.table}${this.whereConditions.size ? ` where ${conditions.join(' and ')}` : ''}${this.limitAmount ? ` limit ${this.limitAmount}` : ''}`
 
-    console.log('SQL: ', query)
+    Logger.info(`Database query: ${query}`)
 
     return []
   }

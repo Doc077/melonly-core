@@ -30,7 +30,7 @@ export abstract class Email {
       to,
       subject,
       text,
-    }, (error: any) => {
+    }, (error: Error | null) => {
       if (error) {
         throw new Exception(`Cannot send an email: ${error}`)
       }

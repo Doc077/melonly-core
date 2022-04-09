@@ -29,7 +29,7 @@ export class View {
         : variables[match[2]]
 
       if (!iterableValue || typeof iterableValue[Symbol.iterator] !== 'function') {
-        throw new Exception(`Value '${iterableValue}' cannot be used in loop as it's not iterable`)
+        throw new Exception(`Value '${iterableValue}' cannot be used as loop variable as it's not iterable`)
       }
 
       let result = ''
@@ -149,7 +149,7 @@ export class View {
         : variables[name]
 
       if (!name.startsWith('MELONLY_') && !(name in variables)) {
-        throw new Exception(`Variable '${name}' has not been passed to a view`)
+        throw new Exception(`The '${name}' variable has not been passed to the view`)
       }
 
       variableValue = Array.isArray(variableValue) || typeof variableValue === 'object'

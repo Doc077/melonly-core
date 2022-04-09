@@ -13,7 +13,7 @@ export class Broadcaster {
       if (channel.nameRegex.test(channelName)) {
         this.broadcastServer?.emit(name, data)
 
-        Logger.info(`Websocket event: ${name}`)
+        Logger.info(`Broadcast event: ${name}`)
 
         break
       }

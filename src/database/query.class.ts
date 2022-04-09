@@ -1,6 +1,8 @@
 export class Query {
   private type: string = 'select'
 
+  private limitAmount: number | null = null
+
   private whereConditions: Map<string, string> = new Map()
 
   private orWhereConditions: Map<string, string> = new Map()
@@ -9,8 +11,28 @@ export class Query {
 
   constructor(private table: string) {}
 
+  public limit(amount: number): this {
+    this.limitAmount = amount
+
+    return this
+  }
+
   public fetch(): any[] {
-    const query = `${this.type} ${this.selectColumns.join('`, `')} from ${this.table} ${this.whereConditions.size ? ` where ${[...this.whereConditions.keys()].join(' and ')}` : ''}`
+    const wheres = [...this.whereConditions.keys()]
+
+    let conditions: string[] = []
+
+    // wheres.map((key: string, i: number) => {
+    //   conditions = {
+    //     ...conditions,
+    //     [key + ' and ']: [...this.whereConditions.values()][i],
+    //   }
+    // })
+    this.whereConditions.forEach((value: string, key: string) => {
+      conditions.push(`${key} ${value}`)
+    })
+
+    const query = `${this.type} ${this.selectColumns.join('`, `')} from ${this.table}${this.whereConditions.size ? ` where ${conditions.join(' and ')}` : ''}${this.limitAmount ? ` limit ${this.limitAmount}` : ''}`
 
     console.log('SQL: ', query)
 

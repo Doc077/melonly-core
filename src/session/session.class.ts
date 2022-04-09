@@ -33,7 +33,9 @@ export class Session {
     try {
       const path = joinPath('storage', 'sessions', `${generatedId}.json`)
 
-      writeFileSync(path, JSON.stringify({}), 'utf-8')
+      if (generatedId) {
+        writeFileSync(path, JSON.stringify({}), 'utf-8')
+      }
     } catch (error) {
       throw new Exception('Unable to initialize session')
     }

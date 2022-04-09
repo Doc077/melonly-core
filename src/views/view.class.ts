@@ -148,7 +148,7 @@ export class View {
         ? constants[name as keyof object]
         : variables[name]
 
-      if (!(name in variables)) {
+      if (!name.startsWith('MELONLY_') && !(name in variables)) {
         throw new Exception(`Variable '${name}' has not been passed to a view`)
       }
 

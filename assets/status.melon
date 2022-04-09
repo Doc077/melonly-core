@@ -88,9 +88,9 @@ Check your Browserslist config to be sure that your targets are set up correctly
     </script>
   </head>
 
-  <body class="bg-slate-50 h-screen flex justify-center items-center leading-8 gap-8 selection:bg-emerald-400 selection:text-gray-900 dark:bg-slate-900 dark:text-slate-50">
+  <body class="bg-slate-50 h-screen flex justify-center items-center leading-8 gap-8 text-gray-800 selection:bg-emerald-400 selection:text-gray-900 dark:bg-slate-900 dark:text-slate-100">
     <h1 class="text-2xl flex items-center">
-      <span class="text-emerald-500 dark:text-emerald-400 text-3xl rounded-md px-2 py-1 mr-1">{{ code }}</span> {{ message }}
+      <span class="text-emerald-500 dark:text-emerald-400 text-3xl font-medium rounded-md px-2 py-1 mr-1">{{ code }}</span> {{ message }}
     </h1>
   </body>
 </html>

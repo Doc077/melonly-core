@@ -20,21 +20,13 @@ export class Query {
   }
 
   public fetch(): any[] {
-    const wheres = [...this.whereConditions.keys()]
-
     let conditions: string[] = []
 
-    // wheres.map((key: string, i: number) => {
-    //   conditions = {
-    //     ...conditions,
-    //     [key + ' and ']: [...this.whereConditions.values()][i],
-    //   }
-    // })
     this.whereConditions.forEach((value: string, key: string) => {
-      conditions.push(`${key} ${value}`)
+      conditions.push(`\`${key}\` ${value}`)
     })
 
-    const query = `${this.type} ${this.selectColumns.join('`, `')} from ${this.table}${this.whereConditions.size ? ` where ${conditions.join(' and ')}` : ''}${this.limitAmount ? ` limit ${this.limitAmount}` : ''}`
+    const query = `${this.type} ${this.selectColumns.join(', ')} from \`${this.table}\`${this.whereConditions.size ? ` where ${conditions.join(' and ')}` : ''}${this.limitAmount ? ` limit ${this.limitAmount}` : ''}`
 
     Logger.info(`Database query: ${query}`)
 

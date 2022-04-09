@@ -90,15 +90,14 @@ Check your Browserslist config to be sure that your targets are set up correctly
 
   <body class="bg-slate-50 h-screen flex justify-center items-center leading-8 text-gray-800 selection:bg-emerald-300 selection:text-gray-900 dark:bg-slate-900 dark:text-slate-50 py-16">
     <main class="flex flex-col bg-white dark:bg-slate-800 p-12 rounded-xl shadow-lg shadow-gray-500/10 dark:shadow-black/10 w-2/3 lg:w-1/2 overflow-auto">
-      <span class="self-start bg-rose-500 text-white font-mono text-sm rounded-md shadow-lg shadow-rose-500/20 px-2 py-1">HTTP {{ status }}</span>
+      <span class="self-start bg-rose-500 text-white font-mono text-sm rounded-md shadow-lg shadow-rose-500/20 px-2 py-1">Exception</span>
 
-      <h1 class="text-2xl font-bold mt-6">
-        Exception: {{ message }}
-      </h1>
+      <h1 class="text-2xl font-bold mt-8">{{ message }}</h1>
 
       <code class="self-start px-2 py-1 text-sm bg-slate-100 dark:bg-slate-900 rounded-md mt-7">{{ method }} {{ uri }}</code>
+      <code class="self-start px-2 py-1 text-sm bg-slate-100 dark:bg-slate-900 rounded-md mt-2">HTTP {{ status }}</code>
   
-      <button class="self-end bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-2 mt-12 rounded-xl text-white shadow-lg shadow-emerald-500/20 hover:opacity-90 select-none" onclick="window.location.reload()">Reload page</button>
+      <button class="self-end bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-2 mt-12 rounded-xl text-white shadow-lg shadow-emerald-500/20 transition-all duration-300 hover:opacity-95 hover:-translate-y-1 select-none" onclick="window.location.reload()">Reload page</button>
     </main>
   </body>
 </html>

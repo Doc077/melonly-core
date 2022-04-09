@@ -14,6 +14,16 @@ export abstract class Entity {
       return query
     }
 
+    if (typeof columns === 'string') {
+      query.selectColumns = [columns]
+
+      return query
+    }
+
+    columns.map((column: string, i: number) => {
+      columns[i] = `\`${column}\``
+    })
+
     query.selectColumns = [...columns]
 
     return query

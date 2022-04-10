@@ -38,12 +38,13 @@ export class Server {
 
       const requestInstance = Container.getSingleton(Request)
       const url = request.url ?? '/'
+      const urlLastSegment = url.slice(url.lastIndexOf('/') + 1)
 
       /**
        * Handle file requests
        */
 
-      if (url.includes('.')) {
+      if (['get', 'head'].includes(requestInstance.method()) && urlLastSegment.includes('.')) {
         const filePath = joinPath('public', url.replace('/', ''))
         const fileExtension = url.replace('/', '').split('.')[1]
 

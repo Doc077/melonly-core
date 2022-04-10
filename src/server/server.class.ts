@@ -14,7 +14,7 @@ import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { Router } from '../routing/router.class'
 import { Session } from '../session/session.class'
 
-export class App {
+export class Server {
   private broadcastingEnabled: boolean = false
 
   public controllers: any[] = []
@@ -35,7 +35,7 @@ export class App {
     Container.getSingleton(Session).generateToken()
   }
 
-  private runServer(): void {
+  private run(): void {
     const server = createServer((request: IncomingMessage, response: ServerResponse) => {
       this.initHttpModule(request, response)
 
@@ -104,7 +104,7 @@ export class App {
         Logger.warn(`Node version requirements v${NODE_MIN_VERSION} or highter not met`)
       }
 
-      this.runServer()
+      this.run()
     } catch (exception) {
       ExceptionHandler.handle(exception)
     }

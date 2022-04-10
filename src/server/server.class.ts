@@ -84,7 +84,7 @@ export class Server {
       })
 
       if (parseInt(process.versions.node) < NODE_MIN_VERSION) {
-        Logger.warn(`Node version requirements v${NODE_MIN_VERSION} or highter not met`)
+        Logger.warn(`Node version requirements >= ${NODE_MIN_VERSION} not met`)
       }
 
       this.run()

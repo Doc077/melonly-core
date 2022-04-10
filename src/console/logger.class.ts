@@ -7,13 +7,13 @@ import {
   blueBright,
   green,
   redBright,
-  yellow,
+  yellowBright,
 } from 'cli-color'
 
 export class Logger {
-  private static readonly PAD_SIZE = 40
+  private static readonly PAD_SIZE = 46
 
-  private static readonly LINE_SIZE = 36
+  private static readonly LINE_SIZE = 42
 
   private static badge(): string {
     const date = new Date()
@@ -30,7 +30,7 @@ export class Logger {
   }
 
   public static error(data: any, status?: string | number): void {
-    if (data.length > this.LINE_SIZE) {
+    if (status && data.length > this.LINE_SIZE) {
       data = `${data.slice(0, this.LINE_SIZE)}...`
     }
 
@@ -45,7 +45,7 @@ export class Logger {
   }
 
   public static info(data: any, status?: string | number): void {
-    if (data.length > this.LINE_SIZE) {
+    if (status && data.length > this.LINE_SIZE) {
       data = `${data.slice(0, this.LINE_SIZE)}...`
     }
 
@@ -60,11 +60,11 @@ export class Logger {
   }
 
   public static warn(data: any, status?: string | number): void {
-    if (data.length > this.LINE_SIZE) {
+    if (status && data.length > this.LINE_SIZE) {
       data = `${data.slice(0, this.LINE_SIZE)}...`
     }
 
-    const main = yellow(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
+    const main = yellowBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
 
     const output = {
       main,
@@ -75,7 +75,7 @@ export class Logger {
   }
 
   public static success(data: any, status?: string | number): void {
-    if (data.length > this.LINE_SIZE) {
+    if (status && data.length > this.LINE_SIZE) {
       data = `${data.slice(0, this.LINE_SIZE)}...`
     }
 

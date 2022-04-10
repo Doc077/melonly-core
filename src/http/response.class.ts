@@ -2,11 +2,11 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 import { ServerResponse } from 'http'
 import { Exception } from '../handler/exception.class'
+import { JsonResponse } from './json-response.type'
+import { RedirectResponse } from './redirect-response.type'
 import { RenderResponse } from '../views/render-response.class'
 import { ViewVariables } from '../views/view-variables.interface'
 import { View } from '../views/view.class'
-
-export type RedirectResponse = null
 
 export class Response {
   private instance: ServerResponse | null = null
@@ -43,6 +43,10 @@ export class Response {
 
   public getStatus(): number {
     return this.instance?.statusCode ?? 200
+  }
+
+  public json(data: any[] | object): JsonResponse {
+    return data
   }
 
   public redirect(uri: string, code: number = 302): RedirectResponse {

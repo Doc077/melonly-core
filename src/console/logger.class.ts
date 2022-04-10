@@ -1,4 +1,4 @@
-import { green, redBright, yellow } from 'cli-color'
+import { black, bgGreen, bgRedBright, bgYellow, green, redBright, yellow } from 'cli-color'
 
 export class Logger {
   private static badge(): string {
@@ -15,21 +15,36 @@ export class Logger {
     return `[melonly] [${timestamp}]`
   }
 
-  public static error(data: any): void {
-    const output = redBright(`${this.badge()}  ${data}`)
+  public static error(data: any, status?: string | number): void {
+    const main = redBright(`${this.badge()}  ${data}`)
 
-    console.log(output)
+    const output = {
+      main,
+      ...(status && { status: black(bgRedBright(` ${status} `)) }),
+    }
+
+    console.log(...Object.values(output))
   }
 
-  public static info(data: any): void {
-    const output = green(`${this.badge()}  ${data}`)
+  public static info(data: any, status?: string | number): void {
+    const main = green(`${this.badge()}  ${data}`)
 
-    console.log(output)
+    const output = {
+      main,
+      ...(status && { status: black(bgGreen(` ${status} `)) }),
+    }
+
+    console.log(...Object.values(output))
   }
 
-  public static warn(data: any): void {
-    const output = yellow(`${this.badge()}  ${data}`)
+  public static warn(data: any, status?: string | number): void {
+    const main = yellow(`${this.badge()}  ${data}`)
 
-    console.warn(output)
+    const output = {
+      main,
+      ...(status && { status: black(bgYellow(` ${status} `)) }),
+    }
+
+    console.warn(...Object.values(output))
   }
 }

@@ -30,6 +30,7 @@ export class Router {
   }
 
   private static respond(responseContent: any): void {
+    const requestInstance = Container.getSingleton(Request)
     const responseInstance = Container.getSingleton(Response)
 
     if (responseContent instanceof RenderResponse) {
@@ -43,6 +44,8 @@ export class Router {
     } else if (responseContent === null || responseContent === undefined || typeof responseContent === 'string') {
       responseInstance.header('content-type', 'text/html; charset=utf-8')
     }
+
+    Logger.info(`Response: ${requestInstance.method().toUpperCase()} ${requestInstance.url()}`, '200 OK')
 
     responseInstance.end(responseContent)
   }
@@ -181,6 +184,8 @@ export class Router {
     try {
       const fileContent = readFileSync(path)
       const extensionMimes: MimeTypes = require('../../assets/mime-types.json')
+
+      Logger.info(`Response: GET ${url}`, '200 OK')
 
       const response = Container.getSingleton(Response)
 

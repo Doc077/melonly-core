@@ -39,7 +39,7 @@ export const enum Code {
   RangeNotSatisfiable = 416,
   ExpectationFailed = 417,
   ImTeapot = 418,
-  Tokenexpired = 419,
+  TokenExpired = 419,
   MisdirectedRequest = 421,
   UnprocessableEntity = 422,
   Locked = 423,

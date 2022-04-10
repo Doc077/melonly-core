@@ -10,9 +10,12 @@ import { View } from '../views/view.class'
 
 export class ExceptionHandler {
   public static handle(exception: any): void {
+    const requestInstance = Container.getSingleton(Request)
     const responseInstance = Container.getSingleton(Response)
 
     if (exception instanceof RouteNotFoundException) {
+      Logger.error(`Response: ${requestInstance.method().toUpperCase()} ${requestInstance.url()}`, '404 NOT FOUND')
+
       responseInstance.status(404)
 
       const customTemplatePath = joinPath('views', 'errors', '404.melon.html')
@@ -32,6 +35,8 @@ export class ExceptionHandler {
     }
 
     if (exception instanceof InvalidTokenException) {
+      Logger.error(`Response: ${requestInstance.method().toUpperCase()} ${requestInstance.url()}`, '419 TOKEN EXPIRED')
+
       responseInstance.status(419)
 
       const customTemplatePath = joinPath('views', 'errors', '419.melon.html')
@@ -51,6 +56,7 @@ export class ExceptionHandler {
     }
 
     Logger.error(`Exception: ${exception.message}`)
+    Logger.error(`Response: ${requestInstance.method().toUpperCase()} ${requestInstance.url()}`, '500 SERVER ERROR')
 
     responseInstance.status(500)
 

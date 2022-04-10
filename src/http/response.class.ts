@@ -1,5 +1,5 @@
 import { existsSync } from 'fs'
-import { join } from 'path'
+import { join as joinPath } from 'path'
 import { ServerResponse } from 'http'
 import { Exception } from '../handler/exception.class'
 import { JsonResponse } from './json-response.type'
@@ -57,7 +57,7 @@ export class Response {
   }
 
   public render(view: string, variables: ViewVariables = {}): RenderResponse {
-    const file = join('views', `${view.replace('.', '/')}.melon.html`)
+    const file = joinPath('views', `${view.replace('.', '/')}.melon.html`)
 
     if (!existsSync(file)) {
       throw new Exception(`View '${view}' does not exist`)

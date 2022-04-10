@@ -1,5 +1,6 @@
 import { encode } from 'html-entities'
-import { readFileSync } from 'fs'
+import { join as joinPath } from 'path'
+import { existsSync, readFileSync } from 'fs'
 import * as constants from '../constants'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
@@ -11,6 +12,7 @@ export class View {
   private static patterns: { [name: string]: RegExp } = {
     each: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
     if: /\[if (not)? ?(.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
+    import: /\[import '?(.*?)'?\]/g,
     method: /\[method '?(.*?)'?\]/g,
     raw: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
     token: /\[token\]/g,
@@ -59,6 +61,22 @@ export class View {
       }
 
       content = content.replace(match[0], '')
+    }
+
+    return content
+  }
+
+  private static parseImportDirectives(content: string): string {
+    const matches = content.matchAll(this.patterns.import) ?? []
+
+    for (const match of matches) {
+      const file = joinPath('views', `${match[1].replace('.', '/')}.melon.html`)
+
+      if (!existsSync(file)) {
+        throw new Exception(`Partial '${match[1]}' does not exist`)
+      }
+
+      content = content.replace(match[0], this.compile(file).toString())
     }
 
     return content
@@ -134,6 +152,7 @@ export class View {
     compiled = this.parseEachDirectives(compiled, variables)
     compiled = this.parseMethodDirectives(compiled)
     compiled = this.parseIfDirectives(compiled, variables)
+    compiled = this.parseImportDirectives(compiled)
     compiled = this.parseTokenDirectives(compiled)
     compiled = this.parseUnlessDirectives(compiled, variables)
 

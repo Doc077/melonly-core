@@ -88,7 +88,7 @@ export class Router {
   public static evaluate(url: string): void {
     const method = Container.getSingleton(Request).method()
 
-    Logger.info(`Request: ${method.toUpperCase()} ${url}`)
+    Logger.info(`Request: ${method.toUpperCase()} ${url}`, 'Resource')
 
     for (const route of this.routes) {
       if (route.pattern.test(url)) {
@@ -179,7 +179,7 @@ export class Router {
   }
 
   public static serveStaticFile(url: string, path: string, extension: string): void {
-    Logger.info(`Request: GET ${url}`)
+    Logger.info(`Request: GET ${url}`, 'File')
 
     try {
       const fileContent = readFileSync(path)

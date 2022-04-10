@@ -1,9 +1,19 @@
-import { black, bgGreen, bgRedBright, bgYellow, bgWhite, green, redBright, yellow } from 'cli-color'
+import {
+  bgBlueBright,
+  bgGreen,
+  bgRedBright,
+  bgYellow,
+  black,
+  blueBright,
+  green,
+  redBright,
+  yellow,
+} from 'cli-color'
 
 export class Logger {
-  private static PAD_SIZE = 40
+  private static readonly PAD_SIZE = 40
 
-  private static LINE_SIZE = 36
+  private static readonly LINE_SIZE = 36
 
   private static badge(): string {
     const date = new Date()
@@ -39,11 +49,11 @@ export class Logger {
       data = `${data.slice(0, this.LINE_SIZE)}...`
     }
 
-    const main = `${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`
+    const main = blueBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
 
     const output = {
       main,
-      ...(status && { status: black(bgWhite(` ${status} `)) }),
+      ...(status && { status: black(bgBlueBright(` ${status} `)) }),
     }
 
     console.log(...Object.values(output))

@@ -1,10 +1,12 @@
 import { pathToRegexp } from 'path-to-regexp'
+import { readFileSync } from 'fs'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Injector } from '../container/injector.class'
 import { InvalidTokenException } from './invalid-token.exception'
 import { Logger } from '../console/logger.class'
 import { Method } from '../http/method.enum'
+import { MimeTypes } from '../http/mime-types.interface'
 import { RenderResponse } from '../views/render-response.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
@@ -170,6 +172,23 @@ export class Router {
       return result
     } catch (exception) {
       throw exception
+    }
+  }
+
+  public static serveStaticFile(url: string, path: string, extension: string): void {
+    Logger.info(`Request: GET ${url}`)
+
+    try {
+      const fileContent = readFileSync(path)
+      const extensionMimes: MimeTypes = require('../../assets/mime-types.json')
+
+      const response = Container.getSingleton(Response)
+
+      response.header('content-type', extensionMimes[extension] ?? 'text/plain')
+
+      response.end(fileContent)
+    } catch (error) {
+      throw new RouteNotFoundException()
     }
   }
 }

@@ -1,16 +1,13 @@
 import { config as envConfig } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { join as joinPath } from 'path'
-import { readFileSync } from 'fs'
 import { Broadcaster } from '../broadcast/broadcaster.class'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { Logger } from '../console/logger.class'
-import { MimeTypes } from '../http/mime-types.interface'
 import { NODE_MIN_VERSION } from '../constants'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
-import { RouteNotFoundException } from '../routing/route-not-found.exception'
 import { Router } from '../routing/router.class'
 import { Session } from '../session/session.class'
 
@@ -36,7 +33,7 @@ export class Server {
   }
 
   private run(): void {
-    const server = createServer((request: IncomingMessage, response: ServerResponse) => {
+    const server = createServer((request: IncomingMessage, response: ServerResponse): void => {
       this.initHttpModule(request, response)
 
       const requestInstance = Container.getSingleton(Request)
@@ -50,7 +47,7 @@ export class Server {
         const filePath = joinPath('public', url.replace('/', ''))
         const fileExtension = url.replace('/', '').split('.')[1]
 
-        this.serveStaticFile(filePath, fileExtension ?? '')
+        Router.serveStaticFile(url, filePath, fileExtension)
 
         return
       }
@@ -75,21 +72,6 @@ export class Server {
     server.listen(serverPort, () => {
       Logger.info(`Server listening on port ${serverPort} [http://localhost:${serverPort}]`)
     })
-  }
-
-  private serveStaticFile(path: string, extension: string): void {
-    try {
-      const fileContent = readFileSync(path)
-      const extensionMimes: MimeTypes = require('../../assets/mime-types.json')
-
-      const response = Container.getSingleton(Response)
-
-      response.header('Content-Type', extensionMimes[extension] ?? 'text/plain')
-
-      response.end(fileContent)
-    } catch (error) {
-      throw new RouteNotFoundException()
-    }
   }
 
   public start(): this {

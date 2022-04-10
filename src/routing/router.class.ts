@@ -45,7 +45,7 @@ export class Router {
       responseInstance.header('content-type', 'text/html; charset=utf-8')
     }
 
-    Logger.info(`Response: ${requestInstance.method().toUpperCase()} ${requestInstance.url()}`, '200 OK')
+    Logger.success(`Response: ${requestInstance.method().toUpperCase()} ${requestInstance.url()}`, '200 OK')
 
     responseInstance.end(responseContent)
   }
@@ -185,7 +185,7 @@ export class Router {
       const fileContent = readFileSync(path)
       const extensionMimes: MimeTypes = require('../../assets/mime-types.json')
 
-      Logger.info(`Response: GET ${url}`, '200 OK')
+      Logger.success(`Response: GET ${url}`, '200 OK')
 
       const response = Container.getSingleton(Response)
 

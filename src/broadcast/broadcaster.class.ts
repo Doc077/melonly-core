@@ -24,7 +24,7 @@ export class Broadcaster {
     this.broadcastServer = new BroadcastServer(server)
 
     this.broadcastServer.on('connection', (socket: Socket) => {
-      Logger.info(`Websocket connection: ${socket.id}`)
+      Logger.success(`Websocket connection: ${socket.id}`)
     })
   }
 

@@ -71,7 +71,7 @@ export class Server {
     }
 
     server.listen(serverPort, () => {
-      Logger.info(`Server listening on port ${serverPort} [http://localhost:${serverPort}]`)
+      Logger.success(`Server listening on port ${serverPort}`, `http://localhost:${serverPort}`)
     })
   }
 

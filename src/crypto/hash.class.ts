@@ -1,16 +1,6 @@
 import { compare, hash } from 'bcrypt'
 
 export class Hash {
-  public make(data: string | Buffer, saltRounds: number | string = 10): string | Buffer {
-    let output = data
-
-    hash(data, saltRounds, (error: any, hash: string) => {
-      output = hash
-    })
-
-    return output
-  }
-
   public compare(data: string | Buffer, hash: string): boolean {
     let same = false
 
@@ -19,5 +9,15 @@ export class Hash {
     })
 
     return same
+  }
+
+  public create(data: string | Buffer, saltRounds: number | string = 10): string | Buffer {
+    let output = data
+
+    hash(data, saltRounds, (error: any, hash: string) => {
+      output = hash
+    })
+
+    return output
   }
 }

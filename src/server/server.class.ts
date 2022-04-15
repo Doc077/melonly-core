@@ -1,6 +1,5 @@
 import { config as envConfig } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
-import { join as joinPath } from 'path'
 import { Broadcaster } from '../broadcast/broadcaster.class'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
@@ -45,10 +44,7 @@ export class Server {
        */
 
       if (['get', 'head'].includes(requestInstance.method()) && urlLastSegment.includes('.')) {
-        const filePath = joinPath('public', url.replace('/', ''))
-        const fileExtension = url.replace('/', '').split('.')[1]
-
-        Router.serveStaticFile(url, filePath, fileExtension)
+        Router.serveStaticFile(url)
 
         return
       }

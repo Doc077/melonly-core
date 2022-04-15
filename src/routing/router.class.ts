@@ -1,5 +1,6 @@
 import { pathToRegexp } from 'path-to-regexp'
 import { readFileSync } from 'fs'
+import { join as joinPath } from 'path'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Injector } from '../container/injector.class'
@@ -178,8 +179,11 @@ export class Router {
     }
   }
 
-  public static serveStaticFile(url: string, path: string, extension: string): void {
+  public static serveStaticFile(url: string): void {
     Logger.info(`Request: GET ${url}`, 'File')
+
+    const path = joinPath('public', url.replace('/', ''))
+    const extension = url.replace('/', '').split('.')[1]
 
     try {
       const fileContent = readFileSync(path)

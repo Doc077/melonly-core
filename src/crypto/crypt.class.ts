@@ -16,7 +16,10 @@ export class Crypt {
   public static encrypt(text: string): EncryptedData {
     const cipher = createCipheriv(this.ALGORITHM, this.key, this.iv)
 
-    const encrypted = Buffer.concat([cipher.update(text), cipher.final()])
+    const encrypted = Buffer.concat([
+      cipher.update(text),
+      cipher.final(),
+    ])
 
     return {
       iv: this.iv.toString('hex'),
@@ -27,7 +30,10 @@ export class Crypt {
   public static decrypt(EncryptedData: EncryptedData): string {
     const decipher = createDecipheriv(this.ALGORITHM, this.key, Buffer.from(EncryptedData.iv, 'hex'))
 
-    const decrypted = Buffer.concat([decipher.update(Buffer.from(EncryptedData.content, 'hex')), decipher.final()])
+    const decrypted = Buffer.concat([
+      decipher.update(Buffer.from(EncryptedData.content, 'hex')),
+      decipher.final(),
+    ])
 
     return decrypted.toString()
   }

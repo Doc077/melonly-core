@@ -1,4 +1,4 @@
-import formidable from 'formidable'
+import formidable, { Fields, Files } from 'formidable'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
 import { join as joinPath } from 'path'
 import { Exception } from '../handler/exception.class'
@@ -37,7 +37,7 @@ export class Request {
         uploadDir: joinPath('storage', 'temp'),
       })
 
-      form.parse(this.instance, (error, fields, files) => {
+      form.parse(this.instance, (error: any, fields: Fields, files: Files) => {
         if (error) {
           throw new Exception('Cannot retrieve form data')
         }

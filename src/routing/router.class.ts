@@ -18,7 +18,7 @@ import { Session } from '../session/session.class'
 export class Router {
   private static routes: Route[] = []
 
-  private static addRoute(url: string, action: () => any, method: Method): void {
+  private static addRoute(url: string, action: () => any, method: Method): Route {
     if (!url.startsWith('/')) {
       url = `/${url}`
     }
@@ -28,27 +28,36 @@ export class Router {
     }), action)
 
     this.routes.push(route)
+
+    return route
   }
 
   private static respond(responseContent: any): void {
-    const requestInstance = Container.getSingleton(Request)
-    const responseInstance = Container.getSingleton(Response)
+    const request = Container.getSingleton(Request)
+    const response = Container.getSingleton(Response)
 
-    if (responseContent instanceof RenderResponse) {
-      responseContent = responseContent.toString()
+    switch (true) {
+      case responseContent instanceof RenderResponse:
+        responseContent = responseContent.toString()
+
+        break
+
+      case Array.isArray(responseContent) || typeof responseContent === 'object':
+        response.header('content-type', 'application/json')
+
+        responseContent = JSON.stringify(responseContent)
+
+        break
+
+      case responseContent === null || responseContent === undefined || typeof responseContent === 'string':
+        response.header('content-type', 'text/html; charset=utf-8')
+
+        break
     }
 
-    if (Array.isArray(responseContent) || typeof responseContent === 'object') {
-      responseInstance.header('content-type', 'application/json')
+    Logger.success(`Response: ${request.method().toUpperCase()} ${request.url()}`, '200 OK')
 
-      responseContent = JSON.stringify(responseContent)
-    } else if (responseContent === null || responseContent === undefined || typeof responseContent === 'string') {
-      responseInstance.header('content-type', 'text/html; charset=utf-8')
-    }
-
-    Logger.success(`Response: ${requestInstance.method().toUpperCase()} ${requestInstance.url()}`, '200 OK')
-
-    responseInstance.end(responseContent)
+    response.end(responseContent)
   }
 
   private static abortNotFound(): never {
@@ -56,10 +65,10 @@ export class Router {
   }
 
   private static verifyCsrfToken(): void {
-    const requestInstance = Container.getSingleton(Request)
+    const request = Container.getSingleton(Request)
 
     if (
-      !['get', 'head'].includes(requestInstance.method()) &&
+      !['get', 'head'].includes(request.method()) &&
       Container.getSingleton(Request).data._token !== Container.getSingleton(Session).data._token
     ) {
       throw new InvalidTokenException()

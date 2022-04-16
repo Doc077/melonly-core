@@ -1,4 +1,5 @@
-import formidable, { Fields, Files } from 'formidable'
+import formidable, { Fields, Files, Part } from 'formidable'
+import { v4 as uuidv4 } from 'uuid'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
 import { join as joinPath } from 'path'
 import { Exception } from '../handler/exception.class'
@@ -35,6 +36,12 @@ export class Request {
         multiples: true,
         maxFileSize: 200 * 1024 * 1024,
         uploadDir: joinPath('storage', 'temp'),
+
+        filename: (name: string, ext: string, part: Part) => {
+          const extension = part.originalFilename?.includes('.') ? part.originalFilename?.split('.').pop() : ''
+
+          return `${uuidv4()}.${extension}`
+        },
       })
 
       form.parse(this.instance, (error: any, fields: Fields, files: Files) => {

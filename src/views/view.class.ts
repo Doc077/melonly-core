@@ -157,7 +157,7 @@ export class View {
     compiled = this.parseUnlessDirectives(compiled, variables)
 
     /**
-     * Variables
+     * Variable rendering syntax
      */
 
     for (const expression of compiled.matchAll(this.patterns.variable) ?? []) {
@@ -187,7 +187,7 @@ export class View {
     }
 
     /**
-     * Restore raw contents
+     * Restore cut raw contents
      */
 
     compiled = this.restoreRawContents(compiled)

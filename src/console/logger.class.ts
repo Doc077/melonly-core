@@ -29,61 +29,59 @@ export class Logger {
     return `[melonly] [${timestamp}]`
   }
 
-  public static error(data: any, status?: string | number): void {
-    if (status && data.length > this.LINE_SIZE) {
-      data = `${data.slice(0, this.LINE_SIZE)}...`
-    }
+  private static trimLine(data: any, additional?: string | number): string {
+    return (additional && data.length > this.LINE_SIZE)
+      ? `${data.slice(0, this.LINE_SIZE)}...`
+      : data
+  }
+
+  public static error(data: any, additional?: string | number): void {
+    data = this.trimLine(data, additional)
 
     const main = redBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
 
     const output = {
       main,
-      ...(status && { status: black(bgRedBright(` ${status} `)) }),
+      ...(additional && { additional: black(bgRedBright(` ${additional} `)) }),
     }
 
     console.log(...Object.values(output))
   }
 
-  public static info(data: any, status?: string | number): void {
-    if (status && data.length > this.LINE_SIZE) {
-      data = `${data.slice(0, this.LINE_SIZE)}...`
-    }
+  public static info(data: any, additional?: string | number): void {
+    data = this.trimLine(data, additional)
 
     const main = blueBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
 
     const output = {
       main,
-      ...(status && { status: black(bgBlueBright(` ${status} `)) }),
+      ...(additional && { additional: black(bgBlueBright(` ${additional} `)) }),
     }
 
     console.log(...Object.values(output))
   }
 
-  public static warn(data: any, status?: string | number): void {
-    if (status && data.length > this.LINE_SIZE) {
-      data = `${data.slice(0, this.LINE_SIZE)}...`
-    }
+  public static warn(data: any, additional?: string | number): void {
+    data = this.trimLine(data, additional)
 
     const main = yellowBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
 
     const output = {
       main,
-      ...(status && { status: black(bgYellow(` ${status} `)) }),
+      ...(additional && { additional: black(bgYellow(` ${additional} `)) }),
     }
 
     console.warn(...Object.values(output))
   }
 
-  public static success(data: any, status?: string | number): void {
-    if (status && data.length > this.LINE_SIZE) {
-      data = `${data.slice(0, this.LINE_SIZE)}...`
-    }
+  public static success(data: any, additional?: string | number): void {
+    data = this.trimLine(data, additional)
 
     const main = green(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
 
     const output = {
       main,
-      ...(status && { status: black(bgGreen(` ${status} `)) }),
+      ...(additional && { additional: black(bgGreen(` ${additional} `)) }),
     }
 
     console.log(...Object.values(output))

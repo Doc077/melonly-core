@@ -197,13 +197,11 @@ export class Router {
     try {
       const fileContent = readFileSync(path)
       const extensionMimes: MimeTypes = require('../../assets/mime-types.json')
+      const response = Container.getSingleton(Response)
 
       Logger.success(`Response: GET ${url}`, '200 OK')
 
-      const response = Container.getSingleton(Response)
-
       response.header('content-type', extensionMimes[extension] ?? 'text/plain')
-
       response.end(fileContent)
     } catch (error) {
       throw new RouteNotFoundException()

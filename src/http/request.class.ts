@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
 import { join as joinPath } from 'path'
 import { Exception } from '../handler/exception.class'
+import { MethodString } from './method-string.type'
 import { Router } from '../routing/router.class'
 
 interface CookieList {
@@ -25,8 +26,6 @@ interface QueryStringParams {
   [key: string]: any
 }
 
-type MethodString = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head'
-
 export class Request {
   private instance: IncomingMessage | null | any = null
 
@@ -41,15 +40,10 @@ export class Request {
       const form = formidable({
         multiples: true,
         maxFileSize: 200 * 1024 * 1024,
+        keepExtensions: true,
         uploadDir: joinPath('storage', 'temp'),
 
-        filename: (name: string, ext: string, part: Part) => {
-          const extension = part.originalFilename?.includes('.')
-            ? `.${part.originalFilename?.split('.').pop()}`
-            : ''
-
-          return `${uuidv4()}${extension}`
-        },
+        filename: () => uuidv4(),
       })
 
       form.parse(this.instance, (error: any, fields: Fields, files: Files) => {

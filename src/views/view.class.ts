@@ -121,7 +121,7 @@ export class View {
     const matches = content.matchAll(this.patterns.unless) ?? []
 
     for (const match of matches) {
-      if (!variables[match[1]] || (match[1] === 'not' && variables[match[2]])) {
+      if (!variables[match[2]] || (match[1] === 'not' && variables[match[2]])) {
         content = content.replace(match[0], match[3])
 
         break

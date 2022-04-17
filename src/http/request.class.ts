@@ -1,4 +1,4 @@
-import formidable, { Fields, Files, Part } from 'formidable'
+import formidable, { Fields, Files, File, Part } from 'formidable'
 import { v4 as uuidv4 } from 'uuid'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
 import { join as joinPath } from 'path'
@@ -17,16 +17,22 @@ interface FormData {
   [key: string]: any
 }
 
+interface FormFiles {
+  [key: string]: File | File[]
+}
+
 interface QueryStringParams {
   [key: string]: any
 }
+
+type MethodString = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head'
 
 export class Request {
   private instance: IncomingMessage | null | any = null
 
   private formData: FormData = {}
 
-  private formFiles: FormData = {}
+  private formFiles: FormFiles = {}
 
   private parameters: UrlParams = {}
 
@@ -38,15 +44,17 @@ export class Request {
         uploadDir: joinPath('storage', 'temp'),
 
         filename: (name: string, ext: string, part: Part) => {
-          const extension = part.originalFilename?.includes('.') ? part.originalFilename?.split('.').pop() : ''
+          const extension = part.originalFilename?.includes('.')
+            ? `.${part.originalFilename?.split('.').pop()}`
+            : ''
 
-          return `${uuidv4()}.${extension}`
+          return `${uuidv4()}${extension}`
         },
       })
 
       form.parse(this.instance, (error: any, fields: Fields, files: Files) => {
         if (error) {
-          throw new Exception('Cannot retrieve form data')
+          throw new Exception('Cannot retrieve incoming form data')
         }
 
         this.formData = { ...fields }
@@ -70,11 +78,10 @@ export class Request {
 
       name = name?.trim()
 
-      if (!name) return
-
       const value = rest.join('=').trim()
 
-      if (!value) return
+      if (!name || !value)
+        return
 
       list[name as keyof object] = decodeURIComponent(value)
     })
@@ -118,7 +125,7 @@ export class Request {
     return this.header('accept-language')?.slice(0, 2) ?? 'en'
   }
 
-  public method(): string {
+  public method(): MethodString {
     let method = this.instance?.method?.toLowerCase() ?? 'get'
 
     if (method === 'post' && ['put', 'patch', 'delete', 'head'].includes(this.formData._method?.toLowerCase())) {

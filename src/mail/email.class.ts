@@ -1,6 +1,6 @@
 import { createTransport } from 'nodemailer'
 import { existsSync } from 'fs'
-import { join as joinPath } from 'path'
+import { join as joinPath, sep as directorySeparator } from 'path'
 import { Exception } from '../handler/exception.class'
 import { ViewVariables } from '../views/view-variables.interface'
 import { View } from '../views/view.class'
@@ -39,7 +39,7 @@ export abstract class Email {
   }
 
   protected fromTemplate(view: string, variables: ViewVariables = {}): string {
-    const file = joinPath('views', `${view.replace('.', '/')}.melon.html`)
+    const file = joinPath('views', `${view.replace('.', directorySeparator)}.melon.html`)
 
     if (!existsSync(file)) {
       throw new Exception(`View '${view}' does not exist`)

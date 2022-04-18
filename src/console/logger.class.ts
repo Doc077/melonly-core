@@ -29,14 +29,14 @@ export class Logger {
     return `[melonly] [${timestamp}]`
   }
 
-  private static trimLine(data: any, additional?: string | number): string {
-    return (additional && data.length > this.LINE_SIZE)
+  private static trimLine(data: any): string {
+    return (data.length > this.LINE_SIZE)
       ? `${data.slice(0, this.LINE_SIZE)}...`
       : data
   }
 
   public static error(data: any, additional?: string | number): void {
-    data = this.trimLine(data, additional)
+    data = this.trimLine(data)
 
     const main = redBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
 
@@ -49,7 +49,7 @@ export class Logger {
   }
 
   public static info(data: any, additional?: string | number): void {
-    data = this.trimLine(data, additional)
+    data = this.trimLine(data)
 
     const main = blueBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
 
@@ -62,7 +62,7 @@ export class Logger {
   }
 
   public static warn(data: any, additional?: string | number): void {
-    data = this.trimLine(data, additional)
+    data = this.trimLine(data)
 
     const main = yellowBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
 
@@ -75,7 +75,7 @@ export class Logger {
   }
 
   public static success(data: any, additional?: string | number): void {
-    data = this.trimLine(data, additional)
+    data = this.trimLine(data)
 
     const main = green(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
 

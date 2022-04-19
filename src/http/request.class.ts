@@ -1,6 +1,6 @@
 import formidable, { Fields, Files, File } from 'formidable'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
-import { renameSync } from 'fs'
+import { existsSync, mkdirSync, renameSync } from 'fs'
 import { join as joinPath, sep as directorySeparator } from 'path'
 import { Exception } from '../handler/exception.class'
 import { MethodString } from './types/method-string.type'
@@ -27,9 +27,19 @@ interface QueryStringParams {
 }
 
 File.prototype.store = function (path: string) {
-  path = joinPath('public', path.replace('.', directorySeparator), this.filepath)
+  const directory = joinPath('public', path.replace('.', directorySeparator))
+
+  if (!existsSync(directory)) {
+    mkdirSync(directory, {
+      recursive: true,
+    })
+  }
+
+  path = joinPath(directory, this.newFilename)
 
   renameSync(this.filepath, path)
+
+  this.filepath = path
 }
 
 export class Request {

@@ -28,7 +28,13 @@ interface QueryStringParams {
 
 // @ts-ignore
 File.prototype.store = function (path: string) {
-  const directory = joinPath('public', ...path.split('.'))
+  const parts = path.split('.')
+
+  if (!['public', 'storage'].includes(parts[0])) {
+    throw new Exception('Files cannot be uploaded to directory other than public and storage')
+  }
+
+  const directory = joinPath(...parts)
 
   if (!existsSync(directory)) {
     mkdirSync(directory, {

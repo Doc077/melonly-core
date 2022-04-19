@@ -1,4 +1,4 @@
-import { Constructor } from './constructor.interface'
+import { Constructor } from './interfaces/constructor.interface'
 import { Container } from './container.class'
 
 export class Injector {

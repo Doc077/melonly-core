@@ -6,7 +6,7 @@ import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
-import { SessionData } from './session-data.interface'
+import { SessionData } from './interfaces/session-data.interface'
 
 export class Session {
   private variables: SessionData = {}

@@ -1,11 +1,11 @@
 import { existsSync } from 'fs'
 import { join as joinPath } from 'path'
 import { Container } from '../container/container.class'
-import { InvalidTokenException } from '../routing/invalid-token.exception'
+import { InvalidTokenException } from '../routing/exceptions/invalid-token.exception'
 import { Logger } from '../console/logger.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
-import { RouteNotFoundException } from '../routing/route-not-found.exception'
+import { RouteNotFoundException } from '../routing/exceptions/route-not-found.exception'
 import { View } from '../views/view.class'
 
 export class ExceptionHandler {

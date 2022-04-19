@@ -6,7 +6,7 @@ import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { RenderResponse } from './render-response.class'
 import { Session } from '../session/session.class'
-import { ViewVariables } from './view-variables.interface'
+import { ViewVariables } from './interfaces/view-variables.interface'
 
 export class View {
   private static patterns: { [name: string]: RegExp } = {

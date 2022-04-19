@@ -1,5 +1,5 @@
 import { pathToRegexp } from 'path-to-regexp'
-import { ClassDecorator } from '../container/class-decorator.type'
+import { ClassDecorator } from '../../container/types/class-decorator.type'
 
 export const BroadcastChannel = (name: string): ClassDecorator<any> => {
   const pattern = pathToRegexp(name)

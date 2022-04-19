@@ -2,10 +2,10 @@ import { existsSync } from 'fs'
 import { join as joinPath, sep as directorySeparator } from 'path'
 import { ServerResponse } from 'http'
 import { Exception } from '../handler/exception.class'
-import { JsonResponse } from './json-response.type'
-import { RedirectResponse } from './redirect-response.type'
+import { JsonResponse } from './types/json-response.type'
+import { RedirectResponse } from './types/redirect-response.type'
 import { RenderResponse } from '../views/render-response.class'
-import { ViewVariables } from '../views/view-variables.interface'
+import { ViewVariables } from '../views/interfaces/view-variables.interface'
 import { View } from '../views/view.class'
 
 export class Response {

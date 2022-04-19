@@ -2,7 +2,7 @@ import formidable, { Fields, Files, File } from 'formidable'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
 import { join as joinPath } from 'path'
 import { Exception } from '../handler/exception.class'
-import { MethodString } from './method-string.type'
+import { MethodString } from './types/method-string.type'
 import { Router } from '../routing/router.class'
 
 interface CookieList {

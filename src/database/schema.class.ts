@@ -1,4 +1,4 @@
-import { SchemaType } from './schema-type.enum'
+import { SchemaType } from './enums/schema-type.enum'
 
 interface Columns {
   [column: string]: SchemaType

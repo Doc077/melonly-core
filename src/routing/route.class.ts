@@ -1,4 +1,4 @@
-import { Method } from '../http/method.enum'
+import { Method } from '../http/enums/method.enum'
 
 export class Route {
   constructor(

@@ -1,4 +1,4 @@
-import { Router } from './router.class'
+import { Router } from '../router.class'
 
 export const Put = (url: string) => {
   return (target: any, methodName: string) => {

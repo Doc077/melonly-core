@@ -1,7 +1,7 @@
 import formidable, { Fields, Files, File } from 'formidable'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
 import { existsSync, mkdirSync, renameSync } from 'fs'
-import { join as joinPath, sep as directorySeparator } from 'path'
+import { join as joinPath } from 'path'
 import { Exception } from '../handler/exception.class'
 import { MethodString } from './types/method-string.type'
 import { Router } from '../routing/router.class'
@@ -26,8 +26,9 @@ interface QueryStringParams {
   [key: string]: any
 }
 
+// @ts-ignore
 File.prototype.store = function (path: string) {
-  const directory = joinPath('public', path.replace('.', directorySeparator))
+  const directory = joinPath('public', ...path.split('.'))
 
   if (!existsSync(directory)) {
     mkdirSync(directory, {
@@ -35,10 +36,17 @@ File.prototype.store = function (path: string) {
     })
   }
 
-  path = joinPath(directory, this.newFilename)
+  // @ts-ignore
+  const fileName = this.newFilename
 
-  renameSync(this.filepath, path)
+  // @ts-ignore
+  const filePath = this.filepath
 
+  path = joinPath(directory, fileName)
+
+  renameSync(filePath, path)
+
+  // @ts-ignore
   this.filepath = path
 }
 

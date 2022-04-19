@@ -1,6 +1,7 @@
 import formidable, { Fields, Files, File } from 'formidable'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
-import { join as joinPath } from 'path'
+import { renameSync } from 'fs'
+import { join as joinPath, sep as directorySeparator } from 'path'
 import { Exception } from '../handler/exception.class'
 import { MethodString } from './types/method-string.type'
 import { Router } from '../routing/router.class'
@@ -23,6 +24,12 @@ interface FormFiles {
 
 interface QueryStringParams {
   [key: string]: any
+}
+
+File.prototype.store = function (path: string) {
+  path = joinPath('public', path.replace('.', directorySeparator), this.filepath)
+
+  renameSync(this.filepath, path)
 }
 
 export class Request {

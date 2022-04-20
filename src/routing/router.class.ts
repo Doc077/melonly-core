@@ -51,7 +51,9 @@ export class Router {
         break
 
       case responseContent === null || typeof responseContent === 'string':
-        responseContent = 'null'
+        if (!responseContent) {
+          responseContent = 'null'
+        }
 
         response.header('content-type', 'text/html; charset=utf-8')
 

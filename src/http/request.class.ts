@@ -27,7 +27,7 @@ interface QueryStringParams {
 }
 
 // @ts-ignore
-File.prototype.store = function (path: string) {
+File.prototype.store = function (path: string, name?: string) {
   const parts = path.split('.')
 
   if (!['public', 'storage'].includes(parts[0])) {
@@ -43,7 +43,7 @@ File.prototype.store = function (path: string) {
   }
 
   // @ts-ignore
-  const fileName = this.newFilename
+  const fileName = name ? `${name}.${this.newFilename.split('.').pop()}` : this.newFilename
 
   // @ts-ignore
   const filePath = this.filepath

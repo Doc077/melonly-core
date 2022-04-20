@@ -1,5 +1,6 @@
+import { File } from 'formidable'
 import { pathToRegexp } from 'path-to-regexp'
-import { readFileSync } from 'fs'
+import { readFileSync, unlinkSync } from 'fs'
 import { join as joinPath } from 'path'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
@@ -49,10 +50,14 @@ export class Router {
 
         break
 
-      case responseContent === null || responseContent === undefined || typeof responseContent === 'string':
+      case responseContent === null || typeof responseContent === 'string':
+        responseContent = 'null'
+
         response.header('content-type', 'text/html; charset=utf-8')
 
         break
+      case responseContent === undefined:
+        throw new Exception('Response cannot be undefined')
     }
 
     Logger.success(`Response: ${request.method().toUpperCase()} ${request.url()}`, '200 OK')
@@ -62,6 +67,16 @@ export class Router {
 
   private static abortNotFound(): never {
     throw new RouteNotFoundException()
+  }
+
+  private static deleteTemporaryFiles(): void {
+    const files = Object.values(Container.getSingleton(Request).files as File[])
+
+    files.forEach((file: File) => {
+      if (file.filepath.includes('temp')) {
+        unlinkSync(file.filepath)
+      }
+    })
   }
 
   private static verifyCsrfToken(): void {
@@ -168,6 +183,8 @@ export class Router {
 
           return
         }
+
+        this.deleteTemporaryFiles()
 
         this.respond(responseContent)
 

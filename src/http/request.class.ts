@@ -8,26 +8,6 @@ import { MethodString } from './types/method-string.type'
 import { Router } from '../routing/router.class'
 import { Session } from '../session/session.class'
 
-interface CookieList {
-  [key: string]: string
-}
-
-interface UrlParams {
-  [key: string]: string
-}
-
-interface FormData {
-  [key: string]: any
-}
-
-interface FormFiles {
-  [key: string]: File | File[]
-}
-
-interface QueryStringParams {
-  [key: string]: any
-}
-
 // @ts-ignore
 File.prototype.store = function (path: string, name?: string) {
   const parts = path.split('.')
@@ -61,11 +41,11 @@ File.prototype.store = function (path: string, name?: string) {
 export class Request {
   private instance: IncomingMessage | null | any = null
 
-  private formData: FormData = {}
+  private formData: Record<string, any> = {}
 
-  private formFiles: FormFiles = {}
+  private formFiles: Record<string, File | File[]> = {}
 
-  private parameters: UrlParams = {}
+  private parameters: Record<string, string> = {}
 
   public init() {
     if (!['get', 'head'].includes(this.method()) && this.instance) {
@@ -93,9 +73,9 @@ export class Request {
     return this.header('x-requested-with') === 'XMLHttpRequest'
   }
 
-  public get cookies(): CookieList {
+  public get cookies(): Record<string, string> {
     const cookieString = this.instance?.headers.cookie ?? ''
-    const list: CookieList = {}
+    const list: Record<string, string> = {}
 
     cookieString.split(';').forEach((cookie: string): void => {
       let [name, ...rest] = cookie.split('=')
@@ -117,11 +97,11 @@ export class Request {
     return this.cookies[name] ?? null
   }
 
-  public get data(): FormData {
+  public get data(): Record<string, any> {
     return this.formData
   }
 
-  public get files(): FormData {
+  public get files(): Record<string, any> {
     return this.formFiles
   }
 
@@ -159,7 +139,7 @@ export class Request {
     return method
   }
 
-  public get params(): UrlParams {
+  public get params(): Record<string, string> {
     return this.parameters
   }
 
@@ -179,12 +159,12 @@ export class Request {
     return this.instance?.socket.encrypted ? 'https' : 'http'
   }
 
-  public get query(): QueryStringParams {
+  public get query(): Record<string, any> {
     const url = new URL(this.fullUrl())
 
     const params = new URLSearchParams(url.search)
 
-    let object: QueryStringParams = {}
+    let object: Record<string, any> = {}
 
     for (const [key, value] of params.entries()) {
       object[key] = value

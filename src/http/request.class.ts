@@ -25,14 +25,15 @@ File.prototype.store = function (path: string, name?: string) {
   }
 
   // @ts-ignore
-  const fileName = name ? `${name}.${this.newFilename.split('.').pop()}` : this.newFilename
+  const { newFilename, filepath } = this
 
-  // @ts-ignore
-  const filePath = this.filepath
+  const fileName = name
+    ? `${name}.${newFilename.split('.').pop()}`
+    : newFilename
 
   path = joinPath(directory, fileName)
 
-  renameSync(filePath, path)
+  renameSync(filepath, path)
 
   // @ts-ignore
   this.filepath = path

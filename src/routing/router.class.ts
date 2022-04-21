@@ -8,7 +8,6 @@ import { Injector } from '../container/injector.class'
 import { InvalidTokenException } from './exceptions/invalid-token.exception'
 import { Logger } from '../console/logger.class'
 import { Method } from '../http/enums/method.enum'
-import { MimeTypes } from '../http/interfaces/mime-types.interface'
 import { RenderResponse } from '../views/render-response.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
@@ -216,7 +215,7 @@ export class Router {
 
     try {
       const fileContent = readFileSync(path)
-      const extensionMimes: MimeTypes = require('../../assets/mime-types.json')
+      const extensionMimes: Record<string, string> = require('../../assets/mime-types.json')
       const response = Container.getSingleton(Response)
 
       Logger.success(`Response: GET ${url}`, '200 OK')

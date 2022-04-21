@@ -2,9 +2,11 @@ import formidable, { Fields, Files, File } from 'formidable'
 import { IncomingMessage, IncomingHttpHeaders } from 'http'
 import { existsSync, mkdirSync, renameSync } from 'fs'
 import { join as joinPath } from 'path'
+import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { MethodString } from './types/method-string.type'
 import { Router } from '../routing/router.class'
+import { Session } from '../session/session.class'
 
 interface CookieList {
   [key: string]: string
@@ -207,6 +209,10 @@ export class Request {
 
   public secure(): boolean {
     return this.protocol() === 'https'
+  }
+
+  public get session(): Session {
+    return Container.getSingleton(Session)
   }
 
   public setInstance(request: IncomingMessage) {

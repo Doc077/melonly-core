@@ -58,8 +58,9 @@ export class Router {
         response.header('content-type', 'text/html; charset=utf-8')
 
         break
-      case responseContent === undefined:
-        throw new Exception('Response cannot be undefined')
+
+      default:
+        throw new Exception('Invalid response type')
     }
 
     Logger.success(`Response: ${request.method().toUpperCase()} ${request.url()}`, '200 OK')

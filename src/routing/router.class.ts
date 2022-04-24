@@ -18,6 +18,8 @@ import { Session } from '../session/session.class'
 export class Router {
   private static routes: Route[] = []
 
+  private static globalMiddleware: (() => any)[] = []
+
   private static addRoute(url: string, action: () => any, method: Method): Route {
     if (!url.startsWith('/')) {
       url = `/${url}`
@@ -90,6 +92,10 @@ export class Router {
     ) {
       throw new InvalidTokenException()
     }
+  }
+
+  public static addGlobalMiddleware(middleware: any[]): void {
+    //
   }
 
   public static get(url: string, action: () => any): void {

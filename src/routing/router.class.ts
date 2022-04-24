@@ -42,7 +42,7 @@ export class Router {
 
         break
 
-      case Array.isArray(responseContent) || typeof responseContent === 'object':
+      case Array.isArray(responseContent) || (typeof responseContent === 'object' && responseContent !== null && responseContent.constructor === Object):
         response.header('content-type', 'application/json')
 
         responseContent = JSON.stringify(responseContent)

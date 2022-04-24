@@ -2,7 +2,6 @@ import { createTransport } from 'nodemailer'
 import { existsSync } from 'fs'
 import { join as joinPath, sep as directorySeparator } from 'path'
 import { Exception } from '../handler/exception.class'
-import { ViewVariables } from '../views/interfaces/view-variables.interface'
 import { View } from '../views/view.class'
 
 export abstract class Email {
@@ -38,7 +37,7 @@ export abstract class Email {
     )
   }
 
-  protected fromTemplate(view: string, variables: ViewVariables = {}): string {
+  protected fromTemplate(view: string, variables: Record<string, any> = {}): string {
     const file = joinPath('views', `${view.replace('.', directorySeparator)}.melon.html`)
 
     if (!existsSync(file)) {

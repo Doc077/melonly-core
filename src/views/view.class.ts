@@ -6,7 +6,6 @@ import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { RenderResponse } from './render-response.class'
 import { Session } from '../session/session.class'
-import { ViewVariables } from './interfaces/view-variables.interface'
 
 export class View {
   private static patterns: { [name: string]: RegExp } = {
@@ -22,7 +21,7 @@ export class View {
 
   private static rawContents: string[] = []
 
-  private static parseEachDirectives(content: string, variables: ViewVariables = {}): string {
+  private static parseEachDirectives(content: string, variables: Record<string, any> = {}): string {
     const matches = content.matchAll(this.patterns.each) ?? []
 
     for (const match of matches) {
@@ -50,7 +49,7 @@ export class View {
     return content
   }
 
-  private static parseIfDirectives(content: string, variables: ViewVariables = {}): string {
+  private static parseIfDirectives(content: string, variables: Record<string, any> = {}): string {
     const matches = content.matchAll(this.patterns.if) ?? []
 
     for (const match of matches) {
@@ -117,7 +116,7 @@ export class View {
     return content
   }
 
-  private static parseUnlessDirectives(content: string, variables: ViewVariables = {}): string {
+  private static parseUnlessDirectives(content: string, variables: Record<string, any> = {}): string {
     const matches = content.matchAll(this.patterns.unless) ?? []
 
     for (const match of matches) {
@@ -145,7 +144,7 @@ export class View {
     return content
   }
 
-  public static compile(file: string, variables: ViewVariables = {}): RenderResponse {
+  public static compile(file: string, variables: Record<string, any> = {}): RenderResponse {
     let compiled = readFileSync(file).toString()
 
     compiled = this.parseRawDirectives(compiled)

@@ -5,7 +5,6 @@ import { Exception } from '../handler/exception.class'
 import { JsonResponse } from './types/json-response.type'
 import { RedirectResponse } from './types/redirect-response.type'
 import { RenderResponse } from '../views/render-response.class'
-import { ViewVariables } from '../views/interfaces/view-variables.interface'
 import { View } from '../views/view.class'
 
 export class Response {
@@ -56,7 +55,7 @@ export class Response {
     return null
   }
 
-  public render(view: string, variables: ViewVariables = {}): RenderResponse {
+  public render(view: string, variables: Record<string, any> = {}): RenderResponse {
     const file = joinPath('views', `${view.replace('.', directorySeparator)}.melon.html`)
 
     if (!existsSync(file)) {

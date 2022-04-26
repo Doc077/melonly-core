@@ -1,15 +1,11 @@
 import { SchemaType } from './enums/schema-type.enum'
 
-interface Columns {
-  [column: string]: SchemaType
-}
-
 export class Schema {
-  public createTable(name: string, fields: Columns): void {
-    //
+  public createTable(name: string, columns: Record<string, SchemaType>): void {
+    // 
   }
 
   public dropTable(name: string): void {
-    //
+    // 
   }
 }

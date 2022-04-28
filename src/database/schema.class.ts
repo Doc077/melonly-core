@@ -1,3 +1,4 @@
+import { DB } from './db.class'
 import { SchemaType } from './enums/schema-type.enum'
 
 export class Schema {
@@ -5,7 +6,7 @@ export class Schema {
     // 
   }
 
-  public dropTable(name: string): void {
+  public dropTable(table: string): void {
     // 
   }
 }

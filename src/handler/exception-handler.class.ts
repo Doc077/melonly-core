@@ -69,8 +69,13 @@ export class ExceptionHandler {
     if (process.env.APP_DEBUG === 'true') {
       const file = joinPath(__dirname, '..', '..', 'assets', 'exception.melon')
 
+      const callerLine = exception.stack.split('\n')[1]
+      const callerIndex = callerLine.indexOf('at ')
+      const details = callerLine.slice(callerIndex + 2, callerLine.length)
+
       responseInstance.end(
         View.compile(file, {
+          details,
           message: exception.message,
           method: Container.getSingleton(Request).method().toUpperCase(),
           status: responseInstance.getStatus(),

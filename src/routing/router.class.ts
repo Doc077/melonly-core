@@ -121,7 +121,7 @@ export class Router {
   public static evaluate(url: string): void {
     const method = Container.getSingleton(Request).method()
 
-    Logger.info(`Request: ${method.toUpperCase()} ${url}`)
+    Logger.success(`Request: ${method.toUpperCase()} ${url}`)
 
     for (const route of this.routes) {
       if (route.pattern.test(url)) {
@@ -214,7 +214,7 @@ export class Router {
   }
 
   public static serveStaticFile(url: string): void {
-    Logger.info(`Request: GET ${url}`)
+    Logger.success(`Request: GET ${url}`)
 
     const path = joinPath('public', url.replace('/', ''))
     const extension = url.replace('/', '').split('.')[1]

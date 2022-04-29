@@ -6,7 +6,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Exception: {{ message }}</title>
+    <title>{{ message }} | Unhandled Exception</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,16 +90,21 @@ Check your Browserslist config to be sure that your targets are set up correctly
 
   <body class="bg-gray-50 h-screen flex justify-center items-center leading-8 text-gray-800 selection:bg-emerald-300 selection:text-gray-900 dark:bg-gray-900 dark:text-gray-50 py-16">
     <main class="flex flex-col bg-white dark:bg-gray-800 p-12 rounded-xl shadow-lg shadow-gray-500/10 dark:shadow-black/10 w-2/3 lg:w-1/2 overflow-auto">
-      <span class="self-start bg-rose-500 text-white font-mono text-sm rounded-md shadow-lg shadow-rose-500/20 px-2 py-1">Exception</span>
+      <span class="self-start bg-rose-500 text-white font-mono text-xs rounded-md shadow-lg shadow-rose-500/20 px-2 py-1">Unhandled Exception</span>
 
       <h1 class="text-2xl font-bold mt-8">{{ message }}</h1>
 
-      <p class="my-1 opacity-80">{{ details }}</p>
+      <p class="my-1 opacity-80">Stack trace: {{ details }}</p>
 
       <code class="self-start px-2 py-1 text-sm bg-gray-100 dark:bg-gray-900 rounded-md mt-7">{{ method }} {{ uri }}</code>
       <code class="self-start px-2 py-1 text-sm bg-gray-100 dark:bg-gray-900 rounded-md mt-2">HTTP {{ status }}</code>
   
-      <button class="self-end bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-2 mt-12 rounded-xl text-white shadow-lg shadow-emerald-500/10 transition-all duration-300 hover:opacity-95 hover:-translate-y-1 select-none" onclick="window.location.reload()">Reload page</button>
+      <button class="flex items-center self-end bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-2 mt-12 rounded-xl text-white shadow-lg shadow-emerald-500/10 transition-all duration-300 hover:opacity-95 hover:-translate-y-1 select-none" onclick="window.location.reload()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        Reload page
+      </button>
     </main>
   </body>
 </html>

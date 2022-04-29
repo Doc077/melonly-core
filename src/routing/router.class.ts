@@ -64,7 +64,7 @@ export class Router {
         throw new Exception('Invalid response type')
     }
 
-    Logger.success(`Response: ${request.method().toUpperCase()} ${request.url()}`, '200 OK')
+    Logger.success(`Response: ${request.method().toUpperCase()} ${request.url()}`, '200')
 
     response.end(responseContent)
   }
@@ -224,7 +224,7 @@ export class Router {
       const extensionMimes: Record<string, string> = require('../../assets/mime-types.json')
       const response = Container.getSingleton(Response)
 
-      Logger.success(`Response: GET ${url}`, '200 OK')
+      Logger.success(`Response: GET ${url}`, '200')
 
       response.header('content-type', extensionMimes[extension] ?? 'text/plain')
       response.end(fileContent)

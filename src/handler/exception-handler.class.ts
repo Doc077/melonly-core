@@ -10,13 +10,13 @@ import { View } from '../views/view.class'
 
 export class ExceptionHandler {
   public static handle(exception: any): void {
-    const requestInstance = Container.getSingleton(Request)
-    const responseInstance = Container.getSingleton(Response)
+    const request = Container.getSingleton(Request)
+    const response = Container.getSingleton(Response)
 
     if (exception instanceof RouteNotFoundException) {
-      Logger.error(`Response: ${requestInstance.method().toUpperCase()} ${requestInstance.url()}`, '404 NOT FOUND')
+      Logger.error(`Response: ${request.method().toUpperCase()} ${request.url()}`, '404')
 
-      responseInstance.status(404)
+      response.status(404)
 
       const customTemplatePath = joinPath('views', 'errors', '404.melon.html')
 
@@ -24,7 +24,7 @@ export class ExceptionHandler {
         ? customTemplatePath
         : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
 
-      responseInstance.end(
+      response.end(
         View.compile(file, {
           code: 404,
           message: 'Not Found',
@@ -35,9 +35,9 @@ export class ExceptionHandler {
     }
 
     if (exception instanceof InvalidTokenException) {
-      Logger.error(`Response: ${requestInstance.method().toUpperCase()} ${requestInstance.url()}`, '419 TOKEN EXPIRED')
+      Logger.error(`Response: ${request.method().toUpperCase()} ${request.url()}`, '419')
 
-      responseInstance.status(419)
+      response.status(419)
 
       const customTemplatePath = joinPath('views', 'errors', '419.melon.html')
 
@@ -45,7 +45,7 @@ export class ExceptionHandler {
         ? customTemplatePath
         : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
 
-      responseInstance.end(
+      response.end(
         View.compile(file, {
           code: 419,
           message: 'Invalid Token',
@@ -56,11 +56,24 @@ export class ExceptionHandler {
     }
 
     Logger.error(`Exception: ${exception.message}`)
-    Logger.error(`Response: ${requestInstance.method().toUpperCase()} ${requestInstance.url()}`, '500 SERVER ERROR')
+    Logger.error(`Response: ${request.method().toUpperCase()} ${request.url()}`, '500')
 
-    responseInstance.status(500)
+    response.status(500)
 
-    responseInstance.terminate()
+    response.terminate()
+
+    /**
+     * Send JSON in case of AJAX request
+     */
+
+    if (request.ajax()) {
+      response.end({
+        exception: exception.message,
+        status: response.getStatus(),
+      })
+
+      return
+    }
 
     /**
      * Render error page
@@ -73,12 +86,12 @@ export class ExceptionHandler {
       const callerIndex = callerLine.indexOf('at ')
       const details = callerLine.slice(callerIndex + 2, callerLine.length)
 
-      responseInstance.end(
+      response.end(
         View.compile(file, {
           details,
           message: exception.message,
           method: Container.getSingleton(Request).method().toUpperCase(),
-          status: responseInstance.getStatus(),
+          status: response.getStatus(),
           uri: Container.getSingleton(Request).url(),
         }),
       )
@@ -92,7 +105,7 @@ export class ExceptionHandler {
       ? customTemplatePath
       : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
 
-    responseInstance.end(
+    response.end(
       View.compile(file, {
         code: 500,
         message: 'Server Error',

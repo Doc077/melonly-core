@@ -161,12 +161,13 @@ export class View {
 
     for (const expression of compiled.matchAll(this.patterns.variable) ?? []) {
       const name: string = expression[2]
+      const isConstant = name.startsWith('MELONLY_') || name.startsWith('NODE_')
 
-      let variableValue: string = name.startsWith('MELONLY_')
+      let variableValue: string = isConstant
         ? constants[name as keyof object]
         : variables[name]
 
-      if (!name.startsWith('MELONLY_') && !(name in variables)) {
+      if (!isConstant && !(name in variables)) {
         throw new Exception(`The '${name}' variable has not been passed to the view`)
       }
 

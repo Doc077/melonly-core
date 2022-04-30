@@ -58,7 +58,7 @@ export class Response {
   }
 
   public redirectBack(code: number = 302): RedirectResponse {
-    const url = Container.getSingleton(Session).data._previousLocation
+    const url = Container.getSingleton(Session).data._previousLocation ?? '/'
 
     this.header('location', url)
     this.status(code)

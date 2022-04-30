@@ -1,5 +1,5 @@
 import { existsSync } from 'fs'
-import { join as joinPath } from 'path'
+import { join as joinPath, sep as directorySeparator } from 'path'
 import { Container } from '../container/container.class'
 import { InvalidTokenException } from '../routing/exceptions/invalid-token.exception'
 import { Logger } from '../console/logger.class'
@@ -80,17 +80,28 @@ export class ExceptionHandler {
      */
 
     if (process.env.APP_DEBUG === 'true') {
-      const file = joinPath(__dirname, '..', '..', 'assets', 'exception.melon')
+      const templateFile = joinPath(__dirname, '..', '..', 'assets', 'exception.melon')
 
       const callerLine = exception.stack.split('\n')[1]
       const callerIndex = callerLine.indexOf('at ')
-      const details = callerLine.slice(callerIndex + 2, callerLine.length)
+      const info = callerLine.slice(callerIndex + 2, callerLine.length)
+      const caller = info.split('(')[0]
+
+      let file: string = info.match(/\((.*?)\)/)[1]
+
+      if (file.includes('dist')) {
+        file = file.replace(/.*?dist./, `src${directorySeparator}`)
+        file = file.replace('.js', '.ts')
+        file = file.split(':')[0]
+      }
 
       response.end(
-        View.compile(file, {
-          details,
+        View.compile(templateFile, {
+          caller,
+          file,
           message: exception.message,
           method: Container.getSingleton(Request).method().toUpperCase(),
+          stack: exception.stack,
           status: response.getStatus(),
           uri: Container.getSingleton(Request).url(),
         }),

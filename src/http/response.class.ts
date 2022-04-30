@@ -1,10 +1,12 @@
 import { existsSync } from 'fs'
 import { join as joinPath, sep as directorySeparator } from 'path'
 import { ServerResponse } from 'http'
+import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { JsonResponse } from './types/json-response.type'
 import { RedirectResponse } from './types/redirect-response.type'
 import { RenderResponse } from '../views/render-response.class'
+import { Session } from '../session/session.class'
 import { View } from '../views/view.class'
 
 export class Response {
@@ -48,8 +50,17 @@ export class Response {
     return data
   }
 
-  public redirect(uri: string, code: number = 302): RedirectResponse {
-    this.header('location', uri)
+  public redirect(url: string, code: number = 302): RedirectResponse {
+    this.header('location', url)
+    this.status(code)
+
+    return null
+  }
+
+  public redirectBack(code: number = 302): RedirectResponse {
+    const url = Container.getSingleton(Session).data._previousLocation
+
+    this.header('location', url)
     this.status(code)
 
     return null

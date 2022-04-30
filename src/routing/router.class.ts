@@ -118,10 +118,19 @@ export class Router {
     this.addRoute(url, action, Method.Delete)
   }
 
-  public static evaluate(url: string): void {
-    const method = Container.getSingleton(Request).method()
+  public static handle(url: string): void {
+    const request = Container.getSingleton(Request)
+    const method = request.method()
 
     Logger.success(`Request: ${method.toUpperCase()} ${url}`)
+
+    /**
+     * Store previous location in session
+     */
+
+    if (!request.ajax()) {
+      Container.getSingleton(Session).set('_previousLocation', url)
+    }
 
     for (const route of this.routes) {
       if (route.pattern.test(url)) {

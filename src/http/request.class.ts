@@ -65,7 +65,7 @@ export class Request {
         this.formData = { ...fields }
         this.formFiles = { ...files }
 
-        Router.evaluate(this.url())
+        Router.handle(this.url())
       })
     }
   }

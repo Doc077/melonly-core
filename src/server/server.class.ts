@@ -56,7 +56,7 @@ export class Server {
        */
 
       if (['get', 'head'].includes(requestInstance.method())) {
-        Router.evaluate(url)
+        Router.handle(url)
       }
     })
 

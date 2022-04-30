@@ -13,6 +13,19 @@ export class ExceptionHandler {
     const request = Container.getSingleton(Request)
     const response = Container.getSingleton(Response)
 
+    /**
+     * Send JSON in case of AJAX request
+     */
+
+     if (request.ajax()) {
+      response.end({
+        exception: exception.message,
+        status: response.getStatus(),
+      })
+
+      return
+    }
+
     if (exception instanceof RouteNotFoundException) {
       Logger.error(`Response: ${request.method().toUpperCase()} ${request.url()}`, '404')
 
@@ -61,19 +74,6 @@ export class ExceptionHandler {
     response.status(500)
 
     response.terminate()
-
-    /**
-     * Send JSON in case of AJAX request
-     */
-
-    if (request.ajax()) {
-      response.end({
-        exception: exception.message,
-        status: response.getStatus(),
-      })
-
-      return
-    }
 
     /**
      * Render error page

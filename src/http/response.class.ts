@@ -66,6 +66,15 @@ export class Response {
     return null
   }
 
+  public redirectIntended(defaultUrl: string, code: number = 302): RedirectResponse {
+    const url = Container.getSingleton(Session).data._intendedLocation ?? defaultUrl
+
+    this.header('location', url)
+    this.status(code)
+
+    return null
+  }
+
   public render(view: string, variables: Record<string, any> = {}): RenderResponse {
     const file = joinPath('views', `${view.replace('.', directorySeparator)}.melon.html`)
 

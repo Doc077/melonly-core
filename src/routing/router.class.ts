@@ -94,10 +94,6 @@ export class Router {
     }
   }
 
-  public static addGlobalMiddleware(middleware: any[]): void {
-    //
-  }
-
   public static get(url: string, action: () => any): void {
     this.addRoute(url, action, Method.Get)
   }
@@ -120,6 +116,8 @@ export class Router {
 
   public static handle(url: string): void {
     const request = Container.getSingleton(Request)
+    const response = Container.getSingleton(Response)
+
     const method = request.method()
 
     Logger.success(`Request: ${method.toUpperCase()} ${url}`)
@@ -131,6 +129,10 @@ export class Router {
     if (!request.ajax()) {
       Container.getSingleton(Session).set('_previousLocation', url)
     }
+
+    this.globalMiddleware.forEach((middleware: (request: Request, response: Response) => any) => {
+      middleware(request, response)
+    })
 
     for (const route of this.routes) {
       if (route.pattern.test(url)) {
@@ -210,6 +212,10 @@ export class Router {
     }
 
     this.abortNotFound()
+  }
+
+  public static registerGlobalMiddleware(middleware: (() => any)[]): void {
+    this.globalMiddleware = middleware
   }
 
   public static resolveController(controller: any, method: string): any {

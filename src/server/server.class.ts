@@ -109,8 +109,8 @@ export class Server {
     return this
   }
 
-  public registerGlobalMiddleware(middleware: any[]): this {
-    Router.addGlobalMiddleware(middleware)
+  public registerGlobalMiddleware(middleware: (() => any)[]): this {
+    Router.registerGlobalMiddleware(middleware)
 
     return this
   }

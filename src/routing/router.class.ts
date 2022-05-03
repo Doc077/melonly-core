@@ -138,6 +138,10 @@ export class Router {
       if (route.pattern.test(url)) {
         const samePathRoutes = this.routes.filter((current: Route) => current.pattern.test(url))
 
+        /**
+         * Handle routes with the same names but different methods
+         */
+
         if (String(route.method) !== method) {
           if (samePathRoutes.length === 1) {
             this.abortNotFound()
@@ -161,10 +165,10 @@ export class Router {
 
         let matchedRouteParams = {}
 
-        keys.map((key: string, i: number) => {
+        keys.map((key: string, index: number) => {
           matchedRouteParams = {
             ...matchedRouteParams,
-            [key]: values[i],
+            [key]: values[index],
           }
         })
 

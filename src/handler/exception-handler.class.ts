@@ -10,7 +10,7 @@ import { View } from '../views/view.class'
 
 export class ExceptionHandler {
   private static handleAjaxRequest(exception: any, request: Request, response: Response): boolean {
-    if (!request.ajax()) {
+    if (request.ajax()) {
       response.end({
         error: exception.message,
         status: response.getStatus(),

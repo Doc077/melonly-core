@@ -37,6 +37,8 @@ export class ExceptionHandler {
         ? customTemplatePath
         : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
 
+      response.header('content-type', 'text/html')
+
       response.end(
         View.compile(file, {
           code: 404,
@@ -57,6 +59,8 @@ export class ExceptionHandler {
       const file = existsSync(customTemplatePath)
         ? customTemplatePath
         : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
+
+      response.header('content-type', 'text/html')
 
       response.end(
         View.compile(file, {
@@ -95,6 +99,8 @@ export class ExceptionHandler {
         file = file.split(':')[0]
       }
 
+      response.header('content-type', 'text/html')
+
       response.end(
         View.compile(templateFile, {
           caller,
@@ -115,6 +121,8 @@ export class ExceptionHandler {
     const file = existsSync(customTemplatePath)
       ? customTemplatePath
       : joinPath(__dirname, '..', '..', 'assets', 'status.melon')
+
+    response.header('content-type', 'text/html')
 
     response.end(
       View.compile(file, {

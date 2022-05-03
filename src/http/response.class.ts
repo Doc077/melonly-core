@@ -14,24 +14,9 @@ export class Response {
 
   private terminated: boolean = false
 
-  public cookie(name: string, value: string): void {
-    this.header('set-cookie', `${name}=${value}`)
-  }
-
-  public end(content?: any): void {
-    if (content instanceof Promise) {
-      let result: any
-
-      content.then((res: any) => {
-        result = res
-      })
-      .finally(() => {
-        content = result
-      })
-      .catch(() => {
-        throw new Exception('Asynchronous action failed')
-      })
-    }
+  private parseResponse(content: any): any {
+    const isObject = typeof content === 'object' && content !== null
+    const type = isObject ? content.constructor.name : typeof content
 
     switch (true) {
       case content instanceof RenderResponse:
@@ -43,7 +28,7 @@ export class Response {
 
         break
 
-      case Array.isArray(content) || (typeof content === 'object' && content !== null && content.constructor === Object):
+      case Array.isArray(content) || (isObject && content.constructor === Object):
         this.header('content-type', 'application/json')
 
         content = JSON.stringify(content)
@@ -60,8 +45,36 @@ export class Response {
         break
 
       default:
-        throw new Exception('Invalid response type')
+        throw new Exception(`Invalid response type '${type}'`)
     }
+
+    return content
+  }
+
+  public cookie(name: string, value: string): void {
+    this.header('set-cookie', `${name}=${value}`)
+  }
+
+  public end(content?: any): void {
+    if (content instanceof Promise) {
+      let result: any
+
+      content.then((res: any) => {
+        result = res
+      })
+      .finally(() => {
+        content = this.parseResponse(result)
+
+        this.instance?.end(content)
+      })
+      .catch(() => {
+        throw new Exception('Asynchronous action failed')
+      })
+
+      return
+    }
+
+    content = this.parseResponse(content)
 
     this.instance?.end(content)
   }

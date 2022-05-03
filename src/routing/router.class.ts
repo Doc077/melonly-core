@@ -18,20 +18,6 @@ export class Router {
 
   private static globalMiddleware: (() => any)[] = []
 
-  private static addRoute(url: string, action: () => any, method: Method): Route {
-    if (!url.startsWith('/')) {
-      url = `/${url}`
-    }
-
-    const route = new Route(url, method, pathToRegexp(url, [], {
-      endsWith: '?',
-    }), action)
-
-    this.routes.push(route)
-
-    return route
-  }
-
   private static respond(responseContent: any): void {
     const request = Container.getSingleton(Request)
     const response = Container.getSingleton(Response)
@@ -67,23 +53,23 @@ export class Router {
   }
 
   public static get(url: string, action: () => any): void {
-    this.addRoute(url, action, Method.Get)
+    this.registerRoute(url, action, Method.Get)
   }
 
   public static post(url: string, action: () => any): void {
-    this.addRoute(url, action, Method.Post)
+    this.registerRoute(url, action, Method.Post)
   }
 
   public static put(url: string, action: () => any): void {
-    this.addRoute(url, action, Method.Put)
+    this.registerRoute(url, action, Method.Put)
   }
 
   public static patch(url: string, action: () => any): void {
-    this.addRoute(url, action, Method.Patch)
+    this.registerRoute(url, action, Method.Patch)
   }
 
   public static delete(url: string, action: () => any): void {
-    this.addRoute(url, action, Method.Delete)
+    this.registerRoute(url, action, Method.Delete)
   }
 
   public static handle(url: string): void {
@@ -148,11 +134,10 @@ export class Router {
           Container.getSingleton(Request).setParam(param, value as string)
         }
 
-        let responseContent = route.action()
+        const responseData = route.action()
 
         this.deleteTemporaryFiles()
-
-        this.respond(responseContent)
+        this.respond(responseData)
 
         return
       }
@@ -163,6 +148,20 @@ export class Router {
 
   public static registerGlobalMiddleware(middleware: (() => any)[]): void {
     this.globalMiddleware = middleware
+  }
+
+  public static registerRoute(url: string, action: () => any, method: Method): Route {
+    if (!url.startsWith('/')) {
+      url = `/${url}`
+    }
+
+    const route = new Route(url, method, pathToRegexp(url, [], {
+      endsWith: '?',
+    }), action)
+
+    this.routes.push(route)
+
+    return route
   }
 
   public static resolveController(controller: any, method: string): any {

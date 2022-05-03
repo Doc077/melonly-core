@@ -35,10 +35,8 @@ export class Response {
 
         break
 
-      case content === null || typeof content === 'string':
-        if (!content) {
-          content = 'null'
-        }
+      case ['boolean', 'number', 'bigint', 'string'].includes(typeof content) || content === null:
+        content = String(content)
 
         this.header('content-type', 'text/html; charset=utf-8')
 

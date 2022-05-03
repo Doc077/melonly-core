@@ -39,6 +39,10 @@ export class Response {
 
         break
 
+      case content instanceof Buffer:
+
+        break
+
       case Array.isArray(content) || (typeof content === 'object' && content !== null && content.constructor === Object):
         this.header('content-type', 'application/json')
 

@@ -9,27 +9,31 @@ import { RouteNotFoundException } from '../routing/exceptions/route-not-found.ex
 import { View } from '../views/view.class'
 
 export class ExceptionHandler {
-  public static handle(exception: any): void {
-    const request = Container.getSingleton(Request)
-    const response = Container.getSingleton(Response)
-
-    /**
-     * Send JSON in case of AJAX request
-     */
-
-     if (request.ajax()) {
+  private static handleAjaxRequest(exception: any, request: Request, response: Response): boolean {
+    if (!request.ajax()) {
       response.end({
-        exception: exception.message,
+        error: exception.message,
         status: response.getStatus(),
       })
 
-      return
+      return true
     }
+
+    return false
+  }
+
+  public static handle(exception: any): void {
+    const request = Container.getSingleton(Request)
+    const response = Container.getSingleton(Response)
 
     if (exception instanceof RouteNotFoundException) {
       Logger.error(`Response: ${request.method().toUpperCase()} ${request.url()}`, '404')
 
       response.status(404)
+
+      if (this.handleAjaxRequest(exception, request, response)) {
+        return
+      }
 
       const customTemplatePath = joinPath('views', 'errors', '404.melon.html')
 
@@ -54,6 +58,10 @@ export class ExceptionHandler {
 
       response.status(419)
 
+      if (this.handleAjaxRequest(exception, request, response)) {
+        return
+      }
+
       const customTemplatePath = joinPath('views', 'errors', '419.melon.html')
 
       const file = existsSync(customTemplatePath)
@@ -77,10 +85,14 @@ export class ExceptionHandler {
 
     response.status(500)
 
+    if (this.handleAjaxRequest(exception, request, response)) {
+      return
+    }
+
     response.terminate()
 
     /**
-     * Render error page
+     * Render detailed exception page
      */
 
     if (process.env.APP_DEBUG === 'true') {

@@ -19,8 +19,44 @@ export class Response {
   }
 
   public end(content?: any): void {
-    if (content instanceof RenderResponse) {
-      content = content.toString()
+    if (content instanceof Promise) {
+      let result: any
+
+      content.then((res: any) => {
+        result = res
+      })
+      .finally(() => {
+        content = result
+      })
+      .catch(() => {
+        throw new Exception('Asynchronous action failed')
+      })
+    }
+
+    switch (true) {
+      case content instanceof RenderResponse:
+        content = content.toString()
+
+        break
+
+      case Array.isArray(content) || (typeof content === 'object' && content !== null && content.constructor === Object):
+        this.header('content-type', 'application/json')
+
+        content = JSON.stringify(content)
+
+        break
+
+      case content === null || typeof content === 'string':
+        if (!content) {
+          content = 'null'
+        }
+
+        this.header('content-type', 'text/html; charset=utf-8')
+
+        break
+
+      default:
+        throw new Exception('Invalid response type')
     }
 
     this.instance?.end(content)

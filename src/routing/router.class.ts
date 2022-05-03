@@ -3,12 +3,10 @@ import { pathToRegexp } from 'path-to-regexp'
 import { readFileSync, unlinkSync } from 'fs'
 import { join as joinPath } from 'path'
 import { Container } from '../container/container.class'
-import { Exception } from '../handler/exception.class'
 import { Injector } from '../container/injector.class'
 import { InvalidTokenException } from './exceptions/invalid-token.exception'
 import { Logger } from '../console/logger.class'
 import { Method } from '../http/enums/method.enum'
-import { RenderResponse } from '../views/render-response.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
 import { RouteNotFoundException } from './exceptions/route-not-found.exception'
@@ -37,32 +35,6 @@ export class Router {
   private static respond(responseContent: any): void {
     const request = Container.getSingleton(Request)
     const response = Container.getSingleton(Response)
-
-    switch (true) {
-      case responseContent instanceof RenderResponse:
-        responseContent = responseContent.toString()
-
-        break
-
-      case Array.isArray(responseContent) || (typeof responseContent === 'object' && responseContent !== null && responseContent.constructor === Object):
-        response.header('content-type', 'application/json')
-
-        responseContent = JSON.stringify(responseContent)
-
-        break
-
-      case responseContent === null || typeof responseContent === 'string':
-        if (!responseContent) {
-          responseContent = 'null'
-        }
-
-        response.header('content-type', 'text/html; charset=utf-8')
-
-        break
-
-      default:
-        throw new Exception('Invalid response type')
-    }
 
     Logger.success(`Response: ${request.method().toUpperCase()} ${request.url()}`, '200')
 
@@ -177,29 +149,6 @@ export class Router {
         }
 
         let responseContent = route.action()
-
-        /**
-         * Handle controller's async methods
-         */
-
-        if (responseContent instanceof Promise) {
-          let result: any
-
-          responseContent
-            .then((content: any) => {
-              result = content
-            })
-            .finally(() => {
-              responseContent = result
-
-              this.respond(result)
-            })
-            .catch(() => {
-              throw new Exception('Asynchronous action failed')
-            })
-
-          return
-        }
 
         this.deleteTemporaryFiles()
 

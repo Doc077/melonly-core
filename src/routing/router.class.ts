@@ -123,7 +123,7 @@ export class Router {
     Logger.success(`Request: ${method.toUpperCase()} ${url}`)
 
     /**
-     * Store previous location in session
+     * Store previous location in the session
      */
 
     if (!request.ajax()) {
@@ -136,16 +136,10 @@ export class Router {
 
     for (const route of this.routes) {
       if (route.pattern.test(url)) {
-        let routePathCount = 0
-
-        for (const item of this.routes) {
-          if (item.pattern.test(url)) {
-            routePathCount += 1
-          }
-        }
+        const samePathRoutes = this.routes.filter((current: Route) => current.pattern.test(url))
 
         if (String(route.method) !== method) {
-          if (routePathCount === 1) {
+          if (samePathRoutes.length === 1) {
             this.abortNotFound()
           }
 
@@ -157,31 +151,31 @@ export class Router {
         let keys: string[] = []
         let values: string[] = []
 
-        for (const key of route.url.matchAll(/:([a-zA-Z0-9]*)/g) ?? []) {
+        route.url.matchAll(/:([a-zA-Z0-9]*)/g) ?? [].forEach((key: string) => {
           keys.push(key[1])
-        }
+        })
 
-        for (const param of route.pattern.exec(url)?.slice(1) ?? []) {
+        route.pattern.exec(url)?.slice(1) ?? [].forEach((param: string) => {
           values.push(param)
-        }
+        })
 
-        let entries = {}
+        let matchedRouteParams = {}
 
         keys.map((key: string, i: number) => {
-          entries = {
-            ...entries,
+          matchedRouteParams = {
+            ...matchedRouteParams,
             [key]: values[i],
           }
         })
 
-        for (const [param, value] of Object.entries(entries)) {
+        for (const [param, value] of Object.entries(matchedRouteParams)) {
           Container.getSingleton(Request).setParam(param, value as string)
         }
 
         let responseContent = route.action()
 
         /**
-         * Async methods support
+         * Handle controller's async methods
          */
 
         if (responseContent instanceof Promise) {
@@ -197,7 +191,7 @@ export class Router {
               this.respond(result)
             })
             .catch(() => {
-              throw new Exception('Asynchronous operation failed')
+              throw new Exception('Asynchronous action failed')
             })
 
           return
@@ -237,6 +231,7 @@ export class Router {
     try {
       const fileContent = readFileSync(path)
       const extensionMimes: Record<string, string> = require('../../assets/mime-types.json')
+
       const response = Container.getSingleton(Response)
 
       Logger.success(`Response: GET ${url}`, '200')

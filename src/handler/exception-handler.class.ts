@@ -105,10 +105,12 @@ export class ExceptionHandler {
 
       let file: string = info.match(/\((.*?)\)/)[1]
 
-      if (file.includes('dist')) {
+      if (file.includes('storage')) {
         file = file.replace(/.*?dist./, `src${directorySeparator}`)
         file = file.replace('.js', '.ts')
         file = file.split(':')[0]
+      } else {
+        file = `${require('../../package.json').name} package file`
       }
 
       response.header('content-type', 'text/html')

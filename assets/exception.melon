@@ -111,7 +111,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
 
         <p class="mt-3 mb-1 opacity-80">File: {{ file }}</p>
 
-        <code class="self-start px-2 py-1 text-sm bg-slate-100 dark:bg-gray-900 rounded-md mt-7">{{ method }} {{ uri }}</code>
+        <code class="self-start px-2 py-1 text-sm bg-slate-100 dark:bg-gray-900 rounded-md mt-7">{{ method }} {{ url }}</code>
         <code class="self-start px-2 py-1 text-sm bg-slate-100 dark:bg-gray-900 rounded-md mt-2">HTTP {{ status }}</code>
     
         <button class="flex items-center self-end bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-2 mt-12 rounded-xl text-white shadow-lg shadow-emerald-500/10 transition-all duration-300 hover:opacity-95 hover:-translate-y-1 select-none" onclick="window.location.reload()">

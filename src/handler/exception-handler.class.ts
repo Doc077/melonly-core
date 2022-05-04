@@ -5,7 +5,7 @@ import { InvalidTokenException } from '../routing/exceptions/invalid-token.excep
 import { Logger } from '../console/logger.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
-import { RouteNotFoundException } from '../routing/exceptions/route-not-found.exception'
+import { NotFoundException } from '../routing/exceptions/not-found.exception'
 import { View } from '../views/view.class'
 
 export class ExceptionHandler {
@@ -26,7 +26,7 @@ export class ExceptionHandler {
     const request = Container.getSingleton(Request)
     const response = Container.getSingleton(Response)
 
-    if (exception instanceof RouteNotFoundException) {
+    if (exception instanceof NotFoundException) {
       Logger.error(`Response: ${request.method().toUpperCase()} ${request.url()}`, '404')
 
       response.status(404)
@@ -123,7 +123,7 @@ export class ExceptionHandler {
           method: Container.getSingleton(Request).method().toUpperCase(),
           stack: exception.stack,
           status: response.getStatus(),
-          uri: Container.getSingleton(Request).url(),
+          url: Container.getSingleton(Request).url(),
         }),
       )
 

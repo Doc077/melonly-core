@@ -9,7 +9,7 @@ import { Logger } from '../console/logger.class'
 import { Method } from '../http/enums/method.enum'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
-import { RouteNotFoundException } from './exceptions/route-not-found.exception'
+import { NotFoundException } from './exceptions/not-found.exception'
 import { Route } from './route.class'
 import { Session } from '../session/session.class'
 
@@ -28,7 +28,7 @@ export class Router {
   }
 
   private static abortNotFound(): never {
-    throw new RouteNotFoundException()
+    throw new NotFoundException()
   }
 
   private static deleteTemporaryFiles(): void {
@@ -191,7 +191,7 @@ export class Router {
       response.header('content-type', extensionMimes[extension] ?? 'text/plain')
       response.end(fileContent)
     } catch (error) {
-      throw new RouteNotFoundException()
+      throw new NotFoundException()
     }
   }
 }

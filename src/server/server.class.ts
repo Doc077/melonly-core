@@ -1,6 +1,7 @@
 import { config as envConfig } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { Broadcaster } from '../broadcast/broadcaster.class'
+import { Config } from '../config/config.class'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { Logger } from '../console/logger.class'
@@ -60,7 +61,7 @@ export class Server {
       }
     })
 
-    const serverPort = process.env.APP_PORT ?? 3000
+    const serverPort = Config.app.port ?? 3000
 
     if (this.broadcastingEnabled) {
       Broadcaster.init(server)
@@ -71,13 +72,15 @@ export class Server {
     })
   }
 
-  public start(): this {
+  public start(directory: string): this {
     process.on('uncaughtException', (exception: any) => ExceptionHandler.handle(exception))
 
     try {
       envConfig({
         path: '.env',
       })
+
+      Config.init(directory)
 
       if (parseInt(process.versions.node) < NODE_MIN_VERSION) {
         Logger.warn(`Node version requirements >= ${NODE_MIN_VERSION} not met`)

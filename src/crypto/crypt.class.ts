@@ -1,4 +1,5 @@
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto'
+import { Config } from '../config/config.class'
 
 export interface EncryptedData {
   iv: string
@@ -8,7 +9,7 @@ export interface EncryptedData {
 export class Crypt {
   private static readonly ALGORITHM: string = 'aes-256-ctr'
 
-  private static readonly key: string = process.env.APP_KEY
+  private static readonly key: string = Config.app.key
     ?? randomBytes(16).toString()
 
   private static readonly iv: Buffer = randomBytes(16)

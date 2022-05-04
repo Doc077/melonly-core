@@ -1,5 +1,6 @@
 import { existsSync } from 'fs'
 import { join as joinPath, sep as directorySeparator } from 'path'
+import { Config } from '../config/config.class'
 import { Container } from '../container/container.class'
 import { InvalidTokenException } from '../routing/exceptions/invalid-token.exception'
 import { Logger } from '../console/logger.class'
@@ -95,7 +96,7 @@ export class ExceptionHandler {
      * Render detailed exception page
      */
 
-    if (process.env.APP_DEBUG === 'true') {
+    if (Config.app.debug === 'true') {
       const templateFile = joinPath(__dirname, '..', '..', 'assets', 'exception.melon')
 
       const callerLine = exception.stack.split('\n')[1]
@@ -106,7 +107,7 @@ export class ExceptionHandler {
       let file: string = info.match(/\((.*?)\)/)[1]
 
       if (file.includes('.dist')) {
-        file = file.replace(/.*?dist./, `src${directorySeparator}`)
+        file = file.replace(/.*?\.dist./, `src${directorySeparator}`)
         file = file.replace('.js', '.ts')
         file = file.split(':')[0]
       } else {

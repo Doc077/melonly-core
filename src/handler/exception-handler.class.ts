@@ -105,7 +105,7 @@ export class ExceptionHandler {
 
       let file: string = info.match(/\((.*?)\)/)[1]
 
-      if (file.includes('storage')) {
+      if (file.includes('.dist')) {
         file = file.replace(/.*?dist./, `src${directorySeparator}`)
         file = file.replace('.js', '.ts')
         file = file.split(':')[0]

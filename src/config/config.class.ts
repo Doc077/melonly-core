@@ -3,6 +3,10 @@ import { join as joinPath } from 'path'
 export class Config {
   private static entries: Record<string, any> = {}
 
+  public static get data(): Record<string, any> {
+    return this.entries
+  }
+
   public static get app(): Record<string, any> {
     return this.entries.app
   }

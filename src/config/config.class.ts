@@ -3,25 +3,37 @@ import { join as joinPath } from 'path'
 export class Config {
   private static entries: Record<string, any> = {}
 
+  private static configDirectory: string = __dirname
+
+  private static load(): void {
+    const path = joinPath(this.configDirectory, 'config', 'config.js')
+
+    this.entries = require(path).default
+  }
+
   public static get data(): Record<string, any> {
-    return this.entries
+    return this.entries ?? {}
   }
 
   public static get app(): Record<string, any> {
-    return this.entries.app
+    return this.entries.app ?? {}
   }
 
   public static get database(): Record<string, any> {
-    return this.entries.database
+    return this.entries.database ?? {}
   }
 
   public static get mail(): Record<string, any> {
-    return this.entries.mail
+    return this.entries.mail ?? {}
   }
 
   public static init(directory: string): void {
-    const path = joinPath(directory, 'config', 'config.js')
+    if (Object.keys(this.entries).length) {
+      return
+    }
 
-    this.entries = require(path).default
+    this.configDirectory = directory
+
+    this.load()
   }
 }

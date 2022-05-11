@@ -1,10 +1,6 @@
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto'
+import { EncryptedData } from './interfaces/encrypted-data.interface'
 import { Config } from '../config/config.class'
-
-export interface EncryptedData {
-  iv: string
-  content: string
-}
 
 export class Crypt {
   private static readonly ALGORITHM: string = 'aes-256-ctr'

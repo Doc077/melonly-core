@@ -32,7 +32,7 @@ export class Query {
 
     const query = `${this.type} ${this.selectColumns.join(', ')} from \`${this.table}\`${this.whereConditions.size ? ` where ${conditions.join('')}` : ''}${this.limitAmount ? ` limit ${this.limitAmount}` : ''}`
 
-    Logger.info(`Database query: ${query}`)
+    Logger.success(`Database query: ${query}`)
 
     return []
   }

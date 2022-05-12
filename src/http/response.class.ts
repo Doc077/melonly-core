@@ -10,7 +10,7 @@ import { Session } from '../session/session.class'
 import { View } from '../views/view.class'
 
 export class Response {
-  private instance: ServerResponse | null = null
+  private instance: null | ServerResponse = null
 
   private terminated: boolean = false
 

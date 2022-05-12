@@ -11,7 +11,7 @@ import { SessionData } from './interfaces/session-data.interface'
 export class Session {
   private variables: SessionData = {}
 
-  private key: string | null = ''
+  private key: null | string = ''
 
   constructor() {
     this.key = Container.getSingleton(Request).cookie('sessionId')

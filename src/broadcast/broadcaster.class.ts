@@ -4,7 +4,7 @@ import { Injector } from '../container/injector.class'
 import { Logger } from '../console/logger.class'
 
 export class Broadcaster {
-  private static broadcastServer: BroadcastServer | null = null
+  private static broadcastServer: null | BroadcastServer = null
 
   private static channels: any[] = []
 

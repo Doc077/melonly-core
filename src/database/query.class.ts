@@ -3,7 +3,7 @@ import { Logger } from '../console/logger.class'
 export class Query {
   private type: string = 'select'
 
-  private limitAmount: number | null = null
+  private limitAmount: null | number = null
 
   private whereConditions: Map<string, string> = new Map()
 

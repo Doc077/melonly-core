@@ -40,7 +40,7 @@ File.prototype.store = function (path: string, name?: string) {
 }
 
 export class Request {
-  private instance: IncomingMessage | null | any = null
+  private instance: null | IncomingMessage | any = null
 
   private formData: Record<string, any> = {}
 

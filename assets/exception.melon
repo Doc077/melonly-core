@@ -91,17 +91,17 @@ Check your Browserslist config to be sure that your targets are set up correctly
     </script>
   </head>
 
-  <body class="bg-slate-50 h-screen flex justify-center items-center leading-8 text-gray-800 selection:bg-emerald-300 selection:text-gray-900 dark:bg-gray-900 dark:text-gray-50 py-16">
+  <body class="bg-slate-50 h-screen flex justify-center items-center leading-8 text-gray-800 selection:bg-purple-300 selection:text-gray-900 dark:bg-gray-900 dark:text-gray-50 py-16">
     <div class="flex flex-col w-2/3 lg:w-1/2">
       <div class="flex gap-2 mb-6">
-        <div class="flex items-center bg-rose-500 text-white font-mono text-xs rounded-lg shadow-lg shadow-rose-500/10 px-3 py-2">
+        <div class="flex items-center bg-rose-500 text-white font-mono text-xs rounded-lg shadow-lg shadow-rose-500/10 select-none px-3 py-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
           </svg>
           Unhandled Exception
         </div>
 
-        <div class="flex items-center bg-slate-100 dark:bg-gray-800 font-mono text-xs rounded-lg px-3 py-2">
+        <div class="flex items-center bg-slate-100 dark:bg-gray-800 font-mono text-xs rounded-lg select-none px-3 py-2">
           {{ caller }}
         </div>
       </div>
@@ -114,7 +114,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
         <code class="self-start px-2 py-1 text-sm bg-slate-100 dark:bg-gray-900 rounded-md mt-7">{{ method }} {{ url }}</code>
         <code class="self-start px-2 py-1 text-sm bg-slate-100 dark:bg-gray-900 rounded-md mt-2">HTTP {{ status }}</code>
     
-        <button class="flex items-center self-end bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-2 mt-12 rounded-xl text-white shadow-lg shadow-emerald-500/10 transition-all duration-300 hover:opacity-95 hover:-translate-y-1 select-none" onclick="window.location.reload()">
+        <button class="flex items-center self-end bg-gradient-to-r from-purple-500 to-fuchsia-500 px-5 py-2 mt-12 rounded-xl text-white shadow-lg shadow-purple-500/20 transition-all duration-300 hover:opacity-95 hover:-translate-y-1 select-none" onclick="window.location.reload()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>

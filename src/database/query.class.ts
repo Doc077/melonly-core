@@ -9,7 +9,7 @@ export class Query {
 
   private orWhereConditions: Map<string, string> = new Map()
 
-  public selectColumns: string[] = []
+  private selectColumns: string[] = []
 
   constructor(private table: string) {}
 
@@ -35,6 +35,28 @@ export class Query {
     Logger.success(`Database query: ${query}`)
 
     return []
+  }
+
+  public select(columns?: string[] | string): this {
+    if (!columns) {
+      this.selectColumns = ['*']
+
+      return this
+    }
+
+    if (typeof columns === 'string') {
+      this.selectColumns = [columns]
+
+      return this
+    }
+
+    columns.forEach((column: string, index: number) => {
+      columns[index] = `\`${column}\``
+    })
+
+    this.selectColumns = [...columns]
+
+    return this
   }
 
   public where(column: string, operator: string, value: any): this {

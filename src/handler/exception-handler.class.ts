@@ -81,8 +81,8 @@ export class ExceptionHandler {
       return
     }
 
-    Logger.error(`Exception: ${exception.message}`)
     Logger.error(`Request: ${request.method().toUpperCase()} ${request.url()}`, '500')
+    Logger.error(`Exception: ${exception.message}`)
 
     response.status(500)
 

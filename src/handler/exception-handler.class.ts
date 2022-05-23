@@ -28,7 +28,7 @@ export class ExceptionHandler {
     const response = Container.getSingleton(Response)
 
     if (exception instanceof NotFoundException) {
-      Logger.error(`Response: ${request.method().toUpperCase()} ${request.url()}`, '404')
+      Logger.error(`Request: ${request.method().toUpperCase()} ${request.url()}`, '404')
 
       response.status(404)
 
@@ -55,7 +55,7 @@ export class ExceptionHandler {
     }
 
     if (exception instanceof InvalidTokenException) {
-      Logger.error(`Response: ${request.method().toUpperCase()} ${request.url()}`, '419')
+      Logger.error(`Request: ${request.method().toUpperCase()} ${request.url()}`, '419')
 
       response.status(419)
 
@@ -82,7 +82,7 @@ export class ExceptionHandler {
     }
 
     Logger.error(`Exception: ${exception.message}`)
-    Logger.error(`Response: ${request.method().toUpperCase()} ${request.url()}`, '500')
+    Logger.error(`Request: ${request.method().toUpperCase()} ${request.url()}`, '500')
 
     response.status(500)
 

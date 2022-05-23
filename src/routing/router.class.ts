@@ -22,7 +22,7 @@ export class Router {
     const request = Container.getSingleton(Request)
     const response = Container.getSingleton(Response)
 
-    Logger.success(`Response: ${request.method().toUpperCase()} ${request.url()}`, '200')
+    Logger.success(`Request: ${request.method().toUpperCase()} ${request.url()}`, '200')
 
     response.end(responseContent)
   }
@@ -77,8 +77,6 @@ export class Router {
     const response = Container.getSingleton(Response)
 
     const method = request.method()
-
-    Logger.success(`Request: ${method.toUpperCase()} ${url}`)
 
     /**
      * Store previous location in the session
@@ -175,8 +173,6 @@ export class Router {
   }
 
   public static serveStaticFile(url: string): void {
-    Logger.success(`Request: GET ${url}`)
-
     const path = joinPath('public', url.replace('/', ''))
     const extension = url.replace('/', '').split('.')[1]
 
@@ -186,7 +182,7 @@ export class Router {
 
       const response = Container.getSingleton(Response)
 
-      Logger.success(`Response: GET ${url}`, '200')
+      Logger.success(`Request: GET ${url}`, '200')
 
       response.header('content-type', extensionMimes[extension] ?? 'text/plain')
       response.end(fileContent)

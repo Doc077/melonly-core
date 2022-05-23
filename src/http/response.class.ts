@@ -127,15 +127,20 @@ export class Response {
   }
 
   public render(view: string, variables: Record<string, any> = {}): RenderResponse {
-    const file = joinPath('views', `${view.replace('.', directorySeparator)}.melon.html`)
+    const file = view
+      .replace('.', directorySeparator)
+      .replace('/', directorySeparator)
+      .replace('\\', directorySeparator)
 
-    if (!existsSync(file)) {
+    const path = joinPath('views', `${file}.melon.html`)
+
+    if (!existsSync(path)) {
       throw new Exception(`View '${view}' does not exist`)
     }
 
     this.header('content-type', 'text/html')
 
-    return View.compile(file, variables)
+    return View.compile(path, variables)
   }
 
   public setInstance(response: ServerResponse) {

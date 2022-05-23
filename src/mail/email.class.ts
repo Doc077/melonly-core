@@ -24,13 +24,18 @@ export abstract class Email {
   protected abstract subject(): string
 
   protected fromTemplate(view: string, variables: Record<string, any> = {}): string {
-    const file = joinPath('views', `${view.replace('.', directorySeparator)}.melon.html`)
+    const file = view
+      .replace('.', directorySeparator)
+      .replace('/', directorySeparator)
+      .replace('\\', directorySeparator)
 
-    if (!existsSync(file)) {
+    const path = joinPath('views', `${file}.melon.html`)
+
+    if (!existsSync(path)) {
       throw new Exception(`Template '${view}' does not exist`)
     }
 
-    return View.compile(file, variables).toString()
+    return View.compile(path, variables).toString()
   }
 
   public static send(to: string, emailOrSubject: Email | string, content?: string, headers?: Record<string, string>): void {

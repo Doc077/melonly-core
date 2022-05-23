@@ -167,6 +167,10 @@ export class View {
         ? constants[name as keyof object]
         : variables[name]
 
+      if (isConstant && !(name in constants)) {
+        throw new Exception(`The '${name}' constant is not defined`)
+      }
+
       if (!isConstant && !(name in variables)) {
         throw new Exception(`The '${name}' variable has not been passed to the view`)
       }

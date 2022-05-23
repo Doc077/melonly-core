@@ -4,12 +4,14 @@ import { existsSync, readFileSync } from 'fs'
 import * as constants from '../constants'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
+import { Lang } from '../lang/lang.class'
 import { RenderResponse } from './render-response.class'
 import { Session } from '../session/session.class'
 
 export class View {
   private static patterns: { [name: string]: RegExp } = {
     each: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
+    function: /([^@])\{\{ (.*?)\((.*?)\) *\}\}/g,
     if: /\[if (not)? ?(.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
     import: /\[import '?(.*?)'?\]/g,
     method: /\[method '?(.*?)'?\]/g,
@@ -17,6 +19,11 @@ export class View {
     token: /\[token\]/g,
     unless: /\[unless (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/unless\]/gm,
     variable: /([^@])\{\{ *([^ ]*?) *\}\}/g,
+  }
+
+  private static functions: Record<string, any> = {
+    __: Lang.trans,
+    trans: Lang.trans,
   }
 
   private static rawContents: string[] = []
@@ -180,6 +187,17 @@ export class View {
         : encode(String(variableValue))
 
       compiled = compiled.replace(expression[0], expression[1] + variableValue)
+    }
+
+    /**
+     * Function call syntax
+     */
+    for (const expression of compiled.matchAll(this.patterns.function) ?? []) {
+      const name: string = expression[2]
+
+      const result: any = this.functions[name as string](eval(expression[3]))
+
+      compiled = compiled.replace(expression[0], expression[1] + String(result))
     }
 
     /**

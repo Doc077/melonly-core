@@ -6,10 +6,9 @@ import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
-import { SessionData } from './interfaces/session-data.interface'
 
 export class Session {
-  private variables: SessionData = {}
+  private variables: Record<string, any> = {}
 
   private key: null | string = ''
 
@@ -54,7 +53,7 @@ export class Session {
     Container.getSingleton(Response).cookie('sessionId', '')
   }
 
-  public get data(): SessionData {
+  public get data(): Record<string, any> {
     return this.variables
   }
 

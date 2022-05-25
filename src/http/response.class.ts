@@ -101,29 +101,27 @@ export class Response {
     return data
   }
 
-  public redirect(url: string, code: number = 302): RedirectResponse {
+  public redirect(url: string, variables: Record<string, any> = {}, code: number = 302): RedirectResponse {
     this.header('location', url)
     this.status(code)
+
+    for (const [variable, value] of Object.entries(variables)) {
+      Container.getSingleton(Session).set(`_flash:${variable}`, value)
+    }
 
     return null
   }
 
-  public redirectBack(code: number = 302): RedirectResponse {
+  public redirectBack(variables: Record<string, any> = {}, code: number = 302): RedirectResponse {
     const url = Container.getSingleton(Session).data._previousLocation ?? '/'
 
-    this.header('location', url)
-    this.status(code)
-
-    return null
+    return this.redirect(url, variables, code)
   }
 
-  public redirectIntended(defaultUrl: string, code: number = 302): RedirectResponse {
+  public redirectIntended(defaultUrl: string, variables: Record<string, any> = {}, code: number = 302): RedirectResponse {
     const url = Container.getSingleton(Session).data._intendedLocation ?? defaultUrl
 
-    this.header('location', url)
-    this.status(code)
-
-    return null
+    return this.redirect(url, variables, code)
   }
 
   public render(view: string, variables: Record<string, any> = {}): RenderResponse {

@@ -1,11 +1,11 @@
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 import { join as joinPath } from 'path'
 import { randomBytes } from 'crypto'
-import { v4 as uuidv4 } from 'uuid'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
+import { Uuid } from '../crypto/uuid.class'
 
 export class Session {
   private variables: Record<string, any> = {}
@@ -26,7 +26,7 @@ export class Session {
       return
     }
 
-    const generatedId = uuidv4()
+    const generatedId = Uuid.v4()
 
     Container.getSingleton(Response).cookie('sessionId', generatedId)
 

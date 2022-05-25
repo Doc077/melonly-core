@@ -24,9 +24,7 @@ export abstract class Email {
   protected abstract subject(): string
 
   protected fromTemplate(view: string, variables: Record<string, any> = {}): string {
-    const file = view
-      .replace('.', directorySeparator)
-      .replace('/', directorySeparator)
+    const file = view.replaceAll(/[\/\.]/g, directorySeparator)
 
     const path = joinPath('views', `${file}.melon.html`)
 

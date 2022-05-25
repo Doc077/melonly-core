@@ -125,9 +125,7 @@ export class Response {
   }
 
   public render(view: string, variables: Record<string, any> = {}): RenderResponse {
-    const file = view
-      .replace('.', directorySeparator)
-      .replace('/', directorySeparator)
+    const file = view.replaceAll(/[\/\.]/g, directorySeparator)
 
     const path = joinPath('views', `${file}.melon.html`)
 

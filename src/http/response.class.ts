@@ -128,7 +128,6 @@ export class Response {
     const file = view
       .replace('.', directorySeparator)
       .replace('/', directorySeparator)
-      .replace('\\', directorySeparator)
 
     const path = joinPath('views', `${file}.melon.html`)
 

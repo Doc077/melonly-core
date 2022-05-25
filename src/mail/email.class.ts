@@ -27,7 +27,6 @@ export abstract class Email {
     const file = view
       .replace('.', directorySeparator)
       .replace('/', directorySeparator)
-      .replace('\\', directorySeparator)
 
     const path = joinPath('views', `${file}.melon.html`)
 

@@ -76,7 +76,7 @@ export class Session {
   }
 
   public get(key: string): any {
-    return this.variables[key]
+    return this.variables[key] ?? null
   }
 
   public set(key: string, value: any): void {

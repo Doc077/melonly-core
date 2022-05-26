@@ -12,14 +12,14 @@ import { Session } from '../session/session.class'
 export class Compiler {
   private static patterns: Record<string, RegExp> = {
     each: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
-    function: /([^@])\{\{ (.*?)\((.*?)\) *\}\}/g,
+    function: /([^@]?)\{\{ (.*?)\((.*?)\) *\}\}/g,
     if: /\[if (not)? ?(.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
     import: /\[import '?(.*?)'?\]/g,
     method: /\[method '?(.*?)'?\]/g,
     raw: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
     token: /\[token\]/g,
     unless: /\[unless (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/unless\]/gm,
-    variable: /([^@])\{\{ *([^ ]*?) *\}\}/g,
+    variable: /([^@]?)\{\{ *([A-Za-z0-9_]*?) *\}\}/g,
   }
 
   private static functions: Record<string, any> = {
@@ -194,6 +194,7 @@ export class Compiler {
     /**
      * Function call syntax
      */
+
     for (const expression of compiled.matchAll(this.patterns.function) ?? []) {
       const name: string = expression[2]
 

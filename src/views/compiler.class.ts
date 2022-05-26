@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'fs'
 import * as constants from '../constants'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
+import { flash } from '../http/functions/flash.function'
 import { Lang } from '../lang/lang.class'
 import { RenderResponse } from './render-response.class'
 import { Session } from '../session/session.class'
@@ -23,6 +24,7 @@ export class Compiler {
 
   private static functions: Record<string, any> = {
     __: Lang.trans,
+    flash: flash,
     trans: Lang.trans,
   }
 

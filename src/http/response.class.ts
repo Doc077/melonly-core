@@ -1,5 +1,4 @@
 import { existsSync } from 'fs'
-import { join as joinPath, sep as directorySeparator } from 'path'
 import { ServerResponse } from 'http'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
@@ -125,9 +124,7 @@ export class Response {
   }
 
   public render(view: string, variables: Record<string, any> = {}): RenderResponse {
-    const file = view.replaceAll(/[\/\.]/g, directorySeparator)
-
-    const path = joinPath('views', `${file}.melon.html`)
+    const path = View.path(view)
 
     if (!existsSync(path)) {
       throw new Exception(`View '${view}' does not exist`)

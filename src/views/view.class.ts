@@ -1,5 +1,5 @@
 import { encode } from 'html-entities'
-import { join as joinPath } from 'path'
+import { join as joinPath, sep as directorySeparator } from 'path'
 import { existsSync, readFileSync } from 'fs'
 import * as constants from '../constants'
 import { Container } from '../container/container.class'
@@ -215,5 +215,11 @@ export class View {
     compiled = this.restoreRawContents(compiled)
 
     return new RenderResponse(compiled)
+  }
+
+  public static path(view: string): string {
+    const file = view.replaceAll(/[\/\.]/g, directorySeparator)
+
+    return joinPath('views', `${file}.melon.html`)
   }
 }

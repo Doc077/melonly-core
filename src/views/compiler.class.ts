@@ -11,7 +11,7 @@ import { Session } from '../session/session.class'
 import { View } from './view.class'
 
 export class Compiler {
-  private static DIRECTIVES: Record<string, RegExp> = {
+  private static readonly DIRECTIVES: Record<string, RegExp> = {
     EACH: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
     FUNCTION: /([^@]?)\{\{ (.*?)\((.*?)\) *\}\}/g,
     IF: /\[if (not)? ?(.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
@@ -23,7 +23,7 @@ export class Compiler {
     VARIABLE: /([^@]?)\{\{ *([A-Za-z0-9_]*?) *\}\}/g,
   }
 
-  private static FUNCTIONS: Record<string, any> = {
+  private static readonly FUNCTIONS: Record<string, any> = {
     __: Lang.trans,
     flash: flash,
     session: session,
@@ -46,13 +46,13 @@ export class Compiler {
 
       let result = ''
 
-      for (const item of iterableValue) {
+      iterableValue.forEach((item: any) => {
         for (const variable of match[4].matchAll(this.DIRECTIVES.VARIABLE)) {
           if (variable[2] === match[1]) {
-            result += match[4].replace(variable[0], variable[1] + item)
+            result += match[4].replace(variable[0], variable[1] + String(item))
           }
         }
-      }
+      })
 
       content = content.replace(match[0], result)
     }

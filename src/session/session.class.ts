@@ -63,6 +63,10 @@ export class Session {
     this.saveSessionData()
   }
 
+  public flash(key: string, value: any): void {
+    this.set(`_flash:${key}`, value)
+  }
+
   public generateToken(): string {
     if ('_token' in this.variables) {
       return this.variables['_token']

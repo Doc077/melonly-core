@@ -105,7 +105,7 @@ export class Response {
     this.status(code)
 
     for (const [variable, value] of Object.entries(variables)) {
-      Container.getSingleton(Session).set(`_flash:${variable}`, value)
+      Container.getSingleton(Session).flash(variable, value)
     }
 
     return null

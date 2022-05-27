@@ -6,6 +6,7 @@ import { Exception } from '../handler/exception.class'
 import { flash } from '../http/functions/flash.function'
 import { Lang } from '../lang/lang.class'
 import { RenderResponse } from './render-response.class'
+import { session } from '../session/functions/session.function'
 import { Session } from '../session/session.class'
 import { View } from './view.class'
 
@@ -25,6 +26,7 @@ export class Compiler {
   private static FUNCTIONS: Record<string, any> = {
     __: Lang.trans,
     flash: flash,
+    session: session,
     trans: Lang.trans,
   }
 
@@ -197,8 +199,13 @@ export class Compiler {
 
     for (const expression of compiled.matchAll(this.DIRECTIVES.FUNCTION) ?? []) {
       const name: string = expression[2]
+      const func = this.FUNCTIONS[name as string]
 
-      const result: any = this.FUNCTIONS[name as string](eval(expression[3]))
+      if (!func) {
+        throw new Exception(`Function '${name}' is not defined`)
+      }
+
+      const result: any = func(eval(expression[3]))
 
       compiled = compiled.replace(expression[0], expression[1] + String(result))
     }

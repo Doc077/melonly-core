@@ -1,5 +1,4 @@
 import { encode } from 'html-entities'
-import { join as joinPath } from 'path'
 import { existsSync, readFileSync } from 'fs'
 import * as constants from '../constants'
 import { Container } from '../container/container.class'
@@ -8,21 +7,22 @@ import { flash } from '../http/functions/flash.function'
 import { Lang } from '../lang/lang.class'
 import { RenderResponse } from './render-response.class'
 import { Session } from '../session/session.class'
+import { View } from './view.class'
 
 export class Compiler {
-  private static patterns: Record<string, RegExp> = {
-    each: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
-    function: /([^@]?)\{\{ (.*?)\((.*?)\) *\}\}/g,
-    if: /\[if (not)? ?(.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
-    import: /\[import '?(.*?)'?\]/g,
-    method: /\[method '?(.*?)'?\]/g,
-    raw: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
-    token: /\[token\]/g,
-    unless: /\[unless (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/unless\]/gm,
-    variable: /([^@]?)\{\{ *([A-Za-z0-9_]*?) *\}\}/g,
+  private static DIRECTIVES: Record<string, RegExp> = {
+    EACH: /\[each (.*?) in (.*)\](\n|\r\n)?((.*?|\s*?)*?)\[\/each\]/gm,
+    FUNCTION: /([^@]?)\{\{ (.*?)\((.*?)\) *\}\}/g,
+    IF: /\[if (not)? ?(.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
+    IMPORT: /\[import '?(.*?)'?\]/g,
+    METHOD: /\[method '?(.*?)'?\]/g,
+    RAW: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
+    TOKEN: /\[token\]/g,
+    UNLESS: /\[unless (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/unless\]/gm,
+    VARIABLE: /([^@]?)\{\{ *([A-Za-z0-9_]*?) *\}\}/g,
   }
 
-  private static functions: Record<string, any> = {
+  private static FUNCTIONS: Record<string, any> = {
     __: Lang.trans,
     flash: flash,
     trans: Lang.trans,
@@ -31,7 +31,7 @@ export class Compiler {
   private static rawContents: string[] = []
 
   private static parseEachDirectives(content: string, variables: Record<string, any> = {}): string {
-    const matches = content.matchAll(this.patterns.each) ?? []
+    const matches = content.matchAll(this.DIRECTIVES.EACH) ?? []
 
     for (const match of matches) {
       const iterableValue = /\[(.*?)\]/.test(match[2])
@@ -39,13 +39,13 @@ export class Compiler {
         : variables[match[2]]
 
       if (!iterableValue || typeof iterableValue[Symbol.iterator] !== 'function') {
-        throw new Exception(`Value '${iterableValue}' cannot be used as loop variable as it's not iterable`)
+        throw new Exception(`Value '${iterableValue}' cannot be used as loop iterator as it's not iterable`)
       }
 
       let result = ''
 
       for (const item of iterableValue) {
-        for (const variable of match[4].matchAll(this.patterns.variable)) {
+        for (const variable of match[4].matchAll(this.DIRECTIVES.VARIABLE)) {
           if (variable[2] === match[1]) {
             result += match[4].replace(variable[0], variable[1] + item)
           }
@@ -59,7 +59,7 @@ export class Compiler {
   }
 
   private static parseIfDirectives(content: string, variables: Record<string, any> = {}): string {
-    const matches = content.matchAll(this.patterns.if) ?? []
+    const matches = content.matchAll(this.DIRECTIVES.IF) ?? []
 
     for (const match of matches) {
       if (variables[match[2]] || (match[1] === 'not' && !variables[match[2]])) {
@@ -75,13 +75,13 @@ export class Compiler {
   }
 
   private static parseImportDirectives(content: string): string {
-    const matches = content.matchAll(this.patterns.import) ?? []
+    const matches = content.matchAll(this.DIRECTIVES.IMPORT) ?? []
 
     for (const match of matches) {
-      const file = joinPath('views', `${match[1].replace('.', '/')}.melon.html`)
+      const file = View.path(match[1])
 
       if (!existsSync(file)) {
-        throw new Exception(`Partial '${match[1]}' does not exist`)
+        throw new Exception(`Template partial '${match[1]}' does not exist`)
       }
 
       content = content.replace(match[0], this.compile(file).toString())
@@ -91,7 +91,7 @@ export class Compiler {
   }
 
   private static parseMethodDirectives(content: string): string {
-    const matches = content.matchAll(this.patterns.method) ?? []
+    const matches = content.matchAll(this.DIRECTIVES.METHOD) ?? []
 
     for (const match of matches) {
       content = content.replace(match[0], `<input type="hidden" name="_method" value="${match[1]}">`)
@@ -101,7 +101,7 @@ export class Compiler {
   }
 
   private static parseRawDirectives(content: string): string {
-    const matches = content.matchAll(this.patterns.raw) ?? []
+    const matches = content.matchAll(this.DIRECTIVES.RAW) ?? []
     let count = 0
 
     for (const match of matches) {
@@ -115,7 +115,7 @@ export class Compiler {
   }
 
   private static parseTokenDirectives(content: string): string {
-    const matches = content.matchAll(this.patterns.token) ?? []
+    const matches = content.matchAll(this.DIRECTIVES.TOKEN) ?? []
     const token = Container.getSingleton(Session).data._token
 
     for (const match of matches) {
@@ -126,7 +126,7 @@ export class Compiler {
   }
 
   private static parseUnlessDirectives(content: string, variables: Record<string, any> = {}): string {
-    const matches = content.matchAll(this.patterns.unless) ?? []
+    const matches = content.matchAll(this.DIRECTIVES.UNLESS) ?? []
 
     for (const match of matches) {
       if (!variables[match[2]] || (match[1] === 'not' && variables[match[2]])) {
@@ -168,7 +168,7 @@ export class Compiler {
      * Variable rendering syntax
      */
 
-    for (const expression of compiled.matchAll(this.patterns.variable) ?? []) {
+    for (const expression of compiled.matchAll(this.DIRECTIVES.VARIABLE) ?? []) {
       const name: string = expression[2]
       const isConstant = name.startsWith('MELONLY_') || name.startsWith('NODE_')
 
@@ -195,10 +195,10 @@ export class Compiler {
      * Function call syntax
      */
 
-    for (const expression of compiled.matchAll(this.patterns.function) ?? []) {
+    for (const expression of compiled.matchAll(this.DIRECTIVES.FUNCTION) ?? []) {
       const name: string = expression[2]
 
-      const result: any = this.functions[name as string](eval(expression[3]))
+      const result: any = this.FUNCTIONS[name as string](eval(expression[3]))
 
       compiled = compiled.replace(expression[0], expression[1] + String(result))
     }

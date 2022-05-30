@@ -30,7 +30,7 @@ export class Compiler {
     trans: Lang.trans,
   }
 
-  private static rawContents: string[] = []
+  private static rawContent: string[] = []
 
   private static parseEachDirectives(content: string, variables: Record<string, any> = {}): string {
     const matches = content.matchAll(this.DIRECTIVES.EACH) ?? []
@@ -110,7 +110,7 @@ export class Compiler {
       content = content.replace(match[0], `__raw__${count}`)
       count += 1
 
-      this.rawContents.push(match[2])
+      this.rawContent.push(match[2])
     }
 
     return content
@@ -149,7 +149,7 @@ export class Compiler {
     for (const match of matches) {
       const index = parseInt(match[1])
 
-      content = content.replace(match[0], this.rawContents[index])
+      content = content.replace(match[0], this.rawContent[index])
     }
 
     return content

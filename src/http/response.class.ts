@@ -1,7 +1,8 @@
-import { existsSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import { ServerResponse } from 'http'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
+import { FileResponse } from './types/file-response.type'
 import { JsonResponse } from './types/json-response.type'
 import { RedirectResponse } from './types/redirect-response.type'
 import { RenderResponse } from '../views/render-response.class'
@@ -84,12 +85,16 @@ export class Response {
     return this
   }
 
-  public status(code: number = 200): this {
-    if (this.instance) {
-      this.instance.statusCode = code
-    }
+  public file(path: string, extension: string = 'txt', code: number = 302): FileResponse {
+    const fileContent = readFileSync(path)
+    const extensionMimes: Record<string, string> = require('../../assets/mime-types.json')
 
-    return this
+    this.status(code)
+
+    this.header('content-type', extensionMimes[extension] ?? 'text/plain')
+    this.end(fileContent)
+
+    return null
   }
 
   public getStatus(): number {
@@ -137,6 +142,14 @@ export class Response {
 
   public setInstance(response: ServerResponse) {
     this.instance = response
+  }
+
+  public status(code: number = 200): this {
+    if (this.instance) {
+      this.instance.statusCode = code
+    }
+
+    return this
   }
 
   public terminate(): void {

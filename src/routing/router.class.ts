@@ -1,6 +1,6 @@
 import { File } from 'formidable'
 import { pathToRegexp } from 'path-to-regexp'
-import { readFileSync, unlinkSync } from 'fs'
+import { unlinkSync } from 'fs'
 import { join as joinPath } from 'path'
 import { Container } from '../container/container.class'
 import { Injector } from '../container/injector.class'
@@ -177,15 +177,11 @@ export class Router {
     const extension = url.replace('/', '').split('.')[1]
 
     try {
-      const fileContent = readFileSync(path)
-      const extensionMimes: Record<string, string> = require('../../assets/mime-types.json')
-
       const response = Container.getSingleton(Response)
 
       Logger.success(`Request: GET ${url}`, '200')
 
-      response.header('content-type', extensionMimes[extension] ?? 'text/plain')
-      response.end(fileContent)
+      response.file(path, extension)
     } catch (error) {
       throw new NotFoundException()
     }

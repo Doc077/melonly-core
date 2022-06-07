@@ -9,6 +9,33 @@ export class Route {
     public readonly action: any,
   ) {}
 
+  public static any(url: string): (target: any, controllerMethod: string) => any {
+    return (target: any, controllerMethod: string) => {
+      const callback = () => Router.resolveController(target.constructor, controllerMethod)
+
+      Router.delete(url, callback)
+      Router.get(url, callback)
+      Router.patch(url, callback)
+      Router.post(url, callback)
+      Router.put(url, callback)
+    }
+  }
+
+  public static except(url: string, exceptMethod: string): (target: any, controllerMethod: string) => any {
+    return (target: any, controllerMethod: string) => {
+      const callback = () => Router.resolveController(target.constructor, controllerMethod)
+
+      const httpMethods = ['delete', 'get', 'patch', 'post', 'put']
+
+      httpMethods.forEach((method: string) => {
+        if (method !== exceptMethod) {
+          // @ts-ignore
+          Router[method](url, callback)
+        }
+      })
+    }
+  }
+
   public static delete(url: string): (target: any, controllerMethod: string) => any {
     return (target: any, controllerMethod: string) => {
       Router.delete(url, () => Router.resolveController(target.constructor, controllerMethod))

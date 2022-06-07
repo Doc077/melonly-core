@@ -6,14 +6,13 @@ import {
   black,
   blueBright,
   green,
+  greenBright,
   redBright,
   yellowBright,
 } from 'cli-color'
 
 export class Logger {
-  private static readonly PAD_SIZE = 50
-
-  private static readonly LINE_SIZE = 46
+  private static readonly LINE_SIZE = 58
 
   private static badge(): string {
     const date = new Date()
@@ -36,52 +35,56 @@ export class Logger {
   }
 
   public static error(data: any, additional?: string | number): void {
-    data = this.trimLine(data)
-
-    const main = redBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
+    data = redBright(`  ${this.trimLine(data)}`)
 
     const output = {
-      main,
-      ...(additional && { additional: black(bgRedBright(` ${additional} `)) }),
+      badge: this.badge(),
+      ...(additional && {
+        additional: black(bgRedBright(` ${additional} `)).padEnd(26, ' '),
+      }),
+      data,
     }
 
     console.log(...Object.values(output))
   }
 
   public static info(data: any, additional?: string | number): void {
-    data = this.trimLine(data)
-
-    const main = blueBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
+    data = blueBright(`  ${this.trimLine(data)}`)
 
     const output = {
-      main,
-      ...(additional && { additional: black(bgBlueBright(` ${additional} `)) }),
+      badge: this.badge(),
+      ...(additional && {
+        additional: black(bgBlueBright(` ${additional} `)).padEnd(26, ' '),
+      }),
+      data,
     }
 
     console.log(...Object.values(output))
   }
 
   public static warn(data: any, additional?: string | number): void {
-    data = this.trimLine(data)
-
-    const main = yellowBright(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
+    data = yellowBright(`  ${this.trimLine(data)}`)
 
     const output = {
-      main,
-      ...(additional && { additional: black(bgYellow(` ${additional} `)) }),
+      badge: this.badge(),
+      ...(additional && {
+        additional: black(bgYellow(` ${additional} `)).padEnd(26, ' '),
+      }),
+      data,
     }
 
     console.warn(...Object.values(output))
   }
 
   public static success(data: any, additional?: string | number): void {
-    data = this.trimLine(data)
-
-    const main = green(`${this.badge()}  ${data.padEnd(this.PAD_SIZE)}`)
+    data = greenBright(this.trimLine(data))
 
     const output = {
-      main,
-      ...(additional && { additional: black(bgGreen(` ${additional} `)) }),
+      badge: this.badge(),
+      ...(additional && {
+        additional: black(bgGreen(` ${additional} `)).padEnd(26, ' '),
+      }),
+      data,
     }
 
     console.log(...Object.values(output))

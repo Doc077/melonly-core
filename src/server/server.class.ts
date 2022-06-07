@@ -1,11 +1,11 @@
 import { config as loadDotEnv } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
+import { satisfies } from 'semver'
 import { Broadcaster } from '../broadcast/broadcaster.class'
 import { Config } from '../config/config.class'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { Logger } from '../console/logger.class'
-import { NODE_MIN_VERSION } from '../constants'
 import { Request } from '../http/request.class'
 import { Response } from '../http/response.class'
 import { Router } from '../routing/router.class'
@@ -68,7 +68,7 @@ export class Server {
     const serverPort = Config.app.port ?? 3000
 
     server.listen(serverPort, () => {
-      Logger.success(`Server listening on port ${serverPort}`, `http://localhost:${serverPort}`)
+      Logger.success(`Server listening on port ${serverPort}`, serverPort)
     })
   }
 
@@ -84,9 +84,13 @@ export class Server {
 
       Config.init(directory)
 
-      if (parseInt(process.versions.node) < NODE_MIN_VERSION) {
-        Logger.warn(`Melonly requires Node.js version ${NODE_MIN_VERSION} or greater`)
+      const requiredNodeVersion = require('../../package.json').engines.node
+
+      if (!satisfies(process.version, requiredNodeVersion)) {
+        Logger.warn(`Melonly requires Node.js version ${requiredNodeVersion.slice(2)} or greater`)
         Logger.warn('Update Node.js on https://nodejs.org')
+
+        process.exit(1)
       }
 
       this.run()

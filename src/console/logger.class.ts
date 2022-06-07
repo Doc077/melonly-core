@@ -6,13 +6,14 @@ import {
   black,
   blueBright,
   green,
-  greenBright,
   redBright,
   yellowBright,
 } from 'cli-color'
 
 export class Logger {
   private static readonly LINE_SIZE = 58
+
+  private static readonly PADDING_SIZE = 27
 
   private static badge(): string {
     const date = new Date()
@@ -37,56 +38,48 @@ export class Logger {
   public static error(data: any, additional?: string | number): void {
     data = redBright(`  ${this.trimLine(data)}`)
 
-    const output = {
-      badge: this.badge(),
-      ...(additional && {
-        additional: black(bgRedBright(` ${additional} `)).padEnd(26, ' '),
-      }),
+    const output = [
+      this.badge(),
+      ...additional ? [black(bgRedBright(` ${additional} `)).padEnd(this.PADDING_SIZE, ' ')] : [],
       data,
-    }
+    ]
 
-    console.log(...Object.values(output))
+    console.error(...output)
   }
 
   public static info(data: any, additional?: string | number): void {
     data = blueBright(`  ${this.trimLine(data)}`)
 
-    const output = {
-      badge: this.badge(),
-      ...(additional && {
-        additional: black(bgBlueBright(` ${additional} `)).padEnd(26, ' '),
-      }),
+    const output = [
+      this.badge(),
+      ...additional ? [black(bgBlueBright(` ${additional} `)).padEnd(this.PADDING_SIZE, ' ')] : [],
       data,
-    }
+    ]
 
-    console.log(...Object.values(output))
+    console.log(...output)
   }
 
   public static warn(data: any, additional?: string | number): void {
     data = yellowBright(`  ${this.trimLine(data)}`)
 
-    const output = {
-      badge: this.badge(),
-      ...(additional && {
-        additional: black(bgYellow(` ${additional} `)).padEnd(26, ' '),
-      }),
+    const output = [
+      this.badge(),
+      ...additional ? [black(bgYellow(` ${additional} `)).padEnd(this.PADDING_SIZE, ' ')] : [],
       data,
-    }
+    ]
 
-    console.warn(...Object.values(output))
+    console.warn(...output)
   }
 
   public static success(data: any, additional?: string | number): void {
-    data = greenBright(this.trimLine(data))
+    data = green(this.trimLine(data))
 
-    const output = {
-      badge: this.badge(),
-      ...(additional && {
-        additional: black(bgGreen(` ${additional} `)).padEnd(26, ' '),
-      }),
+    const output = [
+      this.badge(),
+      ...additional ? [black(bgGreen(` ${additional} `)).padEnd(this.PADDING_SIZE, ' ')] : [],
       data,
-    }
+    ]
 
-    console.log(...Object.values(output))
+    console.log(...output)
   }
 }

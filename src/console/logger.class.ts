@@ -11,9 +11,9 @@ import {
 } from 'cli-color'
 
 export class Logger {
-  private static readonly PAD_SIZE = 46
+  private static readonly PAD_SIZE = 50
 
-  private static readonly LINE_SIZE = 42
+  private static readonly LINE_SIZE = 46
 
   private static badge(): string {
     const date = new Date()

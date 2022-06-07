@@ -83,7 +83,8 @@ export class Server {
       Config.init(directory)
 
       if (parseInt(process.versions.node) < NODE_MIN_VERSION) {
-        Logger.warn(`Node version requirements >= ${NODE_MIN_VERSION} not met`)
+        Logger.warn(`Melonly requires Node.js version ${NODE_MIN_VERSION} or greater`)
+        Logger.warn('Update Node.js on https://nodejs.org')
       }
 
       this.run()

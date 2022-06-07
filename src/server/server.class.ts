@@ -1,4 +1,4 @@
-import { config as envConfig } from 'dotenv'
+import { config as loadDotEnv } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { Broadcaster } from '../broadcast/broadcaster.class'
 import { Config } from '../config/config.class'
@@ -51,9 +51,9 @@ export class Server {
       }
 
       /**
-       * Respond in case of GET or HEAD method
-       * Otherwise, the response will be generated after
-       * Request.init() method processes input data
+       * Respond immediately in case of GET or HEAD method
+       * Otherwise, the response will be sent after
+       * Request.init() method processes form input data
        */
 
       if (['get', 'head'].includes(requestInstance.method())) {
@@ -61,11 +61,11 @@ export class Server {
       }
     })
 
-    const serverPort = Config.app.port ?? 3000
-
     if (this.broadcastingEnabled) {
       Broadcaster.init(server)
     }
+
+    const serverPort = Config.app.port ?? 3000
 
     server.listen(serverPort, () => {
       Logger.success(`Server listening on port ${serverPort}`, `http://localhost:${serverPort}`)
@@ -73,10 +73,12 @@ export class Server {
   }
 
   public start(directory: string): this {
-    process.on('uncaughtException', (exception: any) => ExceptionHandler.handle(exception))
+    process.on('uncaughtException', (exception: any) => {
+      ExceptionHandler.handle(exception)
+    })
 
     try {
-      envConfig({
+      loadDotEnv({
         path: '.env',
       })
 

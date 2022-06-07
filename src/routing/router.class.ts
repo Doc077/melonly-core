@@ -164,7 +164,7 @@ export class Router {
 
   public static resolveController(controller: any, method: string): any {
     try {
-      const result = Injector.resolve(controller)[method]()
+      const result = Injector.resolve<any>(controller)[method]()
 
       return result
     } catch (exception) {

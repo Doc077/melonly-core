@@ -9,15 +9,15 @@ export class Broadcaster {
   private static channels: any[] = []
 
   public static event(name: string, channelName: string, data: object = {}): void {
-    for (const channel of this.channels) {
+    this.channels.forEach((channel: any) => {
       if (channel.nameRegex.test(channelName)) {
         this.broadcastServer?.emit(name, data)
 
         Logger.info(`Broadcast event: ${name}`)
 
-        break
+        return
       }
-    }
+    })
   }
 
   public static init(server: Server): void {
@@ -29,10 +29,10 @@ export class Broadcaster {
   }
 
   public static registerChannels(channels: any[]): void {
-    for (const channel of channels) {
-      const instance = Injector.resolve(channel)
+    channels.forEach((channel: any) => {
+      const instance = Injector.resolve<any>(channel)
 
       this.channels.push(instance)
-    }
+    })
   }
 }

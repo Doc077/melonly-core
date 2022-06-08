@@ -4,6 +4,7 @@ import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
 import { FileResponse } from './types/file-response.type'
 import { JsonResponse } from './types/json-response.type'
+import { NotFoundException } from '../routing/exceptions/not-found.exception'
 import { RedirectResponse } from './types/redirect-response.type'
 import { RenderResponse } from '../views/render-response.class'
 import { Session } from '../session/session.class'
@@ -85,14 +86,20 @@ export class Response {
     return this
   }
 
-  public file(path: string, extension: string = 'txt', code: number = 302): FileResponse {
-    const fileContent = readFileSync(path)
-    const extensionMimes: Record<string, string> = require('../../assets/mime-types.json')
+  public file(path: string, code: number = 302): FileResponse {
+    try {
+      const extension = path.replace('/', '').split('.')[1]
+      const fileContent = readFileSync(path)
 
-    this.status(code)
+      const mimeTypes: Record<string, string> = require('../../assets/mime-types.json')
 
-    this.header('content-type', extensionMimes[extension] ?? 'text/plain')
-    this.end(fileContent)
+      this.header('content-type', mimeTypes[extension] ?? 'text/plain')
+      this.status(code)
+
+      this.end(fileContent)
+    } catch (error) {
+      throw new NotFoundException()
+    }
 
     return null
   }

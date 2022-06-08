@@ -174,16 +174,10 @@ export class Router {
 
   public static serveStaticFile(url: string): void {
     const path = joinPath('public', url.replace('/', ''))
-    const extension = url.replace('/', '').split('.')[1]
+    const response = Container.getSingleton(Response)
 
-    try {
-      const response = Container.getSingleton(Response)
+    response.file(path)
 
-      Logger.success(`Request: GET ${url}`, '200')
-
-      response.file(path, extension)
-    } catch (error) {
-      throw new NotFoundException()
-    }
+    Logger.success(`Request: GET ${url}`, '200')
   }
 }

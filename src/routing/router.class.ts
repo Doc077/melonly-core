@@ -43,11 +43,13 @@ export class Router {
 
   private static verifyCsrfToken(): void {
     const request = Container.getSingleton(Request)
+    const session = Container.getSingleton(Session)
 
-    if (
-      !['get', 'head'].includes(request.method()) &&
-      Container.getSingleton(Request).data._token !== Container.getSingleton(Session).data._token
-    ) {
+    const token = request.ajax()
+      ? request.cookie('csrfToken')
+      : request.data._token
+
+    if (!['get', 'head'].includes(request.method()) && token !== session.data._token) {
       throw new InvalidTokenException()
     }
   }

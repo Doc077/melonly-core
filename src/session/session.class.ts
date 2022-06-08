@@ -76,6 +76,8 @@ export class Session {
 
     this.set('_token', token)
 
+    Container.getSingleton(Response).cookie('csrfToken', token)
+
     return token
   }
 

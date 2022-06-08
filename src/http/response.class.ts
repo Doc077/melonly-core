@@ -78,7 +78,7 @@ export class Response {
     this.instance?.end(content)
   }
 
-  public header(header: string, value: string): this {
+  public header(header: string, value: string | number): this {
     if (!this.terminated) {
       this.instance?.setHeader(header, value)
     }

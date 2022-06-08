@@ -24,6 +24,10 @@ export class Router {
 
     Logger.success(`Request: ${request.method().toUpperCase()} ${request.url()}`, '200')
 
+    response.header('access-control-allow-origin', '*')
+    response.header('access-control-allow-headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    response.header('access-control-allow-credentials', 0)
+
     response.end(responseContent)
   }
 

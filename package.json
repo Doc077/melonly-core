@@ -2,6 +2,7 @@
   "name": "@melonly/core",
   "version": "1.0.0-alpha.11",
   "description": "The modern Node.js framework",
+  "homepage": "https://melonly.pl",
   "repository": {
     "type": "git",
     "url": "https://github.com/Doc077/melonly-core"
@@ -18,6 +19,7 @@
   "scripts": {
     "build": "tsc",
     "format": "prettier \"**/*.ts\" --ignore-path ./.prettierignore --write",
+    "publish:npm": "tsc && npm publish --access public",
     "start": "tsc --watch"
   },
   "dependencies": {

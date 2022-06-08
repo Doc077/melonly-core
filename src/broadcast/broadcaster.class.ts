@@ -8,12 +8,12 @@ export class Broadcaster {
 
   private static channels: any[] = []
 
-  public static event(name: string, channelName: string, data: object = {}): void {
+  public static emit(event: string, channelName: string, data: object = {}): void {
     this.channels.forEach((channel: any) => {
       if (channel.nameRegex.test(channelName)) {
-        this.broadcastServer?.emit(name, data)
+        this.broadcastServer?.emit(event, data)
 
-        Logger.info(`Broadcasted event: ${name}`, 'socket')
+        Logger.info(`Broadcasted event: ${event}`, 'socket')
 
         return
       }

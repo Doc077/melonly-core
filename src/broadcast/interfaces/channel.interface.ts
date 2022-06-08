@@ -1,3 +1,3 @@
-export interface ChannelInterface {
+export interface Channel {
   userAuthorized(): boolean
 }

@@ -13,7 +13,7 @@ import {
 export class Logger {
   private static readonly LINE_SIZE = 58
 
-  private static readonly PADDING_SIZE = 27
+  private static readonly PADDING_SIZE = 30
 
   private static badge(): string {
     const date = new Date()
@@ -40,7 +40,7 @@ export class Logger {
 
     const output = [
       this.badge(),
-      ...additional ? [black(bgRedBright(` ${additional} `)).padEnd(this.PADDING_SIZE, ' ')] : [],
+      ...additional ? [black(bgRedBright(` ${additional} `)).padEnd(this.PADDING_SIZE - 1, ' ')] : [],
       data,
     ]
 

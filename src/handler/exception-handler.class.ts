@@ -82,7 +82,7 @@ export class ExceptionHandler {
     }
 
     Logger.error(`Request: ${request.method().toUpperCase()} ${request.url()}`, '500')
-    Logger.error(`Exception: ${exception.message}`)
+    Logger.error(`Exception: ${exception.message}`, 'error')
 
     response.status(500)
 
@@ -99,12 +99,16 @@ export class ExceptionHandler {
     if (Config.app.debug === 'true') {
       const templateFile = joinPath(__dirname, '..', '..', 'assets', 'exception.melon')
 
-      const callerLine = exception.stack.split('\n')[1]
-      const callerIndex = callerLine.indexOf('at ')
-      const info = callerLine.slice(callerIndex + 2, callerLine.length)
-      const caller = info.split('(')[0]
+      const callerLine: string = exception.stack.split('\n')[1]
+      const callerIndex: number = callerLine.indexOf('at ')
+      const info: string = callerLine.slice(callerIndex + 2, callerLine.length)
+      const caller: string = info.split('(')[0]
 
-      let file: string = info.match(/\((.*?)\)/)[1]
+      const fileMatch = info.match(/\((.*?)\)/)
+
+      let file: string = fileMatch
+        ? fileMatch[1]
+        : 'unknown'
 
       if (file.includes('.dist')) {
         file = file.replace(/.*?\.dist./, `src${directorySeparator}`)

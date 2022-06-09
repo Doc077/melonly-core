@@ -51,7 +51,7 @@ export class Response {
   }
 
   public cookie(name: string, value: string): void {
-    this.header('set-cookie', `${name}=${value}`)
+    this.header('set-cookie', `${name}=${value}; SameSite=Lax`)
   }
 
   public end(content?: any): void {

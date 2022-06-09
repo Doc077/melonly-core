@@ -13,7 +13,7 @@ export class Broadcaster {
       if (channel.nameRegex.test(channelName)) {
         this.broadcastServer?.emit(event, data)
 
-        Logger.info(`Broadcasted event: ${event}`, 'socket')
+        Logger.success(`Broadcasted event: ${event}`, 'socket')
 
         return
       }

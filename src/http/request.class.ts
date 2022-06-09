@@ -71,7 +71,7 @@ export class Request {
   }
 
   public ajax(): boolean {
-    return this.header('x-requested-with') === 'XMLHttpRequest'
+    return this.header('x-requested-with') === 'XMLHttpRequest' || (this.header('accept') ?? '').includes('application/json')
   }
 
   public get cookies(): Record<string, string> {

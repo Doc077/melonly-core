@@ -52,7 +52,7 @@ export class Logger {
 
     const output = [
       blueBright(this.badge()),
-      ...additional ? [black(bgBlueBright(` ${additional} `)).padEnd(this.PADDING_SIZE, ' ')] : [],
+      ...additional ? [black(bgBlueBright(` ${additional} `)).padEnd(this.PADDING_SIZE - 2, ' ')] : [],
       data,
     ]
 

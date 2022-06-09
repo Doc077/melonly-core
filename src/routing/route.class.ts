@@ -21,7 +21,7 @@ export class Route {
     }
   }
 
-  public static except(url: string, exceptMethod: string): (target: any, controllerMethod: string) => any {
+  public static except(url: string, exceptMethod: string | Method): (target: any, controllerMethod: string) => any {
     return (target: any, controllerMethod: string) => {
       const callback = () => Router.resolveController(target.constructor, controllerMethod)
 

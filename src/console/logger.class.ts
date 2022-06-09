@@ -39,7 +39,7 @@ export class Logger {
     data = redBright(`  ${this.trimLine(data)}`)
 
     const output = [
-      this.badge(),
+      redBright(this.badge()),
       ...additional ? [black(bgRedBright(` ${additional} `)).padEnd(this.PADDING_SIZE - 1, ' ')] : [],
       data,
     ]
@@ -51,7 +51,7 @@ export class Logger {
     data = blueBright(`  ${this.trimLine(data)}`)
 
     const output = [
-      this.badge(),
+      blueBright(this.badge()),
       ...additional ? [black(bgBlueBright(` ${additional} `)).padEnd(this.PADDING_SIZE, ' ')] : [],
       data,
     ]
@@ -63,7 +63,7 @@ export class Logger {
     data = yellowBright(`  ${this.trimLine(data)}`)
 
     const output = [
-      this.badge(),
+      yellowBright(this.badge()),
       ...additional ? [black(bgYellow(` ${additional} `)).padEnd(this.PADDING_SIZE, ' ')] : [],
       data,
     ]
@@ -75,7 +75,7 @@ export class Logger {
     data = green(this.trimLine(data))
 
     const output = [
-      this.badge(),
+      green(this.badge()),
       ...additional ? [black(bgGreen(` ${additional} `)).padEnd(this.PADDING_SIZE, ' ')] : [],
       data,
     ]

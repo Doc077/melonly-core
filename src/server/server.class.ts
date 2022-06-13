@@ -1,7 +1,7 @@
 import { config as loadDotEnv } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { satisfies } from 'semver'
-import { Broadcaster } from '../broadcast/broadcaster.class'
+import { Broadcaster } from '../socket/broadcaster.class'
 import { Config } from '../config/config.class'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'

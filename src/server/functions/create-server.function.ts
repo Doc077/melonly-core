@@ -5,7 +5,7 @@ interface Registrations {
   channels?: any[]
 }
 
-export const createAppServer = (params: Registrations): Server => {
+export const createServer = (params: Registrations): Server => {
   const instance = new Server()
 
   instance.registerControllers(params.controllers)

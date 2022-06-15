@@ -1,8 +1,11 @@
-export class Container {
-  private static singletons: Map<any, any> = new Map()
+import { Request } from '../http/request.class'
+import { Constructor } from './interfaces/constructor.interface'
 
-  public static bindSingletons(classes: any[]): any[] {
-    classes.map((className: any) => {
+export class Container {
+  private static singletons: Map<Constructor<any>, any> = new Map()
+
+  public static bindSingletons(classes: Constructor<any>[]): any[] {
+    classes.map((className) => {
       const instance = new className()
 
       this.singletons.set(className, instance)
@@ -11,11 +14,11 @@ export class Container {
     return classes
   }
 
-  public static getSingleton(className: any): any {
+  public static getSingleton<T = any>(className: Constructor<any>): Constructor<T> {
     return this.singletons.get(className)
   }
 
-  public static hasSingleton(className: any): boolean {
+  public static hasSingleton(className: Constructor<any>): boolean {
     return this.singletons.has(className)
   }
 }

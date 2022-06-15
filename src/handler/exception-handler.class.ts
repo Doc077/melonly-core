@@ -24,8 +24,8 @@ export class ExceptionHandler {
   }
 
   public static handle(exception: any): void {
-    const request = Container.getSingleton(Request)
-    const response = Container.getSingleton(Response)
+    const request = Container.getSingleton<Request>(Request)
+    const response = Container.getSingleton<Response>(Response)
 
     if (exception instanceof NotFoundException) {
       Logger.error(`Request: ${request.method().toUpperCase()} ${request.url()}`, '404')

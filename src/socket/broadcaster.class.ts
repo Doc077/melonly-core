@@ -29,7 +29,7 @@ export class Broadcaster {
     })
   }
 
-  public static registerChannels(channels: any[]): void {
+  public static registerChannels(channels: Authorize[]): void {
     channels.forEach((channel: any) => {
       const instance = Injector.resolve<any>(channel)
 

@@ -1,8 +1,10 @@
 import { config as loadDotEnv } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { satisfies } from 'semver'
+import { Authorize } from '../contracts/authorize.interface'
 import { Broadcaster } from '../socket/broadcaster.class'
 import { Config } from '../config/config.class'
+import { Constructor } from '../container/interfaces/constructor.interface'
 import { Container } from '../container/container.class'
 import { ExceptionHandler } from '../handler/exception-handler.class'
 import { Logger } from '../console/logger.class'
@@ -101,11 +103,11 @@ export class Server {
     return this
   }
 
-  public bindSingletons(classes: any[]): void {
+  public bindSingletons(classes: Constructor<any>[]): void {
     Container.bindSingletons(classes)
   }
 
-  public registerChannels(channels: any[]): this {
+  public registerChannels(channels: Authorize[]): this {
     this.broadcastingEnabled = true
 
     Broadcaster.registerChannels(channels)
@@ -113,7 +115,7 @@ export class Server {
     return this
   }
 
-  public registerControllers(controllers: any[]): this {
+  public registerControllers(controllers: Constructor<any>[]): this {
     this.controllers.push(...controllers)
 
     return this

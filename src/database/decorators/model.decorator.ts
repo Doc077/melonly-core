@@ -1,9 +1,12 @@
-interface Data {
+import { ClassDecorator } from '../../container/types/class-decorator.type'
+import { Constructor } from '../../container/interfaces/constructor.interface'
+
+interface ModelData {
   table?: string
 }
 
-export const Model = (data?: Data) => {
-  return (target: any): any => {
+export const Model = (data?: ModelData): ClassDecorator<any> => {
+  return (target: Constructor<any>) => {
     const instance = new target()
 
     return class extends target {

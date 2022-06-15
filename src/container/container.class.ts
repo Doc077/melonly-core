@@ -13,7 +13,7 @@ export class Container {
     return classes
   }
 
-  public static getSingleton<T = any>(className: Constructor<any>): T {
+  public static getSingleton<T = any>(className: Constructor<T>): T {
     return this.singletons.get(className)
   }
 

@@ -3,6 +3,6 @@ import { Session } from '../session.class'
 
 export const session = (key?: string): any => {
   return key
-    ? Container.getSingleton(Session).get(key)
-    : Container.getSingleton(Session).data
+    ? Container.getSingleton<Session>(Session).get(key)
+    : Container.getSingleton<Session>(Session).data
 }

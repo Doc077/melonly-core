@@ -13,7 +13,7 @@ export class Session {
   private key: null | string = ''
 
   constructor() {
-    this.key = Container.getSingleton(Request).cookie('sessionId')
+    this.key = Container.getSingleton<Request>(Request).cookie('sessionId')
 
     const sessionFilePath = joinPath('storage', 'sessions', `${this.key}.json`)
 
@@ -28,7 +28,7 @@ export class Session {
 
     const generatedId = Uuid.v4()
 
-    Container.getSingleton(Response).cookie('sessionId', generatedId)
+    Container.getSingleton<Response>(Response).cookie('sessionId', generatedId)
 
     try {
       const path = joinPath('storage', 'sessions', `${generatedId}.json`)
@@ -50,7 +50,7 @@ export class Session {
       throw new Exception('Unable to clear session')
     }
 
-    Container.getSingleton(Response).cookie('sessionId', '')
+    Container.getSingleton<Response>(Response).cookie('sessionId', '')
   }
 
   public get data(): Record<string, any> {
@@ -76,7 +76,7 @@ export class Session {
 
     this.set('_token', token)
 
-    Container.getSingleton(Response).cookie('csrfToken', token)
+    Container.getSingleton<Response>(Response).cookie('csrfToken', token)
 
     return token
   }

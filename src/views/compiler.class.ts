@@ -129,7 +129,7 @@ export class Compiler {
 
   private static parseTokenDirectives(content: string): string {
     const matches = content.matchAll(this.DIRECTIVES.TOKEN) ?? []
-    const token = Container.getSingleton(Session).data._token
+    const token = Container.getSingleton<Session>(Session).data._token
 
     for (const match of matches) {
       content = content.replace(match[0], `<input type="hidden" name="_token" value="${token}">`)

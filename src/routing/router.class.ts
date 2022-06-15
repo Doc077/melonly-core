@@ -19,8 +19,8 @@ export class Router {
   private static globalMiddleware: (() => any)[] = []
 
   private static respond(responseContent: any): void {
-    const request = Container.getSingleton(Request)
-    const response = Container.getSingleton(Response)
+    const request = Container.getSingleton<Request>(Request)
+    const response = Container.getSingleton<Response>(Response)
 
     Logger.success(`Request: ${request.method().toUpperCase()} ${request.url()}`, '200')
 
@@ -35,7 +35,7 @@ export class Router {
   }
 
   private static deleteTemporaryFiles(): void {
-    const files = Object.values(Container.getSingleton(Request).files as File[])
+    const files = Object.values(Container.getSingleton<Request>(Request).files as File[])
 
     files.forEach((file: File) => {
       if (file.filepath.includes('temp')) {
@@ -45,8 +45,8 @@ export class Router {
   }
 
   private static verifyCsrfToken(): void {
-    const request = Container.getSingleton(Request)
-    const session = Container.getSingleton(Session)
+    const request = Container.getSingleton<Request>(Request)
+    const session = Container.getSingleton<Session>(Session)
 
     const token = request.ajax()
       ? request.cookie('csrfToken')
@@ -78,8 +78,8 @@ export class Router {
   }
 
   public static handle(url: string): void {
-    const request = Container.getSingleton(Request)
-    const response = Container.getSingleton(Response)
+    const request = Container.getSingleton<Request>(Request)
+    const response = Container.getSingleton<Response>(Response)
 
     const method = request.method()
 
@@ -88,7 +88,7 @@ export class Router {
      */
 
     if (!request.ajax()) {
-      Container.getSingleton(Session).set('_previousLocation', url)
+      Container.getSingleton<Session>(Session).set('_previousLocation', url)
     }
 
     this.globalMiddleware.forEach((middleware: (request: Request, response: Response) => any) => {
@@ -134,7 +134,7 @@ export class Router {
         })
 
         for (const [param, value] of Object.entries(matchedRouteParams)) {
-          Container.getSingleton(Request).setParam(param, value as string)
+          Container.getSingleton<Request>(Request).setParam(param, value as string)
         }
 
         const responseData = route.action()
@@ -179,7 +179,7 @@ export class Router {
 
   public static serveStaticFile(url: string): void {
     const path = joinPath('public', url.replace('/', ''))
-    const response = Container.getSingleton(Response)
+    const response = Container.getSingleton<Response>(Response)
 
     response.file(path)
 

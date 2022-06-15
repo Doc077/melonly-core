@@ -193,7 +193,7 @@ export class Request {
   }
 
   public get session(): Session {
-    return Container.getSingleton(Session)
+    return Container.getSingleton<Session>(Session)
   }
 
   public setInstance(request: IncomingMessage) {

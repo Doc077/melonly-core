@@ -125,7 +125,7 @@ export class ExceptionHandler {
           caller,
           file,
           message: exception.message,
-          method: Container.getSingleton(Request).method().toUpperCase(),
+          method: Container.getSingleton<Request>(Request).method().toUpperCase(),
           stack: exception.stack,
           status: response.getStatus(),
           url: Container.getSingleton(Request).url(),

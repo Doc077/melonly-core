@@ -117,20 +117,20 @@ export class Response {
     this.status(code)
 
     for (const [variable, value] of Object.entries(variables)) {
-      Container.getSingleton(Session).flash(variable, value)
+      Container.getSingleton<Session>(Session).flash(variable, value)
     }
 
     return null
   }
 
   public redirectBack(variables: Record<string, any> = {}, code: number = 302): RedirectResponse {
-    const url = Container.getSingleton(Session).data._previousLocation ?? '/'
+    const url: string = Container.getSingleton<Session>(Session).data._previousLocation ?? '/'
 
     return this.redirect(url, variables, code)
   }
 
   public redirectIntended(defaultUrl: string, variables: Record<string, any> = {}, code: number = 302): RedirectResponse {
-    const url = Container.getSingleton(Session).data._intendedLocation ?? defaultUrl
+    const url: string = Container.getSingleton<Session>(Session).data._intendedLocation ?? defaultUrl
 
     return this.redirect(url, variables, code)
   }

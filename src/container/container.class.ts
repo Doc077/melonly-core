@@ -1,4 +1,3 @@
-import { Request } from '../http/request.class'
 import { Constructor } from './interfaces/constructor.interface'
 
 export class Container {
@@ -14,7 +13,7 @@ export class Container {
     return classes
   }
 
-  public static getSingleton<T = any>(className: Constructor<any>): Constructor<T> {
+  public static getSingleton<T = any>(className: Constructor<any>): T {
     return this.singletons.get(className)
   }
 

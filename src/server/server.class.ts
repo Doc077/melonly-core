@@ -21,8 +21,8 @@ export class Server {
   private initHttpModule(request: IncomingMessage, response: ServerResponse): void {
     Container.bindSingletons([Request, Response])
 
-    const requestInstance = Container.getSingleton(Request)
-    const responseInstance = Container.getSingleton(Response)
+    const requestInstance = Container.getSingleton<Request>(Request)
+    const responseInstance = Container.getSingleton<Response>(Response)
 
     requestInstance.setInstance(request)
     responseInstance.setInstance(response)
@@ -38,7 +38,7 @@ export class Server {
     const server = createServer((request: IncomingMessage, response: ServerResponse): void => {
       this.initHttpModule(request, response)
 
-      const requestInstance = Container.getSingleton(Request)
+      const requestInstance = Container.getSingleton<Request>(Request)
       const url = request.url ?? '/'
       const urlLastSegment = url.slice(url.lastIndexOf('/') + 1)
 

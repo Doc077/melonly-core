@@ -16,6 +16,7 @@ export class Compiler {
     FUNCTION: /([^@]?)\{\{ (.*?)\((.*?)\) *\}\}/g,
     IF: /\[if (not)? ?(.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
     IMPORT: /\[import '?(.*?)'?\]/g,
+    JSON: /\[json (.*?)\]/g,
     METHOD: /\[method '?(.*?)'?\]/g,
     RAW: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
     TOKEN: /\[token\]/g,
@@ -92,6 +93,16 @@ export class Compiler {
     return content
   }
 
+  private static parseJsonDirectives(content: string, variables: Record<string, any> = {}): string {
+    const matches = content.matchAll(this.DIRECTIVES.JSON) ?? []
+
+    for (const match of matches) {
+      content = content.replace(match[0], JSON.stringify(variables[match[1]]))
+    }
+
+    return content
+  }
+
   private static parseMethodDirectives(content: string): string {
     const matches = content.matchAll(this.DIRECTIVES.METHOD) ?? []
 
@@ -160,6 +171,7 @@ export class Compiler {
 
     compiled = this.parseRawDirectives(compiled)
     compiled = this.parseEachDirectives(compiled, variables)
+    compiled = this.parseJsonDirectives(compiled, variables)
     compiled = this.parseMethodDirectives(compiled)
     compiled = this.parseIfDirectives(compiled, variables)
     compiled = this.parseImportDirectives(compiled)

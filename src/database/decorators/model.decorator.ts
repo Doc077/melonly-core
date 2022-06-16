@@ -6,7 +6,7 @@ interface ModelData {
 }
 
 export const Model = (data?: ModelData): ClassDecorator<any> => {
-  return (target: Constructor<any>) => {
+  return (target: Constructor) => {
     const instance = new target()
 
     return class extends target {

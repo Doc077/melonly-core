@@ -1,9 +1,9 @@
 import { Constructor } from './interfaces/constructor.interface'
 
 export class Container {
-  private static singletons: Map<Constructor<any>, any> = new Map()
+  private static singletons: Map<Constructor, any> = new Map()
 
-  public static bindSingletons(classes: Constructor<any>[]): any[] {
+  public static bindSingletons(classes: Constructor[]): any[] {
     classes.map((className) => {
       const instance = new className()
 
@@ -17,7 +17,7 @@ export class Container {
     return this.singletons.get(className)
   }
 
-  public static hasSingleton(className: Constructor<any>): boolean {
+  public static hasSingleton(className: Constructor): boolean {
     return this.singletons.has(className)
   }
 }

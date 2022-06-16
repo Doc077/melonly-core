@@ -16,7 +16,7 @@ import { Session } from '../session/session.class'
 export class Server {
   private broadcastingEnabled: boolean = false
 
-  public controllers: any[] = []
+  public controllers: Constructor[] = []
 
   private initHttpModule(request: IncomingMessage, response: ServerResponse): void {
     Container.bindSingletons([Request, Response])
@@ -103,7 +103,7 @@ export class Server {
     return this
   }
 
-  public bindSingletons(classes: Constructor<any>[]): void {
+  public bindSingletons(classes: Constructor[]): void {
     Container.bindSingletons(classes)
   }
 
@@ -115,7 +115,7 @@ export class Server {
     return this
   }
 
-  public registerControllers(controllers: Constructor<any>[]): this {
+  public registerControllers(controllers: Constructor[]): this {
     this.controllers.push(...controllers)
 
     return this

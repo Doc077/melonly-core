@@ -2,7 +2,9 @@ import { Container } from '../../container/container.class'
 import { Session } from '../session.class'
 
 export const session = (key?: string): any => {
+  const session = Container.getSingleton<Session>(Session)
+
   return key
-    ? Container.getSingleton<Session>(Session).get(key)
-    : Container.getSingleton<Session>(Session).data
+    ? session.get(key)
+    : session.data
 }

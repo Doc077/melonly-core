@@ -1,4 +1,4 @@
-import { config as loadDotEnv } from 'dotenv'
+import { config as parseEnvVariables } from 'dotenv'
 import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { satisfies } from 'semver'
 import { Authorize } from '../contracts/authorize.interface'
@@ -14,20 +14,23 @@ import { Router } from '../routing/router.class'
 import { Session } from '../session/session.class'
 
 export class Server {
-  private broadcastingEnabled: boolean = false
+  private socketServiceEnabled: boolean = false
 
   public controllers: Constructor[] = []
 
   private initHttpModule(request: IncomingMessage, response: ServerResponse): void {
-    Container.bindSingletons([Request, Response])
+    Container.bindSingletons([
+      Request,
+      Response,
+    ])
 
-    const requestInstance = Container.getSingleton<Request>(Request)
-    const responseInstance = Container.getSingleton<Response>(Response)
+    const containerRequest = Container.getSingleton<Request>(Request)
+    const containerResponse = Container.getSingleton<Response>(Response)
 
-    requestInstance.setInstance(request)
-    responseInstance.setInstance(response)
+    containerRequest.setInstance(request)
+    containerResponse.setInstance(response)
 
-    requestInstance.init()
+    containerRequest.init()
 
     Container.bindSingletons([Session])
 
@@ -38,7 +41,7 @@ export class Server {
     const server = createServer((request: IncomingMessage, response: ServerResponse): void => {
       this.initHttpModule(request, response)
 
-      const requestInstance = Container.getSingleton<Request>(Request)
+      const containerRequest = Container.getSingleton<Request>(Request)
       const url = request.url ?? '/'
       const urlLastSegment = url.slice(url.lastIndexOf('/') + 1)
 
@@ -46,7 +49,7 @@ export class Server {
        * Handle file requests
        */
 
-      if (['get', 'head'].includes(requestInstance.method()) && urlLastSegment.includes('.')) {
+      if (['get', 'head'].includes(containerRequest.method()) && urlLastSegment.includes('.')) {
         Router.serveStaticFile(url)
 
         return
@@ -58,12 +61,12 @@ export class Server {
        * Request.init() method processes form input data
        */
 
-      if (['get', 'head'].includes(requestInstance.method())) {
+      if (['get', 'head'].includes(containerRequest.method())) {
         Router.handle(url)
       }
     })
 
-    if (this.broadcastingEnabled) {
+    if (this.socketServiceEnabled) {
       Broadcaster.init(server)
     }
 
@@ -80,7 +83,7 @@ export class Server {
     })
 
     try {
-      loadDotEnv({
+      parseEnvVariables({
         path: '.env',
       })
 
@@ -108,7 +111,7 @@ export class Server {
   }
 
   public registerChannels(channels: Authorize[]): this {
-    this.broadcastingEnabled = true
+    this.socketServiceEnabled = true
 
     Broadcaster.registerChannels(channels)
 

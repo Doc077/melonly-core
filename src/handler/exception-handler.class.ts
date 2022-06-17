@@ -28,7 +28,15 @@ export class ExceptionHandler {
     const response = Container.getSingleton<Response>(Response)
 
     if (exception instanceof NotFoundException) {
-      Logger.error(`Request: ${request.method().toUpperCase()} ${request.url()}`, '404')
+      const url = request.url()
+
+      /**
+       * Don't log Vite ping requests
+       */
+
+      if (url !== '/__vite_ping') {
+        Logger.error(`Request: ${request.method().toUpperCase()} ${url}`, '404')
+      }
 
       response.status(404)
 

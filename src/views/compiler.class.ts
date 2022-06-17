@@ -1,5 +1,6 @@
 import { encode } from 'html-entities'
 import { existsSync, readFileSync } from 'fs'
+import { join as joinPath } from 'path'
 import * as constants from '../constants'
 import { Container } from '../container/container.class'
 import { Exception } from '../handler/exception.class'
@@ -17,11 +18,12 @@ export class Compiler {
     IF: /\[if (not)? ?(.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/if\]/gm,
     IMPORT: /\[import '?(.*?)'?\]/g,
     JSON: /\[json (.*?)\]/g,
-    METHOD: /\[method '?(.*?)'?\]/g,
+    METHOD: /\[method '?([a-zA-z]*?)'?\]/g,
     RAW: /\[raw\](\n|\r\n)?((.*?|\s*?)*?)\[\/raw\]/gm,
     TOKEN: /\[token\]/g,
     UNLESS: /\[unless (.*?)\](\n|\r\n)?((.*?|\s*?)*?)\[\/unless\]/gm,
     VARIABLE: /([^@]?)\{\{ *([A-Za-z0-9_]*?) *\}\}/g,
+    VITE: /\[vite '?([a-zA-z]*?)'?\]/g,
   }
 
   private static readonly FUNCTIONS: Record<string, any> = {
@@ -138,6 +140,27 @@ export class Compiler {
     return content
   }
 
+  private static parseViteDirectives(content: string): string {
+    const matches = content.matchAll(this.DIRECTIVES.VITE) ?? []
+
+    for (const match of matches) {
+      if (process.env.APP_DEBUG === 'true') {
+        content = content.replace(match[0], `<script type="module" src="http://localhost:4200/${match[1]}/main.js"></script>`)
+
+        continue
+      }
+
+      const manifest = JSON.parse(readFileSync(joinPath('public', 'manifest.json')).toString())
+
+      content = content.replace(match[0], `
+        <link rel="stylesheet" href="/${manifest[`${match[1]}/main.js`].css}">
+        <script type="module" src="/${manifest[`${match[1]}/main.js`].file}"></script>
+      `)
+    }
+
+    return content
+  }
+
   private static parseUnlessDirectives(content: string, variables: Record<string, any> = {}): string {
     const matches = content.matchAll(this.DIRECTIVES.UNLESS) ?? []
 
@@ -176,6 +199,7 @@ export class Compiler {
     compiled = this.parseIfDirectives(compiled, variables)
     compiled = this.parseImportDirectives(compiled)
     compiled = this.parseTokenDirectives(compiled)
+    compiled = this.parseViteDirectives(compiled)
     compiled = this.parseUnlessDirectives(compiled, variables)
 
     /**

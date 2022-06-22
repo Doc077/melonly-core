@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo.png" width="72">
+  <img src="assets/logo.png" width="72">
 
   <h1>Melonly Node.js Framework</h1>
 
